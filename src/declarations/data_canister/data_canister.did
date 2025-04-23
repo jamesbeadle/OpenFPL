@@ -1,3 +1,21 @@
+type WaterwayLabsApp = 
+ variant {
+   FootballGod;
+   ICF1;
+   ICFC;
+   ICGC;
+   ICPCasino;
+   ICPFA;
+   JeffBets;
+   OpenBeats;
+   OpenBook;
+   OpenCare;
+   OpenChef;
+   OpenFPL;
+   OpenWSL;
+   TransferKings;
+   WaterwayLabs;
+ };
 type ValueHistory = 
  record {
    changedOn: int;
@@ -55,6 +73,12 @@ type TransferPlayer =
    newValueQuarterMillions: nat16;
    playerId: ClubId;
  };
+type TopupCanister = 
+ record {
+   app: WaterwayLabsApp;
+   canisterId: CanisterId;
+   cycles: nat;
+ };
 type SubmitFixtureData = 
  record {
    fixtureId: FixtureId;
@@ -62,6 +86,13 @@ type SubmitFixtureData =
    leagueId: LeagueId;
    playerEventData: vec PlayerEventData;
    seasonId: SeasonId;
+ };
+type SnapshotId = blob;
+type Snapshot = 
+ record {
+   id: SnapshotId;
+   taken_at_timestamp: nat64;
+   total_size: nat64;
  };
 type ShirtType = 
  variant {
@@ -114,92 +145,107 @@ type RetirePlayer =
 type Result_9 = 
  variant {
    err: Error;
-   ok: LeagueTable;
+   ok: LoanedPlayers;
  };
 type Result_8 = 
  variant {
    err: Error;
-   ok: Leagues;
+   ok: PlayerDetails;
  };
 type Result_7 = 
  variant {
    err: Error;
-   ok: LoanedPlayers;
+   ok: PlayerDetailsForGameweek;
  };
 type Result_6 = 
  variant {
    err: Error;
-   ok: PlayerDetails;
+   ok: PlayerValueLeaderboard;
  };
 type Result_5 = 
  variant {
    err: Error;
-   ok: PlayerDetailsForGameweek;
+   ok: Players;
  };
 type Result_4 = 
  variant {
    err: Error;
-   ok: Players;
+   ok: PlayersMap;
  };
 type Result_3 = 
  variant {
    err: Error;
-   ok: PlayersMap;
- };
-type Result_2 = 
- variant {
-   err: Error;
    ok: PostponedFixtures;
  };
-type Result_17 = 
+type Result_20 = 
  variant {
    err: Error;
    ok: BettableFixtures;
  };
-type Result_16 = 
- variant {
-   err: Error;
-   ok: BettableLeagues;
- };
-type Result_15 = 
- variant {
-   err: Error;
-   ok: ClubValueLeaderboard;
- };
-type Result_14 = 
- variant {
-   err: Error;
-   ok: Clubs;
- };
-type Result_13 = 
- variant {
-   err: Error;
-   ok: Countries;
- };
-type Result_12 = 
- variant {
-   err: Error;
-   ok: DataHashes;
- };
-type Result_11 = 
- variant {
-   err: Error;
-   ok: Fixtures;
- };
-type Result_10 = 
- variant {
-   err: Error;
-   ok: LeagueStatus;
- };
-type Result_1 = 
+type Result_2 = 
  variant {
    err: Error;
    ok: RetiredPlayers;
  };
-type Result = 
+type Result_19 = 
+ variant {
+   err: Error;
+   ok: BettableLeagues;
+ };
+type Result_18 = 
+ variant {
+   err: Error;
+   ok: Canister;
+ };
+type Result_17 = 
+ variant {
+   err: Error;
+   ok: ClubValueLeaderboard;
+ };
+type Result_16 = 
+ variant {
+   err: Error;
+   ok: Clubs;
+ };
+type Result_15 = 
+ variant {
+   err: Error;
+   ok: DataHashes;
+ };
+type Result_14 = 
+ variant {
+   err: Error;
+   ok: DataTotals;
+ };
+type Result_13 = 
+ variant {
+   err: Error;
+   ok: Fixtures;
+ };
+type Result_12 = 
+ variant {
+   err: Error;
+   ok: LeagueStatus;
+ };
+type Result_11 = 
+ variant {
+   err: Error;
+   ok: LeagueTable;
+ };
+type Result_10 = 
+ variant {
+   err: Error;
+   ok: Leagues;
+ };
+type Result_1 = 
  variant {
    err: Error;
    ok: Seasons;
+ };
+type Result = 
+ variant {
+   err: Error;
+   ok;
  };
 type RescheduleFixture = 
  record {
@@ -244,6 +290,17 @@ type PlayersMap = record {playersMap: vec record {
                                             PlayerScore;
                                           };};
 type Players = record {players: vec Player;};
+type PlayerValueLeaderboard = record {players: vec PlayerSummary;};
+type PlayerSummary = 
+ record {
+   clubId: ClubId;
+   leagueId: LeagueId;
+   playerId: PlayerId;
+   position: nat;
+   positionText: text;
+   priorValue: nat16;
+   totalValue: nat16;
+ };
 type PlayerStatus = 
  variant {
    Active;
@@ -358,6 +415,13 @@ type MoveFixture =
    updatedFixtureDate: int;
    updatedFixtureGameweek: GameweekNumber;
  };
+type MostValuablePlayer = 
+ record {
+   firstName: text;
+   id: PlayerId;
+   lastName: text;
+   value: nat16;
+ };
 type LoanedPlayers = record {players: vec Player;};
 type LoanPlayer = 
  record {
@@ -457,6 +521,7 @@ type GetPlayersMap =
    seasonId: SeasonId;
  };
 type GetPlayers = record {leagueId: LeagueId;};
+type GetPlayerValueLeaderboard = record {};
 type GetPlayerDetailsForGameweek = 
  record {
    gameweek: GameweekNumber;
@@ -482,8 +547,8 @@ type GetFixtures =
    leagueId: LeagueId;
    seasonId: SeasonId;
  };
+type GetDataTotals = record {};
 type GetDataHashes = record {leagueId: LeagueId;};
-type GetCountries = record {};
 type GetClubs = record {leagueId: LeagueId;};
 type GetClubValueLeaderboard = record {};
 type GetBettableLeagues = record {};
@@ -567,6 +632,15 @@ type DetailedPlayer =
    valueHistory: vec ValueHistory;
    valueQuarterMillions: nat16;
  };
+type DataTotals = 
+ record {
+   totalClubs: nat;
+   totalGovernanceRewards: nat;
+   totalLeagues: nat;
+   totalNeurons: nat;
+   totalPlayers: nat;
+   totalProposals: nat;
+ };
 type DataHashes = record {dataHashes: vec DataHash;};
 type DataHash = 
  record {
@@ -608,13 +682,6 @@ type CreateClub =
    thirdColourHex: text;
  };
 type CountryId = nat16;
-type Country = 
- record {
-   code: text;
-   id: CountryId;
-   name: text;
- };
-type Countries = record {countries: vec Country;};
 type Clubs = 
  record {
    clubs: vec Club;
@@ -625,13 +692,25 @@ type ClubSummary =
  record {
    clubId: ClubId;
    clubName: text;
+   gender: Gender;
    leagueId: LeagueId;
+   mvp: MostValuablePlayer;
    position: nat;
    positionText: text;
    primaryColour: text;
+   priorValue: nat16;
    secondaryColour: text;
    shirtType: ShirtType;
    thirdColour: text;
+   totalDFValue: nat16;
+   totalDefenders: nat8;
+   totalFWValue: nat16;
+   totalForwards: nat8;
+   totalGKValue: nat16;
+   totalGoalkeepers: nat8;
+   totalMFValue: nat16;
+   totalMidfielders: nat8;
+   totalPlayers: nat8;
    totalValue: nat16;
  };
 type ClubId = nat16;
@@ -645,6 +724,20 @@ type Club =
    secondaryColourHex: text;
    shirtType: ShirtType;
    thirdColourHex: text;
+ };
+type CanisterType = 
+ variant {
+   Dynamic;
+   SNS;
+   Static;
+ };
+type CanisterId = text;
+type Canister = 
+ record {
+   app: WaterwayLabsApp;
+   canisterId: CanisterId;
+   canisterName: text;
+   canisterType: CanisterType;
  };
 type CalendarMonth = nat8;
 type BettableLeagues = record {leagues: vec League;};
@@ -662,28 +755,32 @@ type AddInitialFixtures =
  };
 service : {
   addInitialFixtures: (AddInitialFixtures) -> ();
+  calculateDataTotals: () -> ();
   createClub: (CreateClub) -> ();
   createLeague: (CreateLeague) -> ();
   createPlayer: (CreatePlayer) -> ();
-  getBettableFixtures: (GetBettableFixtures) -> (Result_17);
-  getBettableLeagues: (GetBettableLeagues) -> (Result_16) query;
-  getClubValueLeaderboard: (GetClubValueLeaderboard) -> (Result_15);
-  getClubs: (GetClubs) -> (Result_14);
-  getCountries: (GetCountries) -> (Result_13) query;
-  getDataHashes: (GetDataHashes) -> (Result_12) query;
-  getFixtures: (GetFixtures) -> (Result_11);
-  getLeagueStatus: (GetLeagueStatus) -> (Result_10) query;
-  getLeagueTable: (GetLeagueTable) -> (Result_9) query;
-  getLeagues: (GetLeagues) -> (Result_8) query;
-  getLoanedPlayers: (GetLoanedPlayers) -> (Result_7) query;
-  getPlayerDetails: (GetPlayerDetails) -> (Result_6) query;
+  getBettableFixtures: (GetBettableFixtures) -> (Result_20);
+  getBettableLeagues: (GetBettableLeagues) -> (Result_19) query;
+  getCanisterInfo: () -> (Result_18);
+  getClubValueLeaderboard: (GetClubValueLeaderboard) -> (Result_17);
+  getClubs: (GetClubs) -> (Result_16);
+  getDataHashes: (GetDataHashes) -> (Result_15) query;
+  getDataTotals: (GetDataTotals) -> (Result_14);
+  getFixtures: (GetFixtures) -> (Result_13);
+  getLeagueStatus: (GetLeagueStatus) -> (Result_12) query;
+  getLeagueTable: (GetLeagueTable) -> (Result_11) query;
+  getLeagues: (GetLeagues) -> (Result_10) query;
+  getLoanedPlayers: (GetLoanedPlayers) -> (Result_9) query;
+  getPlayerDetails: (GetPlayerDetails) -> (Result_8) query;
   getPlayerDetailsForGameweek: (GetPlayerDetailsForGameweek) ->
-   (Result_5) query;
-  getPlayers: (GetPlayers) -> (Result_4);
-  getPlayersMap: (GetPlayersMap) -> (Result_3) query;
-  getPostponedFixtures: (GetPostponedFixtures) -> (Result_2) query;
-  getRetiredPlayers: (GetRetiredPlayers) -> (Result_1) query;
-  getSeasons: (GetSeasons) -> (Result) query;
+   (Result_7) query;
+  getPlayerValueLeaderboard: (GetPlayerValueLeaderboard) -> (Result_6);
+  getPlayers: (GetPlayers) -> (Result_5);
+  getPlayersMap: (GetPlayersMap) -> (Result_4) query;
+  getPostponedFixtures: (GetPostponedFixtures) -> (Result_3) query;
+  getRetiredPlayers: (GetRetiredPlayers) -> (Result_2) query;
+  getSeasons: (GetSeasons) -> (Result_1) query;
+  getSnapshotIds: () -> (vec Snapshot);
   loanPlayer: (LoanPlayer) -> ();
   moveFixture: (MoveFixture) -> ();
   postponeFixture: (PostponeFixture) -> ();
@@ -695,6 +792,7 @@ service : {
   setFreeAgent: (SetFreeAgent) -> ();
   setPlayerInjury: (SetPlayerInjury) -> ();
   submitFixtureData: (SubmitFixtureData) -> ();
+  transferCycles: (TopupCanister) -> (Result);
   transferPlayer: (TransferPlayer) -> ();
   unretirePlayer: (UnretirePlayer) -> ();
   updateClub: (UpdateClub) -> ();

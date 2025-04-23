@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { type Writable } from "svelte/store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
@@ -15,32 +14,56 @@
   import Modal from "$lib/components/shared/modal.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
   
-  export let visible: boolean;
-  export let fantasyTeam: Writable<TeamSetup | undefined>;
-  export let bonusUsedInSession: Writable<boolean>;
-  export let closeBonusModal: () => void;
-  export let bonus: Bonus;
-  export let updateBonuses: () => void;
-  export let bonuses: Writable<Bonus[]>;
 
-  let countries: { id: number; name: string }[];
+  interface Props {
+    visible: boolean;
+    fantasyTeam: TeamSetup | undefined;
+    bonusUsedInSession: boolean;
+    closeBonusModal: () => void;
+    bonus: Bonus;
+    updateBonuses: () => void;
+    bonuses: Bonus[];
+  }
+  let { visible, fantasyTeam, bonusUsedInSession, closeBonusModal, bonus, updateBonuses, bonuses }: Props = $props();
+
+
+  let countries: { id: number; name: string }[] = $state([]);
+  let playerOptions: { id: number; name: string }[] = $state([]);
+  let teamOptions: { id: number; name: string }[] = $state([]);
   let selectedTeamId = 0;
   let selectedPlayerId = 0;
   let selectedCountry = "";
   let selectedCountryId = 0;
-  let isSubmitting = false;
+  let isSubmitting = $state(false);
+  let isUseButtonEnabled = $state(false);
 
   onMount(async () => {
-    getUniqueCountries();
+    countries = getUniqueCountries();
+    playerOptions = getPlayerNames();
+    teamOptions = getRelatedTeamNames();
+    isUseButtonEnabled = (() => {
+      switch (bonus.selectionType) {
+        case BonusType.PLAYER:
+          return selectedPlayerId !== 0;
+        case BonusType.TEAM:
+          return selectedTeamId !== 0;
+        case BonusType.COUNTRY:
+          return selectedCountryId !== 0;
+        case BonusType.AUTOMATIC:
+          return true;
+        default:
+          return false;
+      }
+    })();
   });
 
   const getUniqueCountries = () => {
 
-    if (!$countryStore || !$fantasyTeam || !$fantasyTeam.playerIds) {
+    if (!$countryStore || !fantasyTeam || !fantasyTeam.playerIds) {
       return [];
     }
 
-    const fantasyTeamPlayerIds = new Set($fantasyTeam.playerIds);
+    const fantasyTeamPlayerIds = new Set(fantasyTeam.playerIds);
     const countriesOfFantasyTeamPlayers = $countryStore
       .filter((country) =>
         $playerStore.some(
@@ -61,9 +84,9 @@
   };
 
   const isPlayerInFantasyTeam = (playerId: number): boolean => {
-    return !$fantasyTeam
+    return !fantasyTeam
       ? false
-      : $fantasyTeam.playerIds && $fantasyTeam.playerIds.includes(playerId);
+      : fantasyTeam.playerIds && fantasyTeam.playerIds.includes(playerId);
   };
 
   const getRelatedTeamNames = () => {
@@ -78,9 +101,9 @@
   };
 
   const getGoalkeeperId = () => {
-    if (!$fantasyTeam || !$fantasyTeam.playerIds) return 0;
+    if (!fantasyTeam || !fantasyTeam.playerIds) return 0;
 
-    for (const playerId of $fantasyTeam.playerIds) {
+    for (const playerId of fantasyTeam.playerIds) {
       const player = $playerStore.find((p) => p.id === playerId);
       if (player && convertPositionToIndex(player.position) === 0) {
         return player.id;
@@ -91,119 +114,88 @@
   };
 
   async function handleUseBonus() {
-    if (!$fantasyTeam) return;
+    if (!fantasyTeam) return;
     let activeGameweek = $leagueStore!.unplayedGameweek;
-    const originalTeam = { ...$fantasyTeam };
+    const originalTeam = { ...fantasyTeam };
 
-    $bonuses[bonus.id - 1].usedGameweek = activeGameweek
+    bonuses[bonus.id - 1].usedGameweek = activeGameweek
     switch (bonus.id) {
       case 1:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          return {
-            ...team,
+        fantasyTeam = {
+            ...fantasyTeam,
             goalGetterPlayerId: selectedPlayerId,
             goalGetterGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
-          };
-        });
+            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
+          }
         break;
       case 2:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          return {
-            ...team,
+        fantasyTeam = {
+          ...fantasyTeam,
             passMasterPlayerId: selectedPlayerId,
             passMasterGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
+            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
           };
-        });
         break;
       case 3:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          return {
-            ...team,
+        fantasyTeam = {
+          ...fantasyTeam,
             noEntryPlayerId: selectedPlayerId,
             noEntryGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
+            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
           };
-        });
         break;
       case 4:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          return {
-            ...team,
+        fantasyTeam = {
+          ...fantasyTeam,
             teamBoostClubId: selectedTeamId,
             teamBoostGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
+            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
           };
-        });
         break;
       case 5:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          return {
-            ...team,
+        fantasyTeam = {
+          ...fantasyTeam,
             safeHandsGameweek: activeGameweek,
             safeHandsPlayerId: getGoalkeeperId(),
-            playerIds: team.playerIds || new Uint16Array(11),
+            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
           };
-        });
         break;
       case 6:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          return {
-            ...team,
-            captainFantasticPlayerId: $fantasyTeam?.captainId ?? 0,
+        fantasyTeam = {
+          ...fantasyTeam,
+            captainFantasticPlayerId: fantasyTeam?.captainId ?? 0,
             captainFantasticGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
+            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
           };
-        });
         break;
       case 7:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          return {
-            ...team,
+        fantasyTeam = {
+          ...fantasyTeam,
             prospectsGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
+            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
           };
-        });
         break;
       case 8:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          return {
-            ...team,
+        fantasyTeam = {
+          ...fantasyTeam,
             oneNationCountryId: selectedCountryId,
-            oneNationCountryName: selectedCountry,
             oneNationGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
+            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
           };
-        });
         break;
       case 9:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          return {
-            ...team,
+        fantasyTeam = {
+          ...fantasyTeam,
             braceBonusGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
+            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
           };
-        });
         break;
       case 10:
-        fantasyTeam.update((team) => {
-          if (!team) return team;
-          return {
-            ...team,
+        fantasyTeam = {
+          ...fantasyTeam,
             hatTrickHeroGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11),
+            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
           };
-        });
         break;
     }
     
@@ -211,23 +203,23 @@
       isSubmitting = true;
 
       const principalId = $authStore.identity?.getPrincipal().toString() ?? "Not available";
-      const bonusPlayed = getBonusPlayed($fantasyTeam, activeGameweek);
-      const bonusPlayerId = getBonusPlayerId($fantasyTeam, activeGameweek);
-      const bonusTeamId = getBonusTeamId($fantasyTeam, activeGameweek);
-      const bonusCountryId = getBonusCountryId($fantasyTeam, activeGameweek);
+      const bonusPlayed = getBonusPlayed(fantasyTeam, activeGameweek);
+      const bonusPlayerId = getBonusPlayerId(fantasyTeam, activeGameweek);
+      const bonusTeamId = getBonusTeamId(fantasyTeam, activeGameweek);
+      const bonusCountryId = getBonusCountryId(fantasyTeam, activeGameweek);
 
       const isSaved = await managerStore.saveBonus(principalId, bonusPlayed, bonusPlayerId, bonusTeamId, bonusCountryId);
 
       if (isSaved) {
         updateBonuses();
-        bonusUsedInSession.set(true);
+        bonusUsedInSession = true;
       } else {
-        fantasyTeam.set(originalTeam);
-        $bonuses[bonus.id - 1].usedGameweek = 0;
+        fantasyTeam = originalTeam;
+        bonuses[bonus.id - 1].usedGameweek = 0;
       }
     } catch (error) {
-      fantasyTeam.set(originalTeam);
-      $bonuses[bonus.id - 1].usedGameweek = 0;
+      fantasyTeam = originalTeam;
+      bonuses[bonus.id - 1].usedGameweek = 0;
       console.error("Error saving bonus:", error);
     } finally {
       isSubmitting = false;
@@ -336,23 +328,6 @@
     return bonusCountryId;
   }
 
-  $: countries = getUniqueCountries();
-  $: playerOptions = getPlayerNames();
-  $: teamOptions = getRelatedTeamNames();
-  $: isUseButtonEnabled = (() => {
-    switch (bonus.selectionType) {
-      case BonusType.PLAYER:
-        return selectedPlayerId !== 0;
-      case BonusType.TEAM:
-        return selectedTeamId !== 0;
-      case BonusType.COUNTRY:
-        return selectedCountryId !== 0;
-      case BonusType.AUTOMATIC:
-        return true;
-      default:
-        return false;
-    }
-  })();
 </script>
 
 <Modal showModal={visible} onClose={closeBonusModal} title="Use Bonus">
@@ -368,7 +343,7 @@
         {#if bonus.selectionType === BonusType.PLAYER}
           <div class="w-full my-4 border border-gray-500">
             <select
-              bind:value={selectedPlayerId}
+              value={selectedPlayerId}
               class="w-full p-2 rounded-md fpl-dropdown"
             >
               <option value={0}>Select Player</option>
@@ -382,8 +357,8 @@
         {#if bonus.selectionType === BonusType.COUNTRY}
           <div class="w-full my-4 border border-gray-500">
             <select
-              bind:value={selectedCountryId}
-              on:change={(e) => {
+              value={selectedCountryId}
+              onchange={(e) => {
                 const selected = countries.find(c => c.id === Number((e.target as HTMLSelectElement).value));
                 if (selected) {
                   selectedCountry = selected.name;
@@ -404,7 +379,7 @@
         {#if bonus.selectionType === BonusType.TEAM}
           <div class="w-full my-4 border border-gray-500">
             <select
-              bind:value={selectedTeamId}
+              value={selectedTeamId}
               class="w-full p-2 rounded-md fpl-dropdown"
             >
               <option value={0}>Select Team</option>
@@ -430,7 +405,7 @@
           <button
             class="px-4 py-2 border rounded-sm border-BrandSlateGray bg-BrandRed default-button"
             type="button"
-            on:click={closeBonusModal}
+            onclick={closeBonusModal}
           >
             Cancel
           </button>
@@ -439,7 +414,7 @@
               isUseButtonEnabled ? "bg-BrandPurple" : "bg-gray-500"
             } 
             default-button bg-BrandPurple`}
-            on:click={handleUseBonus}
+            onclick={handleUseBonus}
             disabled={!isUseButtonEnabled}
           >
             Confirm

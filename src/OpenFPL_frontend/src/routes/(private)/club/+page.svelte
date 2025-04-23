@@ -9,20 +9,23 @@
   import ClubHeader from "$lib/components/club/club-header.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
 
-  let isLoading = true;
+  let isLoading = $state(true);
   
-  let activeTab: string = "players";
-  const tabs = [
+  let activeTab: string = $state("players");
+  const tabs: { id: string; label: string; authOnly: boolean }[] = $state([
     { id: "playes", label: "Fixtures", authOnly: false },
-    { id: "fixtures", label: "Points", authOnly: false },
-    { id: "loaned-players", label: "Leaderboards", authOnly: false }
-  ];
+    { id: "fixtures", label: "Points", authOnly: false }
+  ]);
 
-  $: id = Number(page.url.searchParams.get("id"));
+  let id = $state(0);
 
   onMount(async () => {
     await storeManager.syncStores();
     isLoading = false;
+  });
+  
+  $effect(() => {
+    id = Number(page.url.searchParams.get("id"));
   });
 
   function setActiveTab(tab: string): void {

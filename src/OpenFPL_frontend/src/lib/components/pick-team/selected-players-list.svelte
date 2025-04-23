@@ -1,5 +1,4 @@
 <script lang="ts">
-    import type { Writable } from "svelte/store";
     import { getGridSetup } from "$lib/utils/pick-team.helpers";
     import AddIcon from "$lib/icons/AddIcon.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -11,15 +10,20 @@
     import { clubStore } from "$lib/stores/club-store";
     import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
-    export let selectedFormation: Writable<string>;
-    export let fantasyTeam: Writable<TeamSetup | undefined>;
-    export let loadAddPlayer: (row: number, col: number) => void;
-    export let removePlayer: (playerId: number) => void;
-    export let setCaptain: (playerId: number) => void;
-    export let canSellPlayer: Writable<boolean>;
-    export let sessionAddedPlayers: Writable<number[]>;
-
-    $: gridSetup = getGridSetup($selectedFormation);
+    interface Props {
+      selectedFormation: string;
+      fantasyTeam: TeamSetup | undefined;
+      loadAddPlayer: (row: number, col: number) => void;
+      removePlayer: (playerId: number) => void;
+      setCaptain: (playerId: number) => void;
+      canSellPlayer: boolean;
+      sessionAddedPlayers: number[];
+    }
+    let { selectedFormation, fantasyTeam, loadAddPlayer, removePlayer, setCaptain, canSellPlayer, sessionAddedPlayers }: Props = $props();
+    let gridSetup: number[][] = $state([]);
+    $effect(() => {
+      gridSetup = getGridSetup(selectedFormation);
+    });
 
 </script>
 
@@ -39,7 +43,7 @@
       </div>
       {#each row as _, colIndex (colIndex)}
         {@const actualIndex = getActualIndex(rowIndex, colIndex, gridSetup)}
-        {@const playerIds = $fantasyTeam?.playerIds ?? []}
+        {@const playerIds = fantasyTeam?.playerIds ?? []}
         {@const playerId = playerIds[actualIndex]}
         {@const player = $playerStore.find((p) => p.id === playerId)}
         {@const team = $clubStore.find((x) => x.id === player?.clubId)}
@@ -51,12 +55,12 @@
               {player.lastName}
             </div>
             <div class="w-1/6 flex items-center">
-              {#if $fantasyTeam?.captainId === playerId}
+              {#if fantasyTeam?.captainId === playerId}
                 <span>
                   <ActiveCaptainIcon className="w-6 h-6" />
                 </span>
               {:else}
-                <button on:click={() => setCaptain(player.id)}>
+                <button onclick={() => setCaptain(player.id)}>
                   <PlayerCaptainIcon className="w-6 h-6" />
                 </button>
               {/if}
@@ -69,8 +73,8 @@
               £{(player.valueQuarterMillions / 4).toFixed(2)}m
             </div>
             <div class="w-1/6 flex items-center">
-              {#if canSellPlayer || $sessionAddedPlayers.includes(player.id)}
-                <button on:click={() => removePlayer(player.id)} class="bg-red-600 mb-1 rounded-sm">
+              {#if canSellPlayer || sessionAddedPlayers.includes(player.id)}
+                <button onclick={() => removePlayer(player.id)} class="bg-red-600 mb-1 rounded-sm">
                   <RemovePlayerIcon className="w-6 h-6 p-2" />
                 </button>
               {:else}
@@ -83,7 +87,7 @@
             <div class="w-1/3">-</div>
             <div class="w-1/6">-</div>
             <div class="w-1/6 flex items-center">
-              <button on:click={() => loadAddPlayer(rowIndex, colIndex)} class="rounded fpl-button flex items-center">
+              <button onclick={() => loadAddPlayer(rowIndex, colIndex)} class="rounded fpl-button flex items-center">
                 <AddIcon className="w-6 h-6 p-2" />
               </button>
             </div>

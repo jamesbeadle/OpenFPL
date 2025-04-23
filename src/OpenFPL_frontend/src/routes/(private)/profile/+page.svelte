@@ -14,12 +14,11 @@
     { id: "gameweeks", label: "Gameweeks", authOnly: false }
   ];
 
-  let activeTab: string = "details";
-  let isLoading = true;
-  let bannerVisible = false;
+  let activeTab: string =$state("details");
+  let isLoading = $state(true);
+  let bannerVisible = $state(false);
 
   const urlParams = browser ? new URLSearchParams(window.location.search) : null;
-  const showWelcome = urlParams?.get('welcome') === 'true';
 
   onMount(async () => {
     await userStore.sync();
@@ -38,7 +37,7 @@
     <div class="m-4">
       {#if bannerVisible}
         <WelcomeBanner 
-          bind:visible={bannerVisible}
+          visible={bannerVisible}
         />
       {/if}
       <div class="bg-panel">

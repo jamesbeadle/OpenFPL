@@ -1,8 +1,12 @@
 <script lang="ts">
     import { slide } from 'svelte/transition';
     
-    export let visible = true;
-    let showSecondMessage = false;
+    interface Props {
+      visible: boolean; 
+    }
+    let { visible }: Props = $props();
+    
+    let showSecondMessage = $state(false);
 
     function dismiss() {
         if (!showSecondMessage) {
@@ -35,7 +39,7 @@
                 {/if}
             </div>
             <button 
-                on:click={dismiss}
+                onclick={dismiss}
                 class="self-center px-6 py-2 font-medium transition-colors rounded-lg bg-white/10 hover:bg-white/20"
             >
                 {!showSecondMessage ? 'Got it!' : 'Let\'s go!'}

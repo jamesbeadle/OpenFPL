@@ -1,20 +1,25 @@
 <script lang="ts">
     import { getPlayerName } from "$lib/utils/helpers";
-    import { playerEventsStore } from "$lib/stores/player-events-store";
     import { clubStore } from "$lib/stores/club-store";
     
     import AddIcon from "$lib/icons/AddIcon.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { Player__1, Club } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Club, Player } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    
+    interface Props {
+      player: Player;
+      index: number;
+      selectPlayer : (player: Player) => void;
+      disableReasons: (string | null)[];
+    }
+    let { player, index, selectPlayer, disableReasons }: Props = $props();
 
-    export let player: Player__1;
-    export let index: number;
-    export let selectPlayer : (player: Player__1) => void;
-    export let disableReasons: (string | null)[];
+    let club: Club | undefined = $state(undefined);
 
-    let club: Club | undefined;
+    $effect(() => {
+      club = $clubStore.find((x) => x.id === player.clubId);
+    });
 
-    $: club = $clubStore.find((x) => x.id === player.clubId);
 </script>
 
 <div
@@ -47,7 +52,7 @@ class="flex items-center justify-between py-2 border-b border-gray-700 cursor-po
     <span class="text-center text-xxs">{disableReasons[index]}</span>
   {:else}
     <button
-      on:click={() => selectPlayer(player)}
+      onclick={() => selectPlayer(player)}
       class="flex items-center rounded fpl-button"
     >
       <AddIcon className="w-6 h-6 p-2" />

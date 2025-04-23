@@ -4,7 +4,6 @@ import { clubStore } from "$lib/stores/club-store";
 import { playerStore } from "$lib/stores/player-store";
 import { playerEventsStore } from "$lib/stores/player-events-store";
 import { fixtureStore } from "$lib/stores/fixture-store";
-import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
 import { leagueStore } from "$lib/stores/league-store";
 import { appStore } from "$lib/stores/app-store";
 import { RewardRatesService } from "$lib/services/reward-rates-service";
@@ -19,12 +18,9 @@ import { ClubService } from "$lib/services/club-service";
 import { PlayerService } from "$lib/services/player-service";
 import { PlayerEventsService } from "$lib/services/player-events-service";
 import { FixtureService } from "$lib/services/fixture-service";
-import { WeeklyLeaderboardService } from "$lib/services/weekly-leaderboard-service";
-
 import { replacer } from "$lib/utils/helpers";
-import { writable } from "svelte/store";
 
-export const globalDataLoaded = writable(false);
+export let globalDataLoaded = false;
 
 class StoreManager {
   private dataHashService: DataHashService;
@@ -36,7 +32,6 @@ class StoreManager {
   private playerService: PlayerService;
   private playerEventsService: PlayerEventsService;
   private fixtureService: FixtureService;
-  private weeklyLeaderboardService: WeeklyLeaderboardService;
   private rewardRatesService: RewardRatesService;
 
   private backendCategories: string[] = [
@@ -64,7 +59,6 @@ class StoreManager {
     this.playerService = new PlayerService();
     this.playerEventsService = new PlayerEventsService();
     this.fixtureService = new FixtureService();
-    this.weeklyLeaderboardService = new WeeklyLeaderboardService();
     this.rewardRatesService = new RewardRatesService();
   }
 
@@ -74,13 +68,13 @@ class StoreManager {
     }
     console.log("syncing stores");
     this.isSyncing = true;
-    globalDataLoaded.set(false);
+    globalDataLoaded = false;
     try {
       await this.syncAppDataHashes();
-      globalDataLoaded.set(true);
+      globalDataLoaded = true;
     } catch (error) {
       console.error("Error syncing stores:", error);
-      globalDataLoaded.set(false);
+      globalDataLoaded = false;
       throw error;
     } finally {
       this.isSyncing = false;
@@ -206,30 +200,6 @@ class StoreManager {
           JSON.stringify(updatedFixtures.fixtures, replacer),
         );
         break;
-      case "weekly_leaderboard":
-        leagueStore.subscribe(async (leagueStatus) => {
-          if (!leagueStatus) {
-            return;
-          }
-          const updatedWeeklyLeaderboard =
-            await this.weeklyLeaderboardService.getWeeklyLeaderboard(
-              0,
-              leagueStatus.activeSeasonId,
-              leagueStatus.activeGameweek == 0
-                ? leagueStatus.completedGameweek
-                : leagueStatus.activeGameweek,
-              "",
-            );
-          if (!updatedWeeklyLeaderboard) {
-            return;
-          }
-          weeklyLeaderboardStore.setWeeklyLeaderboard(updatedWeeklyLeaderboard);
-          localStorage.setItem(
-            "weekly_leaderboard",
-            JSON.stringify(updatedWeeklyLeaderboard, replacer),
-          );
-        });
-        break;
       case "reward_rates":
         leagueStore.subscribe(async (leagueStatus) => {
           if (!leagueStatus) {
@@ -281,10 +251,6 @@ class StoreManager {
       case "fixtures":
         const cachedFixtures = JSON.parse(cachedData || "[]");
         fixtureStore.setFixtures(cachedFixtures);
-        break;
-      case "weekly_leaderboard":
-        const cachedWeeklyLeaderboard = JSON.parse(cachedData || "null");
-        weeklyLeaderboardStore.setWeeklyLeaderboard(cachedWeeklyLeaderboard);
         break;
       case "reward_rates":
         const cachedRewardRates = JSON.parse(cachedData || "null");

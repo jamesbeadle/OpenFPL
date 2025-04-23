@@ -1,8 +1,13 @@
 <script lang="ts">
   import Modal from "$lib/components/shared/modal.svelte";
-  export let visible = false;
-  export let onConfirm: () => void;
-  export let newCaptain = "";
+
+  interface Props {
+    visible: boolean;
+    onConfirm: () => void;
+    newCaptain : string;
+  }
+  let { visible, onConfirm, newCaptain }: Props = $props();
+
 
   function onClose() {
     visible = false;
@@ -21,9 +26,9 @@
       <button
         class="default-button fpl-cancel-btn"
         type="button"
-        on:click={onClose}>Cancel</button
+        onclick={onClose}>Cancel</button
       >
-      <button class="default-button fpl-button" on:click={onConfirm}>Confirm</button>
+      <button class="default-button fpl-button" onclick={onConfirm}>Confirm</button>
     </div>
   </div>
 </Modal>

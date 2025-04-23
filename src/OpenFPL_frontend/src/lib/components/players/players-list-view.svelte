@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import { leagueStore } from "$lib/stores/league-store";
@@ -14,22 +13,28 @@
   import LocalSpinner from "../shared/local-spinner.svelte";
   import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let filterPosition = writable(-1);
+  interface Props {
+    filterPosition: number;
+  }
+  let { filterPosition }: Props = $props();
 
   const pageSize = 10;
-  let filterTeam = writable(-1);
-  let filterSurname = writable("");
-  let minValue = writable(0);
-  let maxValue = writable(0);
-  let currentPage = writable(1);
-  let filteredPlayers: Player[] = [];
-  let isLoading = true;
-  let sortField: 'value' | 'points' = 'value';
-  let sortDirection: 'asc' | 'desc' = 'desc';
+  let filterTeam = $state(-1);
+  let filterSurname = $state("");
+  let minValue = $state(0);
+  let maxValue = $state(0);
+  let currentPage = $state(1);
+  let filteredPlayers: Player[] = $state([]);
+  let isLoading = $state(true);
+  let sortField: 'value' | 'points' = $state('value');
+  let sortDirection: 'asc' | 'desc' = $state('desc');
 
   let playerPoints = new Map<number, number>();
 
-  $: paginatedPlayers = addTeamDataToPlayers(
+  let paginatedPlayers: any[] = $state([]);
+  
+  $effect(() => {
+    paginatedPlayers = addTeamDataToPlayers(
     $clubStore, 
     [...filteredPlayers]
       .sort((a, b) => {
@@ -43,15 +48,16 @@
         }
         return 0;
       })
-      .slice(($currentPage - 1) * pageSize, $currentPage * pageSize)
+      .slice((currentPage - 1) * pageSize, currentPage * pageSize)
   );
-  
-  $: { 
-    if ( $filterTeam !== -1 || $filterPosition !== -1 || $minValue !== 0 || $maxValue !== 0 || $filterSurname !== "" ) {
+  });
+
+  $effect(() => {
+    if ( filterTeam !== -1 || filterPosition !== -1 || minValue !== 0 || maxValue !== 0 || filterSurname !== "" ) {
       filterPlayers();
-      $currentPage = 1;
+      currentPage = 1;
     }
-  }
+  });
 
   onMount(async () => {
     resetFilters();
@@ -70,22 +76,22 @@
     if(!players){return}
     filteredPlayers = players.players.filter((player) => {
       return (
-        ($filterTeam === -1 || player.clubId === $filterTeam) &&
-        ($filterPosition === -1 || convertPositionToIndex(player.position) === $filterPosition) &&
-        ($minValue === 0 || player.valueQuarterMillions >= $minValue * 4) &&
-        ($maxValue === 0 || player.valueQuarterMillions <= $maxValue * 4) &&
-        ($filterSurname === "" || normaliseString(player.lastName.toLowerCase()).includes(normaliseString($filterSurname.toLowerCase())))
+        (filterTeam === -1 || player.clubId === filterTeam) &&
+        (filterPosition === -1 || convertPositionToIndex(player.position) === filterPosition) &&
+        (minValue === 0 || player.valueQuarterMillions >= minValue * 4) &&
+        (maxValue === 0 || player.valueQuarterMillions <= maxValue * 4) &&
+        (filterSurname === "" || normaliseString(player.lastName.toLowerCase()).includes(normaliseString(filterSurname.toLowerCase())))
       );
     });
-    sortPlayersByClubThenValue(filteredPlayers, $filterTeam);
+    sortPlayersByClubThenValue(filteredPlayers, filterTeam);
   }
 
   function resetFilters(){
-    $filterTeam = -1;
-    $filterSurname = "";
-    $minValue = 0;
-    $maxValue = 0;
-    $currentPage = 1;
+    filterTeam = -1;
+    filterSurname = "";
+    minValue = 0;
+    maxValue = 0;
+    currentPage = 1;
   }
 
   function toggleSort(field: 'value' | 'points') {

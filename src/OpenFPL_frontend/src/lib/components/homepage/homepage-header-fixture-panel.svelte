@@ -4,9 +4,12 @@
     import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import LoadingDots from "../shared/loading-dots.svelte";
 
-    export let nextFixtureHomeTeam: Club;
-    export let nextFixtureAwayTeam: Club;
-    export let loading: boolean;
+    interface Props {
+        nextFixtureHomeTeam: Club;
+        nextFixtureAwayTeam: Club;
+        loading: boolean;
+    }
+    let { nextFixtureHomeTeam, nextFixtureAwayTeam, loading }: Props = $props();
 
 </script>
 {#if loading}

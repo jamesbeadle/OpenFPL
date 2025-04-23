@@ -1,9 +1,14 @@
 <script lang="ts">
     import LoadingDots from "../loading-dots.svelte";
-    export let countdownTime: { days: number; hours: number; minutes: number; };
-    export let header: string;
-    export let footer: string;
-    export let loading: boolean;
+    
+    interface Props {
+        countdownTime: { days: number; hours: number; minutes: number; }
+        header: string;
+        footer: string;
+        loading: boolean;
+    }
+    let { header, countdownTime, footer, loading }: Props = $props();
+
 </script>
 
 <div class="flex-grow">

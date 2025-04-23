@@ -1,6 +1,10 @@
-<script>
-    export let className = "";
-    export let currentColor = "#ffffff";
+<script lang="ts">
+
+	interface Props {
+		className: string;
+		currentColor: string;
+  }
+  let { className, currentColor }: Props = $props();
 </script>
 
 

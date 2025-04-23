@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable, type Writable } from "svelte/store";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import { leagueStore } from "$lib/stores/league-store";
@@ -14,27 +13,36 @@
   import AddPlayerFilterRow from "./add-player-filter-row.svelte";
   import AddPlayerTableHaeder from "./add-player-table-haeder.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
-  import type { Player__1, TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Player, TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let visible: boolean;
-  export let handlePlayerSelection: (player: Player__1) => void;
-  export let fantasyTeam: Writable<TeamSetup | undefined>;
-  export let filterPosition = writable(-1);
+
+  interface Props {
+    visible: boolean;
+    handlePlayerSelection: (player: Player) => void;
+    fantasyTeam: TeamSetup | undefined;
+    filterPosition: number;
+  }
+  let { visible, handlePlayerSelection, fantasyTeam, filterPosition }: Props = $props();
 
   const pageSize = 10;
-  let filterTeam = writable(-1);
-  let filterSurname = writable("");
-  let minValue = writable(0);
-  let maxValue = writable(0);
-  let currentPage = writable(1);
-  let filteredPlayers: Player__1[] = [];
-  let isLoading = true;
-  let sortField: 'value' | 'points' = 'value';
-  let sortDirection: 'asc' | 'desc' = 'desc';
+  let filterTeam = $state(-1);
+  let filterSurname = $state("");
+  let minValue = $state(0);
+  let maxValue = $state(0);
+  let currentPage = $state(1);
+  let paginatedPlayers: Player[] = $state([]);
+  let teamPlayerCounts: Record<number, number> = $state({});
+  let filteredPlayers: Player[] = $state([]);
+  let isLoading = $state(true);
+  let sortField: 'value' | 'points' = $state('value');
+  let sortDirection: 'asc' | 'desc' = $state('desc');
 
   let playerPoints = new Map<number, number>();
 
-  $: paginatedPlayers = addTeamDataToPlayers(
+  let disableReasons: (string | null)[] = $state([]);
+  
+  $effect(() => {
+    paginatedPlayers = addTeamDataToPlayers(
     $clubStore, 
     [...filteredPlayers]
       .sort((a, b) => {
@@ -48,41 +56,50 @@
         }
         return 0;
       })
-      .slice(($currentPage - 1) * pageSize, $currentPage * pageSize)
+      .slice((currentPage - 1) * pageSize, currentPage * pageSize)
   );
-  $: teamPlayerCounts = countPlayersByTeam($playerStore, $fantasyTeam?.playerIds ?? []);
-  $: disableReasons = paginatedPlayers.map((player) => reasonToDisablePlayer($fantasyTeam!, $playerStore, player, teamPlayerCounts));
+  });
 
-  $: { 
-    if ( $filterTeam !== -1 || $filterPosition !== -1 || $minValue !== 0 || $maxValue !== 0 || $filterSurname !== "" ) {
+
+  $effect(() => {
+    teamPlayerCounts = countPlayersByTeam($playerStore, fantasyTeam?.playerIds ?? []);
+  });
+
+$effect(() => {
+  disableReasons = paginatedPlayers.map((player) => reasonToDisablePlayer(fantasyTeam!, $playerStore, player, teamPlayerCounts));
+});
+
+$effect(() => {
+  if ( filterTeam !== -1 || filterPosition !== -1 || minValue !== 0 || maxValue !== 0 || filterSurname !== "" ) {
       filterPlayers();
-      teamPlayerCounts = countPlayersByTeam($playerStore, $fantasyTeam?.playerIds ?? []);
-      $currentPage = 1;
+      teamPlayerCounts = countPlayersByTeam($playerStore, fantasyTeam?.playerIds ?? []);
+      currentPage = 1;
     }
-  }
+});
+
 
   onMount(async () => {
     resetFilters();
     await filterPlayers();
-    teamPlayerCounts = countPlayersByTeam($playerStore, $fantasyTeam!.playerIds ?? []);
+    teamPlayerCounts = countPlayersByTeam($playerStore, fantasyTeam!.playerIds ?? []);
     isLoading = false;
   });
   
   async function filterPlayers() {
     filteredPlayers = $playerStore.filter((player) => {
       return (
-        ($filterTeam === -1 || player.clubId === $filterTeam) &&
-        ($filterPosition === -1 || convertPositionToIndex(player.position) === $filterPosition) &&
-        ($minValue === 0 || player.valueQuarterMillions >= $minValue * 4) &&
-        ($maxValue === 0 || player.valueQuarterMillions <= $maxValue * 4) &&
-        ($filterSurname === "" || normaliseString(player.lastName.toLowerCase()).includes(normaliseString($filterSurname.toLowerCase())))
+        (filterTeam === -1 || player.clubId === filterTeam) &&
+        (filterPosition === -1 || convertPositionToIndex(player.position) === filterPosition) &&
+        (minValue === 0 || player.valueQuarterMillions >= minValue * 4) &&
+        (maxValue === 0 || player.valueQuarterMillions <= maxValue * 4) &&
+        (filterSurname === "" || normaliseString(player.lastName.toLowerCase()).includes(normaliseString(filterSurname.toLowerCase())))
       );
     });
-    sortPlayersByClubThenValue(filteredPlayers, $filterTeam);
+    sortPlayersByClubThenValue(filteredPlayers, filterTeam);
   }
 
 
-  function selectPlayer(player: Player__1) {
+  function selectPlayer(player: Player) {
     handlePlayerSelection(player);
     closeModal();
     filteredPlayers = [];
@@ -94,11 +111,11 @@
   }
 
   function resetFilters(){
-    $filterTeam = -1;
-    $filterSurname = "";
-    $minValue = 0;
-    $maxValue = 0;
-    $currentPage = 1;
+    filterTeam = -1;
+    filterSurname = "";
+    minValue = 0;
+    maxValue = 0;
+    currentPage = 1;
   }
 
   function toggleSort(field: 'value' | 'points') {

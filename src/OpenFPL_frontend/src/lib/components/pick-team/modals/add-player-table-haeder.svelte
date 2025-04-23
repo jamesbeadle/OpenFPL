@@ -1,16 +1,20 @@
 <script lang="ts">
     import SortIcon from "$lib/icons/SortIcon.svelte";
-    
-    export let sortField: 'value' | 'points';
-    export let sortDirection: 'asc' | 'desc';
-    export let toggleSort: (field: 'value' | 'points') => void;
+
+    interface Props {
+        sortField: string;
+        sortDirection: string;
+        toggleSort: (field: 'value' | 'points') => void;
+    }
+    let { sortField, sortDirection, toggleSort }: Props = $props();
+
 </script>
 
 <div class="flex items-center justify-between py-2 border-b border-gray-700">
     <div class="w-1/12 text-center">Pos</div>
     <div class="w-2/12">Player</div>
     <div class="w-2/12">Team</div>
-    <button class="flex items-center w-2/12" on:click={() => toggleSort('value')}>
+    <button class="flex items-center w-2/12" onclick={() => toggleSort('value')}>
         Value
         <SortIcon 
             className="w-2 lg:w-3 ml-1 xxs:ml-2"

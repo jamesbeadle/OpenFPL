@@ -3,9 +3,12 @@
     import { authStore } from "$lib/stores/auth-store";
     import { toasts } from "$lib/stores/toasts-store";
 
-    export let bgColor = "bg-BrandGray";
-    export let borderColor = "border-BrandGrayShade3";
-
+    interface Props {
+        bgColor: string;
+        borderColor: string;
+    }
+    let { bgColor, borderColor }: Props = $props();
+    
     async function copyTextAndShowToast(text: string) {
         try {
             await navigator.clipboard.writeText(text);
@@ -25,7 +28,7 @@
         {$authStore.identity?.getPrincipal().toString() ?? "Not available"}
     </p>
     <button 
-        on:click={() => { copyTextAndShowToast($authStore.identity?.getPrincipal().toString() ?? "") }}
+        onclick={() => { copyTextAndShowToast($authStore.identity?.getPrincipal().toString() ?? "") }}
         class="p-2 ml-2 text-white transition-colors duration-200 rounded-lg hover:bg-BrandGrayShade1"
     >
         <CopyIcon className="w-5 h-5" fill='#FFFFFF' />

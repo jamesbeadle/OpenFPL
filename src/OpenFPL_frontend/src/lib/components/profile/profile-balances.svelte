@@ -45,7 +45,7 @@
                     {fplBalanceFormatted} ICFC
                   </p>
                   <button class="p-1 px-2 text-sm rounded md:text-sm md:p-2 md:px-4 fpl-button"
-                    on:click={loadWithdrawFPLModal}
+                    onclick={loadWithdrawFPLModal}
                   >
                     Withdraw
                   </button>
@@ -58,7 +58,7 @@
   </div>
 
   <WithdrawFplModal
-    bind:visible={showWithdrawFPLModal}
+    visible={showWithdrawFPLModal}
     closeModal={closeWithdrawFPLModal}
     cancelModal={closeWithdrawFPLModal}
     fplBalance={fplBalance}

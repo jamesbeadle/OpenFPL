@@ -1,18 +1,20 @@
 <script lang="ts">
     import { clubStore } from "$lib/stores/club-store";
-    import type { Writable } from "svelte/store";
 
-    export let filterTeam: Writable<number>;
-    export let filterPosition: Writable<number>;
-    export let minValue: Writable<number>;
-    export let maxValue: Writable<number>;
-    export let filterSurname: Writable<string>;
+    interface Props {
+      filterTeam: number;
+      filterPosition: number;
+      minValue: number;
+      maxValue: number;
+      filterSurname: string;
+    }
+    let { filterTeam, filterPosition, minValue, maxValue, filterSurname }: Props = $props();
 
 </script>
 <div class="grid grid-cols-2 gap-1">
     <div>
     <label for="filterTeam">Filter by Team:</label>
-    <select id="filterTeam" class="block w-full py-2 mt-1 text-white fpl-dropdown focus:outline-none bigger-text" bind:value={$filterTeam}>
+    <select id="filterTeam" class="block w-full py-2 mt-1 text-white fpl-dropdown focus:outline-none bigger-text" value={filterTeam}>
         <option value={-1}>All</option>
         {#each $clubStore as team}
         <option value={team.id}>{team.friendlyName}</option>
@@ -21,7 +23,7 @@
     </div>
     <div>
     <label for="filterPosition">Filter by Position:</label>
-    <select id="filterPosition" class="block w-full py-2 mt-1 text-white fpl-dropdown focus:outline-none" bind:value={$filterPosition}>
+    <select id="filterPosition" class="block w-full py-2 mt-1 text-white fpl-dropdown focus:outline-none" value={filterPosition}>
         <option value={-1}>All</option>
         <option value={0}>Goalkeepers</option>
         <option value={1}>Defenders</option>
@@ -38,7 +40,7 @@
         id="minValue"
         type="number"
         class="block w-full p-2 mt-1 text-white bg-gray-700 fpl-dropdown focus:outline-none"
-        bind:value={$minValue}
+        value={minValue}
       />
     </div>
     <div>
@@ -47,7 +49,7 @@
         id="maxValue"
         type="number"
         class="block w-full p-2 mt-1 text-white bg-gray-700 rounded-md fpl-dropdown focus:outline-none focus:border-BrandGreen"
-        bind:value={$maxValue}
+        value={maxValue}
       />
     </div>
   </div>
@@ -59,6 +61,6 @@
       type="text"
       class="w-full p-2 mt-2 text-white transition-colors border border-gray-700 rounded-lg bg-BrandGray focus:outline-none focus:border-BrandGreen"
       placeholder="Enter"
-      bind:value={$filterSurname}
+      value={filterSurname}
     />
   </div>

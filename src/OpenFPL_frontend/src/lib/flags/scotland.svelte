@@ -1,7 +1,12 @@
-<script>
-  export let size = '24'; 
-  export let role = 'img';
-  export let ariaLabel = 'flag of Scotland'; 
+<script lang="ts">
+
+	interface Props {
+		size: string;
+		role: string;
+		ariaLabel: string;
+    className: string;
+  }
+  let { size, role, ariaLabel, className }: Props = $props();
 </script>
 
 <svg
@@ -9,10 +14,9 @@
   viewBox="0 0 60 30"
   {role}
   aria-label={ariaLabel}
-  class={$$props.class}
+  class={className} 
   width={size}
   height={size}
-  {...$$restProps}
 >
   <!-- Blue background -->
   <rect width="60" height="30" fill="#005eb6" />

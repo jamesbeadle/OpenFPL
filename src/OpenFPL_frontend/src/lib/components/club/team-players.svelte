@@ -8,24 +8,30 @@
     getPositionAbbreviation
   } from "../../utils/helpers";
   import { playerStore } from "$lib/stores/player-store";
-  import { writable } from "svelte/store";
   import PositionFilter from "../shared/position-filter.svelte";
   import TeamPlayersTableHeader from "./team-players-table-header.svelte";
-  import type { Player__1 } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  export let clubId;
+  interface Props {
+    clubId: number;
+  }
+  let { clubId }: Props = $props();
+
+  let filteredPlayers: Player[] = $state([]);
 
   onMount(async () => {
     players = $playerStore.filter((x) => x.clubId == clubId)
   });
 
-  let players: Player__1[] = [];
-  let selectedPosition = writable(-1);
-  $: filteredPlayers = $selectedPosition === -1
+  let players: Player[] = [];
+  let selectedPosition = $state(-1);
+  $effect(() => {
+    filteredPlayers = selectedPosition === -1
       ? players
       : players.filter(
-          (p) => convertPositionToIndex(p.position) === $selectedPosition
+          (p) => convertPositionToIndex(p.position) === selectedPosition
         );
+  });
   
 </script>
 
@@ -43,10 +49,10 @@
             {getPositionAbbreviation(convertPositionToIndex(player.position))}
           </div>
           <div class="flex items-center w-6/12 sm:w-4/12 lg:w-3/12 xl:w-3/12">
-            <svelte:component
-              this={getFlagComponent(player.nationality)}
-              class="hidden w-4 h-4 mr-2 xs:flex"
-            />
+            {#if player.nationality > 0}
+              {@const flag = getFlagComponent(player.nationality)}
+              <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
+            {/if}
             {player.firstName}
             {player.lastName}
           </div>

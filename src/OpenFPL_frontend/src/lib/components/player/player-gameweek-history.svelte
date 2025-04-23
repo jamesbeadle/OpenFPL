@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { page } from "$app/state";
-  import { writable } from "svelte/store";
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
   import { seasonStore } from "$lib/stores/season-store";
@@ -17,22 +16,21 @@
   import LocalSpinner from "../shared/local-spinner.svelte";
   import type { Club, PlayerDetails, PlayerGameweek } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
-  let isLoading = true;
-  let selectedGameweek = writable(1);
+  let isLoading = $state(true);
+  let selectedGameweek = $state(1);
   let fixturesWithTeams: FixtureWithClubs[] = [];
-  let playerDetails: PlayerDetails;
-  let selectedOpponent: Club | null = null;
-  let selectedPlayerGameweek: PlayerGameweek | null = null;
-  let showModal: boolean = false;
-  let seasonName = "";
-
-  $: id = Number(page.url.searchParams.get("id"));
+  let playerDetails: PlayerDetails | undefined = $state(undefined);
+  let selectedOpponent: Club | null = $state(null);
+  let selectedPlayerGameweek: PlayerGameweek | null = $state(null);
+  let showModal: boolean = $state(false);
+  let seasonName = $state("");
+  let id = Number(page.url.searchParams.get("id"));
 
   onMount(async () => {
     await storeManager.syncStores();
       seasonName = await seasonStore.getSeasonName($leagueStore!.activeSeasonId ?? 0) ?? "";
       fixturesWithTeams = getFixturesWithTeams($clubStore, $fixtureStore);
-      $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek;
+      selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek;
       let playerDetailsResult = await playerEventsStore.getPlayerDetails(id, $leagueStore!.activeSeasonId);
       playerDetails = playerDetailsResult ? playerDetailsResult : playerDetails;
       isLoading = false;
@@ -40,7 +38,7 @@
 
   function getOpponentFromFixtureId(fixtureId: number): Club {
     let fixture = fixturesWithTeams.find((f) => f.fixture.id === fixtureId);
-    let opponentId = fixture?.homeClub?.id === playerDetails.player.clubId ? fixture?.awayClub?.id : fixture?.homeClub?.id;
+    let opponentId = fixture?.homeClub?.id === playerDetails!.player.clubId ? fixture?.awayClub?.id : fixture?.homeClub?.id;
     return $clubStore.find((team) => team.id === opponentId)!;
   }
 
@@ -63,26 +61,26 @@
   {#if showModal}
     <PlayerGameweekModal
       gameweekDetail={playerDetails.player.gameweeks.find(
-        (x) => x.number === $selectedGameweek
+        (x) => x.number === selectedGameweek
       ) ?? null}
       opponentTeam={selectedOpponent}
-      playerTeam={$clubStore.find((team) => team.id === playerDetails.player.clubId)}
+      playerTeam={$clubStore.find((team) => team.id === playerDetails!.player.clubId)}
       {closeDetailModal}
-      bind:visible={showModal}
+      visible={showModal}
       playerDetail={playerDetails}
-      gameweek={$selectedGameweek}
-      seasonName={seasonName};
+      gameweek={selectedGameweek}
+      {seasonName}
     />
     {/if}
   {/if}
   <div class="flex flex-col">
     <div class="flex-1 overflow-x-auto">
       <PlayerGameweekHistoryHeader />
-      {#each playerDetails.player.gameweeks as gameweek}
+      {#each playerDetails!.player.gameweeks as gameweek}
         {@const opponent = getOpponentFromFixtureId(gameweek.fixtureId)}
         <button
           class="flex items-center justify-between w-full p-2 py-4 border-b border-gray-700 cursor-pointer"
-          on:click={() => showDetailModal(gameweek, opponent)}
+          onclick={() => showDetailModal(gameweek, opponent)}
         >
           <div class="w-1/6 px-4 md:w-1/4">{gameweek.number}</div>
           <div class="w-2/6 px-4 md:w-1/4">

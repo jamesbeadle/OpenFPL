@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable } from "svelte/store";
   import { leagueStore } from "$lib/stores/league-store";
   import { seasonStore } from "$lib/stores/season-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
@@ -14,29 +13,34 @@
   import PageHeader from "../shared/panels/page-header.svelte";
   import ContentPanel from "../shared/panels/content-panel.svelte";
   import LocalSpinner from "../shared/local-spinner.svelte";
-  import type { Club, Fixture, Player, ClubId } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Club, ClubId, Fixture, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
-  export let clubId: ClubId;
-
-  let isLoading = true;
-  let club: Club;
-  let nextFixture: Fixture | null;
-  let nextFixtureHomeTeam: Club | undefined;
-  let nextFixtureAwayTeam: Club | undefined;
-  let fixturesWithTeams: FixtureWithClubs[] = [];
-  let selectedGameweek = writable(1);
-  let tableData: any[] = [];
-  let highestScoringPlayer: Player | null = null;
-  let seasonName = "";
-
-  $: if (fixturesWithTeams.length > 0 && $clubStore.length > 0) {
-    tableData = updateTableData(fixturesWithTeams, $clubStore, $selectedGameweek);
+  interface Props {
+    clubId: ClubId;
   }
+  let { clubId }: Props = $props();
+
+  let isLoading = $state(true);
+  let club: Club | undefined = $state(undefined)
+  let nextFixture: Fixture | null = $state(null);
+  let nextFixtureHomeTeam: Club | undefined = $state(undefined);
+  let nextFixtureAwayTeam: Club | undefined = $state(undefined);
+  let fixturesWithTeams: FixtureWithClubs[] = $state([]);
+  let selectedGameweek = $state(1);
+  let tableData: any[] = [];
+  let highestScoringPlayer: Player | null = $state(null);
+  let seasonName = $state("");
+
+  $effect(() => {
+    if (fixturesWithTeams.length > 0 && $clubStore.length > 0) {
+      tableData = updateTableData(fixturesWithTeams, $clubStore, selectedGameweek);
+    }
+  });
 
   onMount(async () => {
       club = $clubStore.find((x) => x.id == clubId)!;
       seasonName = $seasonStore.find(x => x.id == $leagueStore!.activeSeasonId)?.name ?? "";
-      $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1;
+      selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1;
 
       let teamFixtures = $fixtureStore.filter((x) => x.homeClubId === clubId || x.awayClubId === clubId);
       fixturesWithTeams = getFixturesWithTeams($clubStore, teamFixtures);
@@ -44,7 +48,7 @@
       highestScoringPlayer = $playerStore.filter(x => x.clubId == clubId)
         .sort((a, b) => Number(b.valueQuarterMillions) - Number(a.valueQuarterMillions))[0];
 
-      nextFixture = teamFixtures.find((x) => x.gameweek === $selectedGameweek) ?? null;
+      nextFixture = teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
       nextFixtureHomeTeam = $clubStore.find((team) => team.id === nextFixture?.homeClubId);
       nextFixtureAwayTeam = $clubStore.find((team) => team.id === nextFixture?.awayClubId);
       isLoading = false;
@@ -67,7 +71,7 @@
     <LocalSpinner />
   {:else}
     <ContentPanel>
-      <ClubBrandPanel {club} />
+      <ClubBrandPanel club={club!} />
       <div class="vertical-divider"></div>
       <HeaderContentPanel header="Players" content={$playerStore.filter((x) => x.clubId == clubId).length.toString()} footer="Total" loading={false} />
       <div class="vertical-divider"></div>

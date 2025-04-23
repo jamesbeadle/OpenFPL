@@ -1,9 +1,13 @@
 <script lang="ts">
     import { Position } from "$lib/enums/Position";
     import { getPositionIndexToText } from "$lib/utils/helpers";
-    import type { Writable } from "svelte/store";
 
-    export let selectedPosition: Writable<number>;
+
+    interface Props {
+      selectedPosition: number;
+    }
+    let { selectedPosition }: Props = $props();
+    
 
     let positionValues: number[] = Object.values(Position).filter(
         (value) => typeof value === "number"
@@ -14,7 +18,7 @@
       <p>Position:</p>
       <select
         class="px-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-        bind:value={$selectedPosition}
+        value={selectedPosition}
       >
         <option value={-1}>All</option>
         {#each positionValues as position}

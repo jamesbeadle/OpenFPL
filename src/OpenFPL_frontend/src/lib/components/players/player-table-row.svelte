@@ -3,7 +3,10 @@
     import { playerEventsStore } from "$lib/stores/player-events-store";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
-    export let player: any;
+    interface Props {
+      player: any;
+    }
+    let { player }: Props = $props();
  
 </script>
 

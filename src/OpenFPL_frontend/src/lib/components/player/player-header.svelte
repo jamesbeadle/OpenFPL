@@ -17,19 +17,23 @@
     import PlayerCountryPanel from "./player-country-panel.svelte";
     import PageHeader from "../shared/panels/page-header.svelte";
     import ContentPanel from "../shared/panels/content-panel.svelte";
-    import type { Club, Fixture, GameweekNumber, Player__1 } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Club, Fixture, GameweekNumber, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
-    export let player: Player__1;
-    export let club: Club;
-    export let gameweek: GameweekNumber;
     
-    let nextFixture: Fixture | null = null;
-    let nextFixtureHomeTeam: Club;
-    let nextFixtureAwayTeam: Club;
+    interface Props {
+      player: Player;
+      club: Club;
+      gameweek: GameweekNumber;
+    }
+    let { player, club, gameweek }: Props = $props();
+    
+    let nextFixture: Fixture | null = $state(null);
+    let nextFixtureHomeTeam: Club | undefined = $state(undefined);
+    let nextFixtureAwayTeam: Club | undefined = $state(undefined);
 
-    let countdownTime: { days: number; hours: number; minutes: number; };
+    let countdownTime: { days: number; hours: number; minutes: number; } = $state({ days: 0, hours: 0, minutes: 0 });
   
-    let isLoading = true;
+    let isLoading = $state(true);
   
     onMount(async () => {
       await storeManager.syncStores();
@@ -59,7 +63,7 @@
   </ContentPanel>
   <ContentPanel>
     {#if nextFixture}
-      <HeaderFixturePanel loading={isLoading} {nextFixtureHomeTeam} {nextFixtureAwayTeam} />
+      <HeaderFixturePanel loading={isLoading} nextFixtureHomeTeam={nextFixtureHomeTeam!} nextFixtureAwayTeam={nextFixtureAwayTeam!} />
       <div class="vertical-divider"></div>
       <HeaderCountdownPanel loading={isLoading} {countdownTime} header="Upcoming Fixture" footer={`${formatUnixDateToSmallReadable(nextFixture.kickOff).toString()} ${formatUnixTimeToTime(nextFixture.kickOff)}`} />
     {:else}

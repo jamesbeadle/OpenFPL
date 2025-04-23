@@ -1,9 +1,14 @@
 <script lang="ts">
     import { slide } from 'svelte/transition';
+
+    interface Props {
+        visible: boolean;
+        onDismiss: () => void;
+    }
+    let { visible, onDismiss }: Props = $props();
     
-    export let visible = true;
-    export let onDismiss = () => {};
-    let currentStep = 1;
+    
+    let currentStep = $state(1);
     const totalSteps = 2;
 
     function nextStep() {
@@ -39,7 +44,7 @@
                 {/if}
             </div>
             <button 
-                on:click={nextStep}
+                onclick={nextStep}
                 class="self-center px-6 py-2 font-medium transition-colors rounded-lg bg-white/10 hover:bg-white/20"
             >
                 {currentStep < totalSteps ? 'Next' : 'Got it!'}

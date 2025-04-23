@@ -1,5 +1,8 @@
 <script lang="ts">
-    export let fixtureStatus: string;
+    interface Props {
+        fixtureStatus: string;
+    }
+    let { fixtureStatus }: Props = $props();
 </script>
 
 {#if fixtureStatus == "Unplayed"}

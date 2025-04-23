@@ -8,18 +8,25 @@
     import LocalSpinner from "../shared/local-spinner.svelte";
     import { authStore } from "$lib/stores/auth-store";
 
-  export let visible: boolean;
-  export let newFavouriteTeam: number = 0;
+  
+    interface Props {
+      visible: boolean; 
+      newFavouriteTeam: number
+    }
+    let { visible, newFavouriteTeam }: Props = $props();
 
-  let isLoading = true;
+  let isLoading = $state(true);
 
-  let isSubmitDisabled: boolean = true;
-  $: isSubmitDisabled = newFavouriteTeam <= 0;
+  let isSubmitDisabled: boolean = $state(true);
 
   onMount(async () => {
     await storeManager.syncStores();
     await userStore.sync();
     isLoading = false;
+  });
+  
+  $effect(() => {
+    isSubmitDisabled = newFavouriteTeam <= 0;
   });
 
   async function updateFavouriteTeam() {
@@ -63,7 +70,7 @@
     <div class="p-4 mx-4">
       <div class="w-full mt-4 mb-2 border border-gray-500">
         <select
-          bind:value={newFavouriteTeam}
+          value={newFavouriteTeam}
           class="w-full p-2 rounded-md fpl-dropdown"
         >
           <option value={0}>Select Team</option>
@@ -79,7 +86,7 @@
       </div>
 
       <div class="flex items-center py-3 space-x-4">
-        <button class="px-4 py-2 default-button fpl-cancel-btn" type="button" on:click={cancelModal}>
+        <button class="px-4 py-2 default-button fpl-cancel-btn" type="button" onclick={cancelModal}>
           Cancel
         </button>
         <button
@@ -87,7 +94,7 @@
             isSubmitDisabled ? "bg-gray-500" : "bg-BrandPurple"
           } 
           default-button bg-BrandPurplebtn`}
-          on:click={updateFavouriteTeam}
+          onclick={updateFavouriteTeam}
           disabled={isSubmitDisabled}>Update</button
         >
       </div>

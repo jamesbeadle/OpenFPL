@@ -1,27 +1,29 @@
 <script lang="ts">
   import { formatE8s } from "$lib/utils/helpers";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import Pagination from "../shared/pagination.svelte";
-  import {type Writable, writable, get} from "svelte/store";
+  import Pagination from "../../shared/pagination.svelte";
 
-  export let leaderboard: any;
-  export let selectedGameweek: Writable<number>;
-  export let currentPage: number = 1;
-  export let totalPages: number = 0;
-  export let onPageChange: (page: number) => void;
-  export let searchQuery: Writable<string>;
+  interface Props {
+    leaderboard: any;
+    selectedGameweek: number;
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+    searchQuery: string;
+  }
+  let { leaderboard, selectedGameweek, currentPage, totalPages, onPageChange, searchQuery }: Props = $props();
 
-  let searchInput: string = "";
+  let searchInput: string = $state("");
 
   function executeSearch() {
-    searchQuery.set(searchInput);
+    searchQuery = searchInput;
     currentPage = 1;
     onPageChange(1);
   }
 
   function resetSearch() {
     searchInput = "";
-    searchQuery.set("");
+    searchQuery = "";
     currentPage = 1;
     onPageChange(1);
   }
@@ -39,8 +41,8 @@
       <input
         type="text"
         placeholder="Search by username..."
-        on:keydown={handleKeydown}
-        bind:value={searchInput}
+        onkeydown={handleKeydown}
+        value={searchInput}
         class="w-full px-4 py-3 text-white transition-colors border border-gray-700 rounded-lg bg-BrandGray focus:outline-none focus:border-BrandGreen"
       />
       <svg class="absolute right-4 top-3.5 md:h-5 md:w-5 h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,13 +50,13 @@
       </svg>
     </div>
     <button
-      on:click={executeSearch}
+      onclick={executeSearch}
       class="px-4 py-2 text-white transition-colors border border-gray-700 rounded-lg bg-BrandGray hover:bg-BrandGrayShade1 focus:outline-none focus:border-BrandGreen"
     >
       Search
     </button>
     <button
-      on:click={resetSearch}
+      onclick={resetSearch}
       class="px-4 py-2 text-white transition-colors border border-gray-700 rounded-lg bg-BrandGray hover:bg-BrandGrayShade1 focus:outline-none focus:border-BrandGreen"
     >
       Reset
@@ -74,7 +76,7 @@
 
     {#if leaderboard && leaderboard.entries && leaderboard.entries.length > 0}
       {#each leaderboard.entries as entry}
-        <a href={`/manager?id=${entry.principalId}&gw=${$selectedGameweek}`}>
+        <a href={`/manager?id=${entry.principalId}&gw=${selectedGameweek}`}>
           <div class="flex items-center justify-between p-2 py-4 border-b border-gray-700 cursor-pointer hover:bg-BrandGrayShade1">
             <div class="w-2/12 px-4 xs:w-2/12">{entry.positionText}</div>
             <div class="w-3/12 px-4 xs:w-4/12">{entry.principalId === entry.username ? "Unknown" : entry.username}</div>
@@ -90,7 +92,7 @@
         </a>
       {/each}
       {#if leaderboard.entries.length === 0}
-          <p class="w-full p-4">No managers found matching "{$searchQuery}"</p>
+          <p class="w-full p-4">No managers found matching "{searchQuery}"</p>
       {:else}
         <Pagination
           {currentPage}

@@ -1,11 +1,13 @@
 <script lang="ts">
     import type { GameweekData } from "$lib/interfaces/GameweekData";
-    import type { Writable } from "svelte/store";
     import { convertPositionToIndex, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
     import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
     
-    export let gameweekData: Writable<GameweekData[]>;
-    export let showDetailModal: (gameweekData: GameweekData) => void;
+    interface Props {
+      gameweekData: GameweekData[];
+      showDetailModal: (gameweekData: GameweekData) => void;
+    }
+    let { gameweekData, showDetailModal }: Props = $props();
 
 </script>
 <div class="flex flex-col">
@@ -16,11 +18,11 @@
         <div class="w-3/12 xs:w-3/12">Points</div>
         <div class="w-2/12 xs:w-3/12">&nbsp;</div>
       </div>
-      {#if $gameweekData.length > 0}
-        {#each $gameweekData as playerGameweek}
+      {#if gameweekData.length > 0}
+        {#each gameweekData as playerGameweek}
           <button
             class="flex justify-between w-full p-4 text-center border-b cursor-pointer border-BrandGray lg:text-center lg:px-10"
-            on:click={() => showDetailModal(playerGameweek)}
+            onclick={() => showDetailModal(playerGameweek)}
           >
             <div class="w-2/12 xs:w-2/12">
               {getPositionAbbreviation(

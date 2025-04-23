@@ -2,9 +2,14 @@
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import type { Club, Player } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
-    export let header: string;
-    export let nextFixtureHomeTeam: Club | undefined;
-    export let nextFixtureAwayTeam: Club | undefined;
+
+    interface Props {
+      nextFixtureHomeTeam: Club | undefined;
+      nextFixtureAwayTeam: Club | undefined;
+      header: string;
+    }
+    let { header, nextFixtureHomeTeam, nextFixtureAwayTeam }: Props = $props();
+    
     let highestScoringPlayer: Player | null = null;
 </script>
 

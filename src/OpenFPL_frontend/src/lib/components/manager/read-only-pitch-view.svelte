@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
   import { browser } from "$app/environment";
-  import { type Writable } from "svelte/store";
   import { leagueStore } from "$lib/stores/league-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { clubStore } from "$lib/stores/club-store";
@@ -15,23 +14,30 @@
   import LocalSpinner from "../shared/local-spinner.svelte";
   import type { FantasyTeamSnapshot, GameweekNumber, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-
-  export let fantasyTeam: Writable<FantasyTeamSnapshot | null>;
-  export let gridSetup: number[][];
-  export let gameweekPlayers: Writable<GameweekData[]>;
-  export let selectedGameweek: Writable<GameweekNumber>;
+  interface Props {
+    fantasyTeam: FantasyTeamSnapshot | null;
+    gridSetup: number[][];
+    gameweekPlayers: GameweekData[];
+    selectedGameweek: GameweekNumber;
+  }
+  let { fantasyTeam, gridSetup, gameweekPlayers, selectedGameweek }: Props = $props();
   
   let pitchHeight = 0;
-  let pitchElement: HTMLImageElement | null = null;
-  let isLoading = true;
-  let favouriteTeam: Club | null = null;
+  let pitchElement: HTMLImageElement | null = $state(null);
+  let isLoading = $state(true);
+  let favouriteTeam: Club | null = $state(null);
+  let rowHeight = $state(0);
 
-  $: rowHeight = (pitchHeight * 0.9) / 4;
-  $: gridSetup = getGridSetup( getTeamFormationReadOnly($fantasyTeam!, $playerStore));
+  $effect(() => {
+    rowHeight = (pitchHeight * 0.9) / 4;
+    gridSetup = getGridSetup( getTeamFormationReadOnly(fantasyTeam!, $playerStore));
+  });
 
-  $: if ($fantasyTeam || $selectedGameweek > 0) {
-    updateGameweekPlayers();
-  }
+  $effect(() => {
+    if (fantasyTeam || selectedGameweek > 0) {
+      updateGameweekPlayers();
+    }
+  })
 
   onMount(async () => {
     if (!browser) return;
@@ -51,9 +57,9 @@ function measurePitch() {
 
 async function updateGameweekPlayers() {
   try {
-    if (!$fantasyTeam) { gameweekPlayers.set([]); return; }
+    if (!fantasyTeam) { gameweekPlayers = []; return; }
 
-    let favouriteClubId = $fantasyTeam.favouriteClubId[0];
+    let favouriteClubId = fantasyTeam.favouriteClubId[0];
 
     if(favouriteClubId){
       let foundFavouriteClub = $clubStore.find(x => x.id == favouriteClubId);
@@ -63,13 +69,13 @@ async function updateGameweekPlayers() {
     }
 
     let fetchedPlayers = await playerEventsStore.getGameweekPlayers(
-      $fantasyTeam!,
+      fantasyTeam!,
       $leagueStore!.activeSeasonId,
-      $selectedGameweek!
+      selectedGameweek!
     );
-    calculateBonusPoints(fetchedPlayers, $fantasyTeam);
+    calculateBonusPoints(fetchedPlayers, fantasyTeam);
     sortPlayersByPointsThenValue(fetchedPlayers);
-    gameweekPlayers.set(fetchedPlayers);
+    gameweekPlayers = fetchedPlayers;
   } catch (error) {
     toasts.addToast({ type: "error", message: "Error updating gameweek players." });
     console.error("Error updating gameweek players:", error);
@@ -88,7 +94,7 @@ async function updateGameweekPlayers() {
       alt="pitch" 
       class="w-full h-auto" 
       bind:this={pitchElement}
-      on:load={onPitchLoad} 
+      onload={onPitchLoad} 
     />
     {#if isLoading}
       <LocalSpinner />
@@ -99,14 +105,14 @@ async function updateGameweekPlayers() {
             <div class="flex items-center justify-around w-full" style="height: {rowHeight}px;">
               {#each row as _, colIndex (colIndex)}
                 {@const actualIndex = getActualIndex(rowIndex, colIndex, gridSetup)}
-                {@const playerIds = $fantasyTeam?.playerIds ?? []}
+                {@const playerIds = fantasyTeam?.playerIds ?? []}
                 {@const playerId = playerIds[actualIndex]}
-                {@const playerData = $gameweekPlayers.find((data) => data.player.id === playerId) ?? null}
+                {@const playerData = gameweekPlayers.find((data) => data.player.id === playerId) ?? null}
                 {@const clubData = $clubStore.find((club) => club.id === playerData?.player.clubId) ?? null}
   
                 <div class="flex flex-col items-center justify-center flex-1 player-card">
                   {#if playerData && clubData}
-                    <ManagerPitchPlayer {playerData} {clubData} isCaptain={$fantasyTeam?.captainId == playerId} />
+                    <ManagerPitchPlayer {playerData} {clubData} isCaptain={fantasyTeam?.captainId == playerId} />
                   {/if}
                 </div>
               {/each}
@@ -119,8 +125,8 @@ async function updateGameweekPlayers() {
   <div class="relative hidden w-1/2 text-lg lg:flex">
     
     <div class="flex flex-col w-full p-4 py-4 space-y-4 border border-gray-700 bg-light-gray">
-      <p class="text-3xl">{$fantasyTeam?.username}</p>
-      <p class="text-3xl">{$fantasyTeam?.points} Points</p>
+      <p class="text-3xl">{fantasyTeam?.username}</p>
+      <p class="text-3xl">{fantasyTeam?.points} Points</p>
       {#if favouriteTeam}
         <p class="text-xs">Favourite Club</p>
         <p class="flex items-center content-panel-stat">
@@ -130,9 +136,9 @@ async function updateGameweekPlayers() {
           </span>
         </p>
       {/if}
-      <p>Team Value: £{(($fantasyTeam?.teamValueQuarterMillions!) / 4).toFixed(2)}</p>
-      <p>Transfers Available: {$fantasyTeam?.transfersAvailable}</p>
-      <p>Bonus Played: {getBonusUsed($fantasyTeam!, $fantasyTeam?.gameweek ?? 0)}</p>
+      <p>Team Value: £{((fantasyTeam?.teamValueQuarterMillions!) / 4).toFixed(2)}</p>
+      <p>Transfers Available: {fantasyTeam?.transfersAvailable}</p>
+      <p>Bonus Played: {getBonusUsed(fantasyTeam!, fantasyTeam?.gameweek ?? 0)}</p>
       
     </div>
     

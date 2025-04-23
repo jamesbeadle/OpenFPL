@@ -7,17 +7,25 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
-  export let visible: boolean;
-  export let gameweekData: GameweekData;
-  export let playerTeam: Club;
-  export let opponentTeam: Club;
-  export let seasonName: string;
+  interface Props {
+    visible: boolean;
+    gameweekData: GameweekData;
+    playerTeam: Club;
+    opponentTeam: Club;
+    seasonName: string;
+  }
+  let { visible, gameweekData, playerTeam, opponentTeam, seasonName }: Props = $props();
+  
+
 </script>
 
 <Modal showModal={visible} onClose={() => {visible = false;}} title="Player Detail">
   <div class="flex flex-row items-center w-full mb-4 space-y-4">
     <div class="flex items-center justify-center w-full sm:w-1/3">
-      <svelte:component this={getFlagComponent(gameweekData.nationalityId)} class="w-12 h-12 xs:w-16 xs:h-16" />
+      {#if gameweekData.nationalityId > 0}
+          {@const flag = getFlagComponent(gameweekData.nationalityId)}
+          <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
+      {/if}
     </div>
     <div class="flex items-center justify-center w-full sm:w-1/3">
       <h3 class="mb-2 text-lg font-semibold text-center xs:mb-3 xs:text-xl">

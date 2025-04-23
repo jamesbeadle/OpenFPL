@@ -7,35 +7,36 @@
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
-  import { writable } from "svelte/store";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
-    import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/local-spinner.svelte";
 
-  let fixturesWithTeams: FixtureWithClubs[] = [];
-  let selectedGameweek = writable(1);
-  let gameweeks: number[];
-  let tableData: any[] = [];
-  let isLoading = true;
+  let fixturesWithTeams: FixtureWithClubs[] = $state([]);
+  let selectedGameweek = $state(1);
+  let gameweeks: number[] = $state([]);
+  let tableData: any[] = $state([]);
+  let isLoading = $state(true);
 
   onMount(async () => {
     await storeManager.syncStores();
     gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1);
-    $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1;
+    selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1;
     fixturesWithTeams = getFixturesWithTeams($clubStore, $fixtureStore);
     isLoading = false;
   });
-
-  $: if ($fixtureStore.length > 0 && $clubStore.length > 0) {
-    tableData = updateTableData(fixturesWithTeams, $clubStore, $selectedGameweek);
-  }
+  
+  $effect(() => {
+    if ($fixtureStore.length > 0 && $clubStore.length > 0) {
+      tableData = updateTableData(fixturesWithTeams, $clubStore, selectedGameweek);
+    }
+  });
 
   const changeGameweek = (delta: number) => {
-    $selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), $selectedGameweek + delta));
+    selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), selectedGameweek + delta));
   };
 </script>
 {#if isLoading}
   <LocalSpinner />
-  <p class="pb-4 mb-4 text-center">Getting League Table for Gameweek {$selectedGameweek}</p>
+  <p class="pb-4 mb-4 text-center">Getting League Table for Gameweek {selectedGameweek}</p>
 {:else}
   <div class="flex flex-col gap-4 sm:flex-row sm:gap-8">
     <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} lastGameweek={$leagueStore!.unplayedGameweek} />

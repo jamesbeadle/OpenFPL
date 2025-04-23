@@ -1,5 +1,4 @@
 <script lang="ts">
-    import JunoIcon from "$lib/icons/JunoIcon.svelte";
 </script>
 <footer class="absolute bottom-0 flex flex-row w-full md:w-1/2">
     
