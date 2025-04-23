@@ -10,17 +10,17 @@
     visible: boolean; 
     closeModal: () => void;
     cancelModal: () => void;
-    withdrawalAddress: string;
-    withdrawalInputAmount: string;
     fplBalance: bigint;
     fplBalanceFormatted: string;
   }
-  let { visible, closeModal, cancelModal, withdrawalAddress, withdrawalInputAmount, fplBalance, fplBalanceFormatted }: Props = $props();
+  let { visible, closeModal, cancelModal, fplBalance, fplBalanceFormatted }: Props = $props();
 
 
   let isLoading = $state(false);
   let errorMessage: string = $state("");
   let isSubmitDisabled = $state(true);
+  let withdrawalAddress: string = $state("");
+  let withdrawalInputAmount: string = $state("");
 
   function isWithdrawAmountValid(amount: string, balance: bigint): boolean {
     if (!isAmountValid(amount)) {
@@ -74,10 +74,10 @@
     <div class="p-4 mx-4">
       <p>ICFC Balance: {fplBalanceFormatted}</p>
       <div class="mt-4">
-        <input type="text" class="fpl-button" placeholder="Withdrawal Address" bind:value={withdrawalAddress} />
+        <input type="text" class="fpl-button" placeholder="Withdrawal Address" value={withdrawalAddress} />
       </div>
       <div class="flex items-center mt-4">
-        <input type="text" class="mr-2 fpl-button" placeholder="Withdrawal Amount" bind:value={withdrawalInputAmount} />
+        <input type="text" class="mr-2 fpl-button" placeholder="Withdrawal Amount" value={withdrawalInputAmount} />
         <button type="button" class="p-1 px-2 text-sm rounded md:text-sm md:p-2 md:px-4 fpl-button" onclick={setMaxWithdrawAmount}>
           Max
         </button>

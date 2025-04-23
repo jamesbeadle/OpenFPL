@@ -7,7 +7,7 @@
     let { changeLeaderboardType, selectedLeaderboardType }: Props = $props();
 
 </script>
-<div class="mt-6 xs:p-4 xs:mt-0 {$selectedLeaderboardType === 3 ? 'pb-6' : ''}">
+<div class="mt-6 xs:p-4 xs:mt-0 {selectedLeaderboardType === 3 ? 'pb-6' : ''}">
     <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
         <div class="flex items-center">
             <button
@@ -15,7 +15,7 @@
                 onclick={() => changeLeaderboardType(-1)}>&lt;</button>
             <select
                 class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[125px]"
-                value={$selectedLeaderboardType}
+                value={selectedLeaderboardType}
             >
                 <option value={1}>Weekly</option>
                 <option value={2}>Monthly</option>

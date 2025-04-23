@@ -19,11 +19,11 @@
   let availableFormations = $state(Object.keys(allFormations));   
   let selectedFormation = $state('4-4-2');
   let teamValue = $state(0);
-  const pitchView = $state(true);
+  let pitchView = $state(true);
   let sessionAddedPlayers = $state<number[]>([]);
   
-  let isLoading = true;
-  let showWelcomeBanner = false;
+  let isLoading = $state(true);
+  let showWelcomeBanner = $state(false);
 
   onMount(async () => {
       await storeManager.syncStores();
@@ -34,26 +34,19 @@
   async function loadData() {
     const storedViewMode = localStorage.getItem("viewMode");
     if (storedViewMode) {
-      pitchView.set(storedViewMode === "pitch");
+      pitchView = storedViewMode === "pitch";
     }
 
     const hasSeenBanner = localStorage.getItem("hasSeenPickTeamBanner");
     
     let userFantasyTeam = await managerStore.getTeamSelection();
-    fantasyTeam.set(userFantasyTeam);
-
-    fantasyTeam.update((currentTeam) => {
-      if (
-        currentTeam &&
-        (!currentTeam.playerIds || currentTeam.playerIds.length !== 11)
-      ) {
-        return {
-          ...currentTeam,
-          playerIds: new Uint16Array(11).fill(0),
-        };
-      }
-      return currentTeam;
-    });
+    fantasyTeam = userFantasyTeam;
+    if (fantasyTeam && (!fantasyTeam.playerIds || fantasyTeam.playerIds.length !== 11)) {
+      return {
+        ...fantasyTeam,
+        playerIds: new Uint16Array(11).fill(0),
+      };
+    }
 
     if (!hasSeenBanner && (userFantasyTeam.firstGameweek || userFantasyTeam.playerIds.every((id: PlayerId) => id === 0))) {
       showWelcomeBanner = true;
@@ -91,7 +84,7 @@
     <div>
       {#if showWelcomeBanner}
         <PickTeamBanner 
-          bind:visible={showWelcomeBanner} 
+          visible={showWelcomeBanner} 
           onDismiss={handleBannerDismiss}
         />
       {/if}

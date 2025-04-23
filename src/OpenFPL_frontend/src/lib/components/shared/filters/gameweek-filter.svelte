@@ -14,16 +14,16 @@
         <div class="flex items-center">
             <button
               class={`${
-                $selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
+                selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
               } default-button mr-1`}
               onclick={() => changeGameweek(-1)}
-              disabled={$selectedGameweek === 1}
+              disabled={selectedGameweek === 1}
             >
               &lt;
             </button>
             <select
               class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[125px]"
-              bind:value={$selectedGameweek}
+              value={selectedGameweek}
             >
               {#each gameweeks.filter(gw => gw <= lastGameweek) as gameweek}
                 <option value={gameweek}>Gameweek {gameweek}</option>
@@ -31,12 +31,12 @@
             </select>
             <button
               class={`${
-                $selectedGameweek === lastGameweek
+                selectedGameweek === lastGameweek
                   ? "bg-gray-500"
                   : "fpl-button"
               } default-button ml-3`}
               onclick={() => changeGameweek(1)}
-              disabled={$selectedGameweek === lastGameweek}
+              disabled={selectedGameweek === lastGameweek}
             >
               &gt;
             </button>

@@ -15,10 +15,9 @@
     }
     let { visible, newFavouriteTeam }: Props = $props();
 
-  let isLoading = true;
+  let isLoading = $state(true);
 
-  let isSubmitDisabled: boolean = true;
-  $: isSubmitDisabled = newFavouriteTeam <= 0;
+  let isSubmitDisabled: boolean = $state(true);
 
   onMount(async () => {
     await storeManager.syncStores();
@@ -27,7 +26,7 @@
   });
   
   $effect(() => {
-      
+    isSubmitDisabled = newFavouriteTeam <= 0;
   });
 
   async function updateFavouriteTeam() {
@@ -71,7 +70,7 @@
     <div class="p-4 mx-4">
       <div class="w-full mt-4 mb-2 border border-gray-500">
         <select
-          bind:value={newFavouriteTeam}
+          value={newFavouriteTeam}
           class="w-full p-2 rounded-md fpl-dropdown"
         >
           <option value={0}>Select Team</option>

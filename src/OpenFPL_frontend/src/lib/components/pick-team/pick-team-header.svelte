@@ -27,14 +27,14 @@
 
   onMount(async () => {
     console.log('team:')
-    console.log($fantasyTeam)
+    console.log(fantasyTeam)
     let foundSeason = $seasonStore.find(x => x.id == $leagueStore!.activeSeasonId);
     if(foundSeason){
       activeSeason = foundSeason.name;
     }
     activeGameweek = $leagueStore!.unplayedGameweek;
-    if ($fantasyTeam) {
-      teamValue.set(updateTeamValue($fantasyTeam));
+    if (fantasyTeam) {
+      teamValue.set(updateTeamValue(fantasyTeam));
     } else {
       teamValue.set(0);
     }
@@ -68,13 +68,13 @@
     <div class="vertical-divider"></div>
     <HeaderCountdownPanel header="Kick Off" footer={`${nextFixtureDate} | ${nextFixtureTime}`} {countdownTime} loading={false} />    
     <div class="vertical-divider"></div>
-    <HeaderContentPanel header="Players" content={`${$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11`} footer="Selected" loading={false} />
+    <HeaderContentPanel header="Players" content={`${fantasyTeam?.playerIds.filter((x) => x > 0).length}/11`} footer="Selected" loading={false} />
   </ContentPanel>
   <ContentPanel>
     <HeaderContentPanel header="Team Value" content={`£${$teamValue.toFixed(2)}m`} footer="GBP" loading={false} />
     <div class="vertical-divider"></div>
-    <HeaderContentPanel header="Bank Balance" content={`£${($fantasyTeam ? $fantasyTeam?.bankQuarterMillions  / 4 : 350).toFixed(2)}m`} footer="GBP" loading={false} />
+    <HeaderContentPanel header="Bank Balance" content={`£${(fantasyTeam ? fantasyTeam?.bankQuarterMillions  / 4 : 350).toFixed(2)}m`} footer="GBP" loading={false} />
     <div class="vertical-divider"></div>
-    <HeaderContentPanel header="Transfers" content={`${(!$fantasyTeam || $fantasyTeam.firstGameweek || $fantasyTeam.transferWindowGameweek == $leagueStore!.unplayedGameweek) ? "Unlimited" : $fantasyTeam.transfersAvailable}`} footer="Available" loading={false} />
+    <HeaderContentPanel header="Transfers" content={`${(!fantasyTeam || fantasyTeam.firstGameweek || fantasyTeam.transferWindowGameweek == $leagueStore!.unplayedGameweek) ? "Unlimited" : fantasyTeam.transfersAvailable}`} footer="Available" loading={false} />
   </ContentPanel>
 </PageHeader>

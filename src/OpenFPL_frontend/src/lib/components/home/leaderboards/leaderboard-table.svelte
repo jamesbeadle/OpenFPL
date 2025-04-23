@@ -76,7 +76,7 @@
 
     {#if leaderboard && leaderboard.entries && leaderboard.entries.length > 0}
       {#each leaderboard.entries as entry}
-        <a href={`/manager?id=${entry.principalId}&gw=${$selectedGameweek}`}>
+        <a href={`/manager?id=${entry.principalId}&gw=${selectedGameweek}`}>
           <div class="flex items-center justify-between p-2 py-4 border-b border-gray-700 cursor-pointer hover:bg-BrandGrayShade1">
             <div class="w-2/12 px-4 xs:w-2/12">{entry.positionText}</div>
             <div class="w-3/12 px-4 xs:w-4/12">{entry.principalId === entry.username ? "Unknown" : entry.username}</div>
@@ -92,7 +92,7 @@
         </a>
       {/each}
       {#if leaderboard.entries.length === 0}
-          <p class="w-full p-4">No managers found matching "{$searchQuery}"</p>
+          <p class="w-full p-4">No managers found matching "{searchQuery}"</p>
       {:else}
         <Pagination
           {currentPage}

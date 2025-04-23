@@ -31,9 +31,9 @@
     filteredFixtures = fixturesWithTeams
     .filter(
       ({ fixture }) => {
-        if($selectedFixtureType == -1 ) { return true; }
-        if($selectedFixtureType == 0 && fixture.homeClubId === clubId) { return true; }
-        if($selectedFixtureType == 1 && fixture.awayClubId === clubId) { return true; }
+        if(selectedFixtureType == -1 ) { return true; }
+        if(selectedFixtureType == 0 && fixture.homeClubId === clubId) { return true; }
+        if(selectedFixtureType == 1 && fixture.awayClubId === clubId) { return true; }
       } 
     ).sort((a, b) => a.fixture.gameweek - b.fixture.gameweek)
   });

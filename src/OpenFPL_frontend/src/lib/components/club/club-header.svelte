@@ -33,14 +33,14 @@
 
   $effect(() => {
     if (fixturesWithTeams.length > 0 && $clubStore.length > 0) {
-      tableData = updateTableData(fixturesWithTeams, $clubStore, $selectedGameweek);
+      tableData = updateTableData(fixturesWithTeams, $clubStore, selectedGameweek);
     }
   });
 
   onMount(async () => {
       club = $clubStore.find((x) => x.id == clubId)!;
       seasonName = $seasonStore.find(x => x.id == $leagueStore!.activeSeasonId)?.name ?? "";
-      $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1;
+      selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1;
 
       let teamFixtures = $fixtureStore.filter((x) => x.homeClubId === clubId || x.awayClubId === clubId);
       fixturesWithTeams = getFixturesWithTeams($clubStore, teamFixtures);
@@ -48,7 +48,7 @@
       highestScoringPlayer = $playerStore.filter(x => x.clubId == clubId)
         .sort((a, b) => Number(b.valueQuarterMillions) - Number(a.valueQuarterMillions))[0];
 
-      nextFixture = teamFixtures.find((x) => x.gameweek === $selectedGameweek) ?? null;
+      nextFixture = teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
       nextFixtureHomeTeam = $clubStore.find((team) => team.id === nextFixture?.homeClubId);
       nextFixtureAwayTeam = $clubStore.find((team) => team.id === nextFixture?.awayClubId);
       isLoading = false;

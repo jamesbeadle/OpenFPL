@@ -24,18 +24,13 @@
   let selectedPlayerGameweek: PlayerGameweek | null = null;
   let showModal: boolean = false;
   let seasonName = "";
-  
-  $effect(() => {
-      
-  });
-
-  $: id = Number(page.url.searchParams.get("id"));
+  let id = Number(page.url.searchParams.get("id"));
 
   onMount(async () => {
     await storeManager.syncStores();
       seasonName = await seasonStore.getSeasonName($leagueStore!.activeSeasonId ?? 0) ?? "";
       fixturesWithTeams = getFixturesWithTeams($clubStore, $fixtureStore);
-      $selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek;
+      selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek;
       let playerDetailsResult = await playerEventsStore.getPlayerDetails(id, $leagueStore!.activeSeasonId);
       playerDetails = playerDetailsResult ? playerDetailsResult : playerDetails;
       isLoading = false;
@@ -66,14 +61,14 @@
   {#if showModal}
     <PlayerGameweekModal
       gameweekDetail={playerDetails.player.gameweeks.find(
-        (x) => x.number === $selectedGameweek
+        (x) => x.number === selectedGameweek
       ) ?? null}
       opponentTeam={selectedOpponent}
       playerTeam={$clubStore.find((team) => team.id === playerDetails.player.clubId)}
       {closeDetailModal}
-      bind:visible={showModal}
+      visible={showModal}
       playerDetail={playerDetails}
-      gameweek={$selectedGameweek}
+      gameweek={selectedGameweek}
       seasonName={seasonName};
     />
     {/if}

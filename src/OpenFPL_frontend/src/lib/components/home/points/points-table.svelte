@@ -18,8 +18,8 @@
         <div class="w-3/12 xs:w-3/12">Points</div>
         <div class="w-2/12 xs:w-3/12">&nbsp;</div>
       </div>
-      {#if $gameweekData.length > 0}
-        {#each $gameweekData as playerGameweek}
+      {#if gameweekData.length > 0}
+        {#each gameweekData as playerGameweek}
           <button
             class="flex justify-between w-full p-4 text-center border-b cursor-pointer border-BrandGray lg:text-center lg:px-10"
             onclick={() => showDetailModal(playerGameweek)}

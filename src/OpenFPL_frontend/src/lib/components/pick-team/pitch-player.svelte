@@ -33,7 +33,7 @@
         <div class="flex items-center justify-center flex-grow">
           <ShirtIcon className="h-6 xs:h-12 sm:h-12 md:h-16 lg:h-20 xl:h-12 2xl:h-16" {club} />
         </div>
-        {#if $fantasyTeam?.captainId === player.id}
+        {#if fantasyTeam?.captainId === player.id}
           <span class="mb-1">
             <ActiveCaptainIcon className="captain-icon"/>
           </span>
@@ -49,10 +49,11 @@
         <p class="hidden sm:flex sm:min-w-[15px]">
           {getPositionAbbreviation(convertPositionToIndex(player.position))}
         </p>
-        <svelte:component
-          this={getFlagComponent(player.nationality)}
-          class="hidden xs:flex h-2 w-2 mr-1 sm:h-4 sm:w-4 sm:mx-2 min-w-[15px]"
-        />
+
+        {#if player.nationality > 0}
+            {@const flag = getFlagComponent(player.nationality)}
+            <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
+        {/if}
         <p class="hidden xs:block truncate-50">
           {getPlayerName(player)}
         </p>

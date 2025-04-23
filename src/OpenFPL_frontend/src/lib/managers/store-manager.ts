@@ -20,7 +20,7 @@ import { PlayerEventsService } from "$lib/services/player-events-service";
 import { FixtureService } from "$lib/services/fixture-service";
 import { replacer } from "$lib/utils/helpers";
 
-export const globalDataLoaded = $state(false);
+export let globalDataLoaded = $state(false);
 
 class StoreManager {
   private dataHashService: DataHashService;
@@ -68,13 +68,13 @@ class StoreManager {
     }
     console.log("syncing stores");
     this.isSyncing = true;
-    globalDataLoaded.set(false);
+    globalDataLoaded = false;
     try {
       await this.syncAppDataHashes();
-      globalDataLoaded.set(true);
+      globalDataLoaded = true;
     } catch (error) {
       console.error("Error syncing stores:", error);
-      globalDataLoaded.set(false);
+      globalDataLoaded = false;
       throw error;
     } finally {
       this.isSyncing = false;

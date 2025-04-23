@@ -15,9 +15,9 @@
 
 </script>
 <div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer 
-    {$fantasyTeam!.captainId == player?.id ? 'captain-row' : ''}">
+    {fantasyTeam!.captainId == player?.id ? 'captain-row' : ''}">
     <div class="flex items-center justify-center w-1/12 text-center">
-        {#if $fantasyTeam!.captainId == player?.id}
+        {#if fantasyTeam!.captainId == player?.id}
             <ActiveCaptainIcon className="w-5 sm:w-6 md:w-7" />
         {:else}
             {getPositionAbbreviation(
@@ -26,11 +26,11 @@
         {/if}
     </div>
     <div class="flex items-center w-2/12">
-        <component
-            this={getFlagComponent(data.player.nationality)}
-            class="hidden w-4 h-4 mr-1 md:flex"
-            size="100"
-        ></component>
+
+        {#if data.player.nationality > 0}
+            {@const flag = getFlagComponent(data.player.nationality)}
+            <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
+        {/if}
         <span class="flex items-center">
             <BadgeIcon club={playerTeam} className="w-4 h-4 mr-1 md:hidden" />
             <p class="truncate min-w-[30px] max-w-[30px] xs:min-w-[50px] xs:max-w-[50px] sm:min-w-[60px] sm:max-w-[60px] md:min-w-[75px] md:max-w-[75px]">
@@ -84,8 +84,8 @@
         {data.bonusPoints}
         </div>
     </div>
-    <div class={`w-1/12 text-center ${ $fantasyTeam!.captainId == player?.id ? "" : "text-gray-500" }`}>
-    {$fantasyTeam!.captainId == player?.id ? data.points : "-"}
+    <div class={`w-1/12 text-center ${ fantasyTeam!.captainId == player?.id ? "" : "text-gray-500" }`}>
+    {fantasyTeam!.captainId == player?.id ? data.points : "-"}
     </div>
     <div class="w-1/12 text-center">{data.totalPoints}</div>
 </div>

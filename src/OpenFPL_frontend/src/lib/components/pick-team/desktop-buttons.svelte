@@ -23,10 +23,10 @@
 
     });
     
-    $: showResetButton = $fantasyTeam?.playerIds && startingFantasyTeam?.playerIds && (
+    $: showResetButton = fantasyTeam?.playerIds && startingFantasyTeam?.playerIds && (
       (startingFantasyTeam.playerIds.filter(id => id > 0).length === 11 && 
-       $fantasyTeam.playerIds.filter(id => id > 0).length < startingFantasyTeam.playerIds.filter(id => id > 0).length) ||
-      !$fantasyTeam.playerIds.every((id, index) => id === startingFantasyTeam.playerIds[index])
+       fantasyTeam.playerIds.filter(id => id > 0).length < startingFantasyTeam.playerIds.filter(id => id > 0).length) ||
+      !fantasyTeam.playerIds.every((id, index) => id === startingFantasyTeam.playerIds[index])
     );
 </script>
 <div class="flex flex-row items-center justify-between w-full p-2 mb-4 text-white rounded-md bg-panel">
@@ -43,8 +43,8 @@
     <div class="order-2 w-full mt-0 mt-4 text-center md:text-left md:ml-8 md:mt-0">
       <span class="text-lg">
         Formation:
-        <select class="px-4 py-2 text-center border-sm fpl-dropdown" value={$selectedFormation}>
-          {#each $availableFormations as formation}
+        <select class="px-4 py-2 text-center border-sm fpl-dropdown" value={selectedFormation}>
+          {#each availableFormations as formation}
             <option value={formation}>{formation}</option>
           {/each}
         </select>
@@ -65,14 +65,14 @@
         </button>
       {/if}
       <button
-        disabled={$fantasyTeam?.playerIds
-          ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
+        disabled={fantasyTeam?.playerIds
+          ? fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
           : true}
         onclick={autoFillFantasyTeam}
         class={`btn w-full md:w-auto px-4 py-2 rounded  
           ${
-            $fantasyTeam?.playerIds &&
-            $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
+            fantasyTeam?.playerIds &&
+            fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
               ? "bg-BrandPurple hover:bg-BrandPurple/90"
               : "bg-gray-500"
           } text-white min-w-[125px]`}

@@ -10,7 +10,7 @@
     const pageSize = 10;
 
     function goToPage(page: number) {
-        $currentPage = page;
+        currentPage = page;
     }
 
 </script>
@@ -20,7 +20,7 @@
       {#each Array(Math.ceil(filteredPlayers.length / pageSize)) as _, index}
         <button
           class={`px-4 py-2 rounded-md ${
-            index + 1 === $currentPage ? "fpl-button" : ""
+            index + 1 === currentPage ? "fpl-button" : ""
           }`}
           onclick={() => goToPage(index + 1)}
         >

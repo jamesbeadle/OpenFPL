@@ -30,12 +30,11 @@
   let sortDirection: 'asc' | 'desc' = 'desc';
 
   let playerPoints = new Map<number, number>();
+
+  let paginatedPlayers: any[] = $state([]);
   
   $effect(() => {
-      
-  });
-
-  $: paginatedPlayers = addTeamDataToPlayers(
+    paginatedPlayers = addTeamDataToPlayers(
     $clubStore, 
     [...filteredPlayers]
       .sort((a, b) => {
@@ -49,15 +48,16 @@
         }
         return 0;
       })
-      .slice(($currentPage - 1) * pageSize, $currentPage * pageSize)
+      .slice((currentPage - 1) * pageSize, currentPage * pageSize)
   );
-  
-  $: { 
-    if ( $filterTeam !== -1 || $filterPosition !== -1 || $minValue !== 0 || $maxValue !== 0 || $filterSurname !== "" ) {
+  });
+
+  $effect(() => {
+    if ( filterTeam !== -1 || filterPosition !== -1 || minValue !== 0 || maxValue !== 0 || filterSurname !== "" ) {
       filterPlayers();
-      $currentPage = 1;
+      currentPage = 1;
     }
-  }
+  });
 
   onMount(async () => {
     resetFilters();
@@ -76,22 +76,22 @@
     if(!players){return}
     filteredPlayers = players.players.filter((player) => {
       return (
-        ($filterTeam === -1 || player.clubId === $filterTeam) &&
-        ($filterPosition === -1 || convertPositionToIndex(player.position) === $filterPosition) &&
-        ($minValue === 0 || player.valueQuarterMillions >= $minValue * 4) &&
-        ($maxValue === 0 || player.valueQuarterMillions <= $maxValue * 4) &&
-        ($filterSurname === "" || normaliseString(player.lastName.toLowerCase()).includes(normaliseString($filterSurname.toLowerCase())))
+        (filterTeam === -1 || player.clubId === filterTeam) &&
+        (filterPosition === -1 || convertPositionToIndex(player.position) === filterPosition) &&
+        (minValue === 0 || player.valueQuarterMillions >= minValue * 4) &&
+        (maxValue === 0 || player.valueQuarterMillions <= maxValue * 4) &&
+        (filterSurname === "" || normaliseString(player.lastName.toLowerCase()).includes(normaliseString(filterSurname.toLowerCase())))
       );
     });
-    sortPlayersByClubThenValue(filteredPlayers, $filterTeam);
+    sortPlayersByClubThenValue(filteredPlayers, filterTeam);
   }
 
   function resetFilters(){
-    $filterTeam = -1;
-    $filterSurname = "";
-    $minValue = 0;
-    $maxValue = 0;
-    $currentPage = 1;
+    filterTeam = -1;
+    filterSurname = "";
+    minValue = 0;
+    maxValue = 0;
+    currentPage = 1;
   }
 
   function toggleSort(field: 'value' | 'points') {

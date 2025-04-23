@@ -24,15 +24,15 @@
   let { selectedFormation, fantasyTeam, loadAddPlayer, canSellPlayer, sessionAddedPlayers, removePlayer, setCaptain }: Props = $props();
   
   
-  let pitchHeight = 0;
+  let pitchHeight = $state(0);
   let pitchElement: HTMLImageElement | null = null;
+  let rowHeight = $state(0);
+  let gridSetup: number[][] = $state([]);
 
   $effect(() => {
-      
+    rowHeight = (pitchHeight * 0.9) / 4;
+    gridSetup = getGridSetup(selectedFormation);
   });
-
-  $: rowHeight = (pitchHeight * 0.9) / 4;
-  $: gridSetup = getGridSetup($selectedFormation);
 
   onMount(async () => {
     if (!browser) return;
@@ -40,12 +40,6 @@
     measurePitch();
     window.addEventListener("resize", measurePitch);
   });
-
-  $: {
-    console.log("Formation:", $selectedFormation);
-    console.log("Player IDs:", $fantasyTeam?.playerIds);
-    console.log("Grid Setup:", gridSetup);
-}
 
   function onPitchLoad() {
     measurePitch();
@@ -66,8 +60,8 @@
     src="/pitch.png"
     alt="pitch"
     class="w-full h-auto"
-    bind:this={pitchElement}
-    on:load={onPitchLoad}
+    this={pitchElement}
+    onload={onPitchLoad}
   />
   {#if canShowOverlay()}
     <div class="absolute top-0 bottom-0 left-0 right-0">
@@ -83,7 +77,7 @@
         >
           {#each row as _, colIndex (colIndex)}
             {@const actualIndex = getActualIndex(rowIndex, colIndex, gridSetup)}
-            {@const playerIds = $fantasyTeam?.playerIds ?? []}
+            {@const playerIds = fantasyTeam?.playerIds ?? []}
             {@const playerId = playerIds[actualIndex]}
             {@const player = $playerStore.find((p) => p.id === playerId)}
 
@@ -105,6 +99,9 @@
                   class="flex items-center"
                 >
                   <AddPlayerIcon
+                    primaryColour='white'
+                    secondaryColour='white'
+                    thirdColour='white'
                     className="h-12 sm:h-16 md:h-20 lg:h-24 xl:h-16 2xl:h-20"
                   />
                 </button>

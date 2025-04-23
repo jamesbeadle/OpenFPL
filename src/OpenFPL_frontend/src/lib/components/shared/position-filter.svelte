@@ -18,7 +18,7 @@
       <p>Position:</p>
       <select
         class="px-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-        bind:value={$selectedPosition}
+        value={selectedPosition}
       >
         <option value={-1}>All</option>
         {#each positionValues as position}

@@ -34,11 +34,11 @@
 
   onMount(async () => {
     await storeManager.syncStores();
-    $selectedGameweek = Number(gw);
-    $manager = await managerStore.getPublicProfile(id ?? "");
-    formation = getTeamFormationReadOnly($fantasyTeam, $playerStore);
+    selectedGameweek = Number(gw);
+    manager = await managerStore.getPublicProfile(id ?? "");
+    formation = getTeamFormationReadOnly(fantasyTeam, $playerStore);
     gridSetup = getGridSetup(formation);
-    viewGameweekDetail($selectedGameweek!);
+    viewGameweekDetail(selectedGameweek!);
     isLoading = false;
   });
   
@@ -48,14 +48,14 @@
 
   function setActiveTab(tab: string): void {
     if (tab === "details") {
-      $loadingGameweekDetail = true;
+      loadingGameweekDetail = true;
     }
     activeTab = tab;
   }
 
   function viewGameweekDetail(gw: number) {
-    $selectedGameweek = gw;
-    fantasyTeam.set($manager!.gameweeks.find((x) => x.gameweek === $selectedGameweek)!);
+    selectedGameweek = gw;
+    fantasyTeam = manager!.gameweeks.find((x) => x.gameweek === selectedGameweek)!;
     setActiveTab("details");
   }
 </script>
@@ -63,7 +63,7 @@
   {#if isLoading}
     <LocalSpinner />
   {:else}
-    <ManagerHeader manager={$manager!} />
+    <ManagerHeader manager={manager!} />
 
     <div class="bg-panel">
       <TabContainer {tabs} {activeTab} {setActiveTab} />

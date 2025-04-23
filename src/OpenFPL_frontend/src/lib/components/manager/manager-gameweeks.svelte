@@ -25,8 +25,8 @@
       <div class="w-2/12">Points</div>
       <div class="w-3/12">&nbsp;</div>
     </div>
-    {#if $manager && $manager.gameweeks}
-      {#each $manager.gameweeks as gameweek}
+    {#if manager && manager.gameweeks}
+      {#each manager.gameweeks as gameweek}
         {@const captain = $playerStore.find((x) => x.id === gameweek.captainId)}
         {@const playerCountry = $countryStore
           ? $countryStore.find((x) => x.id === captain?.nationality)

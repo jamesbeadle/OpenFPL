@@ -17,19 +17,19 @@
   
   $effect(() => {
     filteredFixtures = fixturesWithTeams.filter(
-      ({ fixture }) => fixture.gameweek === $selectedGameweek
+      ({ fixture }) => fixture.gameweek === selectedGameweek
     );
     groupedFixtures = reduceFilteredFixtures(filteredFixtures);
   });
 
   onMount(async () => {
     await storeManager.syncStores();
-    $selectedGameweek = $leagueStore!.unplayedGameweek;
+    selectedGameweek = $leagueStore!.unplayedGameweek;
     fixturesWithTeams = getFixturesWithTeams($clubStore, $fixtureStore);
   });
 
   const changeGameweek = (delta: number) => {
-    $selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), $selectedGameweek + delta));
+    selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), selectedGameweek + delta));
   };
 </script>
 

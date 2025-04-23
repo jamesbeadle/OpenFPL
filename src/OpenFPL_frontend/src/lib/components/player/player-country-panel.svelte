@@ -16,11 +16,10 @@
     </p>
     <p class="content-panel-header">
       <span class="flex flex-row items-center">
-        <svelte:component
-          this={getFlagComponent(player.nationality ?? 0)}
-          class="w-4 h-4 mr-1"
-          size="100"
-        />{$countryStore.find(
+        {#if player.nationality > 0}
+            {@const flag = getFlagComponent(player.nationality)}
+            <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
+        {/if}{$countryStore.find(
           (x) => x.id == player.nationality
         )?.name}
       </span>

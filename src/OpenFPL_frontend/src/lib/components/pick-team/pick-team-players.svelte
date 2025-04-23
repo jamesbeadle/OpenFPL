@@ -41,23 +41,23 @@
       }
       await loadData();
       isLoading = false;
-      if ($fantasyTeam) {
-        startingTeamPlayerIds = Array.from($fantasyTeam.playerIds);
+      if (fantasyTeam) {
+        startingTeamPlayerIds = Array.from(fantasyTeam.playerIds);
       }
   });
 
   async function loadData() {
 
-    if (!$fantasyTeam) {
+    if (!fantasyTeam) {
       return;
     }
 
-    let principalId = $fantasyTeam?.principalId ?? "";
+    let principalId = fantasyTeam?.principalId ?? "";
     if (principalId.length > 0) {
         newTeam = false;
     }
 
-    $canSellPlayer = $fantasyTeam.firstGameweek || $fantasyTeam.transferWindowGameweek != $leagueStore!.unplayedGameweek || $fantasyTeam.transfersAvailable > 0;
+    $canSellPlayer = fantasyTeam.firstGameweek || fantasyTeam.transferWindowGameweek != $leagueStore!.unplayedGameweek || fantasyTeam.transfersAvailable > 0;
     
     fantasyTeam.update((currentTeam) => {
       if (currentTeam && (!currentTeam.playerIds || currentTeam.playerIds.length !== 11)) {
@@ -72,7 +72,7 @@
   }
   
   function loadAddPlayer(row: number, col: number) {
-    $selectedPosition = row;
+    selectedPosition = row;
     selectedColumn = col;
     showAddPlayerModal = true;
   }
@@ -87,16 +87,16 @@
       return;
     }
 
-    newCaptainId.set(getHighestValuedPlayerId($fantasyTeam!, $playerStore));
-    let player = $playerStore.find((x) => x.id === $newCaptainId);    
+    newCaptainId.set(getHighestValuedPlayerId(fantasyTeam!, $playerStore));
+    let player = $playerStore.find((x) => x.id === newCaptainId);    
     $newCaptain = `${player?.firstName} ${player?.lastName}`;
     showCaptainModal = true;
   }
 
   function removePlayer(playerId: number) {
-      $selectedPosition = -1;
+      selectedPosition = -1;
       selectedColumn = -1;
-      if(!$fantasyTeam){ return };
+      if(!fantasyTeam){ return };
       fantasyTeam.update((currentTeam) => {
         const playerIndex = currentTeam!.playerIds.indexOf(playerId);
         if (playerIndex === -1) {
@@ -126,13 +126,13 @@
       });
       teamValue.set(newTeamValue / 4);
       
-      let bankQuarterMillions = $fantasyTeam.bankQuarterMillions + $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions;
+      let bankQuarterMillions = fantasyTeam.bankQuarterMillions + $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions;
       return { ...currentTeam!, playerIds: newPlayerIds, bankQuarterMillions, transfersAvailable, teamValue };
     })
   }
 
   $effect(() => {
-    if ($fantasyTeam) {
+    if (fantasyTeam) {
       setTeamValue();
       setTeamFormation();
     }
@@ -140,7 +140,7 @@
 
   function setTeamValue() {
     let totalValue = 0;
-    $fantasyTeam!.playerIds.forEach((id) => {
+    fantasyTeam!.playerIds.forEach((id) => {
       const player = $playerStore.find((p) => p.id === id);
       if (player) {
         totalValue += player.valueQuarterMillions;
@@ -148,21 +148,21 @@
     });
     
     let updatedFantasyTeam = {
-      ...$fantasyTeam!,
+      ...fantasyTeam!,
       teamValue: totalValue / 4,
     };
     fantasyTeam.set(updatedFantasyTeam);
   }
 
   function setTeamFormation(){
-    if ($fantasyTeam!.playerIds.filter((x) => x > 0).length == 11) {
-      const newFormation = getTeamFormation($fantasyTeam!, $playerStore);
-      $selectedFormation = newFormation;
+    if (fantasyTeam!.playerIds.filter((x) => x > 0).length == 11) {
+      const newFormation = getTeamFormation(fantasyTeam!, $playerStore);
+      selectedFormation = newFormation;
     }
   }
 
   function changeCaptain() {
-    $selectedPosition = -1;
+    selectedPosition = -1;
     selectedColumn = -1;
     fantasyTeam.update((currentTeam) => {
       return { ...currentTeam!, captainId: $newCaptainId };
@@ -171,19 +171,19 @@
   }
 
   function handlePlayerSelection(player: Player) {
-    if (canAddPlayerToCurrentFormation($playerStore, player, $fantasyTeam!, $selectedFormation)) 
+    if (canAddPlayerToCurrentFormation($playerStore, player, fantasyTeam!, selectedFormation)) 
     {
-      addPlayerToTeam(player, $selectedFormation);
+      addPlayerToTeam(player, selectedFormation);
     } else {
-      const newFormation = findValidFormationWithPlayer($playerStore, $fantasyTeam!, player, $selectedFormation);
+      const newFormation = findValidFormationWithPlayer($playerStore, fantasyTeam!, player, selectedFormation);
       fantasyTeam.update((team) => {
         return {
           ...team!,
-          playerIds: repositionPlayersForNewFormation($playerStore, $fantasyTeam!, newFormation),
+          playerIds: repositionPlayersForNewFormation($playerStore, fantasyTeam!, newFormation),
           bankQuarterMillions: team!.bankQuarterMillions - player.valueQuarterMillions
         };
       });
-      $selectedFormation = newFormation;
+      selectedFormation = newFormation;
       addPlayerToTeam(player, newFormation);
     }
     if (!$sessionAddedPlayers.includes(player.id)) {
@@ -192,7 +192,7 @@
   }
 
   function addPlayerToTeam(player: Player, formation: string) {
-    const indexToAdd = getAvailablePositionIndex(convertPositionToIndex(player.position), $fantasyTeam!, formation);
+    const indexToAdd = getAvailablePositionIndex(convertPositionToIndex(player.position), fantasyTeam!, formation);
     if (indexToAdd === -1) {
       console.error("No available position to add the player.");
       return;
@@ -232,9 +232,9 @@
       }
     });
 
-    if ($fantasyTeam!.captainId > 0 && $fantasyTeam!.playerIds.filter((x) => x == $fantasyTeam!.captainId).length == 0) 
+    if (fantasyTeam!.captainId > 0 && fantasyTeam!.playerIds.filter((x) => x == fantasyTeam!.captainId).length == 0) 
     {
-      newCaptainId.set(getHighestValuedPlayerId($fantasyTeam!, $playerStore));
+      newCaptainId.set(getHighestValuedPlayerId(fantasyTeam!, $playerStore));
       changeCaptain();
     }
   }
@@ -243,14 +243,14 @@
 
 <ConfirmCaptainChange
   newCaptain={$newCaptain}
-  bind:visible={showCaptainModal}
+  visible={showCaptainModal}
   onConfirm={changeCaptain}
 />
 
 <AddPlayerModal
   {handlePlayerSelection}
   filterPosition={selectedPosition}
-  bind:visible={showAddPlayerModal}
+  visible={showAddPlayerModal}
   {fantasyTeam}
 />
 

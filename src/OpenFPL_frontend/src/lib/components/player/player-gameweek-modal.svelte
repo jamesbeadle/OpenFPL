@@ -17,12 +17,12 @@
   }
   let { visible, closeDetailModal, playerDetail, gameweekDetail, playerTeam, opponentTeam, gameweek, seasonName }: Props = $props();
 
-  let appearanceEvents: PlayerEventData[] = [];
+  let appearanceEvents: PlayerEventData[] = $state([]);
   let concededEvents: PlayerEventData[] = [];
   let keeperSaveEvents: PlayerEventData[] = [];
-  let otherEvents: PlayerEventData[] = [];
-  let goalConcededCount = 0;
-  let keeperSaveCount = 0;
+  let otherEvents: PlayerEventData[] = $state([]);
+  let goalConcededCount = $state(0);
+  let keeperSaveCount = $state(0);
 
   let pointsForAppearance = 5;
   let pointsFor3Saves = 5;
@@ -39,73 +39,73 @@
   var pointsForAssist = 15;
   
   $effect(() => {
+     
+    if (gameweekDetail) {
+      appearanceEvents = [];
+      concededEvents = [];
+      keeperSaveEvents = [];
+      otherEvents = [];
+      goalConcededCount = 0;
+      keeperSaveCount = 0;
       
+
+      gameweekDetail.events.forEach((evt) => {
+
+        var added = false;
+
+        if(Object.keys(evt.eventType)[0] == "Appearance"){
+          appearanceEvents.push(evt);
+          added = true;
+        }
+
+        if(Object.keys(evt.eventType)[0] == "GoalConceded"){
+            concededEvents.push(evt);
+            goalConcededCount++;
+            added = true;
+        }
+
+        if(Object.keys(evt.eventType)[0] == "KeeperSave"){
+            keeperSaveEvents.push(evt);
+            keeperSaveCount++;
+            added = true;
+        }
+        
+        if(!added){
+          otherEvents.push(evt);
+        }
+        
+      });
+
+      let position = Object.keys(playerDetail.player.position)[0]; 
+      if(position == "Forward"){
+        pointsForGoal = 10;
+        pointsForAssist = 10;
+      }
+
+      if(position == "Midfielder"){
+        pointsForGoal = 15;
+        pointsForAssist = 10;
+      }
+
+      concededEvents.sort((a, b) => a.eventEndMinute - b.eventEndMinute);
+      keeperSaveEvents.sort((a, b) => a.eventEndMinute - b.eventEndMinute);
+      otherEvents.sort(
+        (a, b) =>
+          a.eventEndMinute - b.eventEndMinute
+      );
+    }
+
   });
-
-  $: if (gameweekDetail) {
-    appearanceEvents = [];
-    concededEvents = [];
-    keeperSaveEvents = [];
-    otherEvents = [];
-    goalConcededCount = 0;
-    keeperSaveCount = 0;
-    
-
-    gameweekDetail.events.forEach((evt) => {
-
-      var added = false;
-
-      if(Object.keys(evt.eventType)[0] == "Appearance"){
-        appearanceEvents.push(evt);
-        added = true;
-      }
-
-      if(Object.keys(evt.eventType)[0] == "GoalConceded"){
-          concededEvents.push(evt);
-          goalConcededCount++;
-          added = true;
-      }
-
-      if(Object.keys(evt.eventType)[0] == "KeeperSave"){
-          keeperSaveEvents.push(evt);
-          keeperSaveCount++;
-          added = true;
-      }
-      
-      if(!added){
-        otherEvents.push(evt);
-      }
-      
-    });
-
-    let position = Object.keys(playerDetail.player.position)[0]; 
-    if(position == "Forward"){
-      pointsForGoal = 10;
-      pointsForAssist = 10;
-    }
-
-    if(position == "Midfielder"){
-      pointsForGoal = 15;
-      pointsForAssist = 10;
-    }
-
-    concededEvents.sort((a, b) => a.eventEndMinute - b.eventEndMinute);
-    keeperSaveEvents.sort((a, b) => a.eventEndMinute - b.eventEndMinute);
-    otherEvents.sort(
-      (a, b) =>
-        a.eventEndMinute - b.eventEndMinute
-    );
-  }
 </script>
 
 <Modal showModal={visible} onClose={closeDetailModal} title="Player Detail">
   {#if playerDetail}
   <div class="mx-4 p-4">
     <div class="flex justify-start items-center w-full">
-      <svelte:component
-        this={getFlagComponent(playerDetail.player.nationality)}
-        class="h-20 w-20"
-      />
+      {#if playerDetail.player.nationality > 0}
+          {@const flag = getFlagComponent(playerDetail.player.nationality)}
+          <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
+      {/if}
       <div class="w-full flex-col space-y-4 mb-2">
         <h3 class="default-header mb-2">
           {playerDetail.player.firstName}

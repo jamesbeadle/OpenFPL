@@ -19,33 +19,28 @@
     let mergedFixtures: FixtureWithClubs[] = [];
     let groupedFixtures: { [key: string]: FixtureWithClubs[]; } = $state({ ['']: [] });
     
-    onMount(() => {
-      const unsubscribe = globalDataLoaded.subscribe(async (loaded) => {
-          if (loaded) {
-              try {
-                  await Promise.all([
-                      new Promise(resolve => {
-                          $selectedGameweek = $leagueStore!.activeGameweek == 0 
-                              ? $leagueStore!.unplayedGameweek 
-                              : $leagueStore!.activeGameweek ?? 1;
-                          mergedFixtures = $fixtureWithClubsStore;
-                          resolve(null);
-                      })
-                  ]);
-                  isLoading = false;
-              } catch (error) {
-                  console.error('Error loading fixture data:', error);
-              }
-          }
-      });
-      return () => {
-          unsubscribe();
-      };
+    onMount(async () => {
+      if (globalDataLoaded) {
+        try {
+            await Promise.all([
+                new Promise(resolve => {
+                    selectedGameweek = $leagueStore!.activeGameweek == 0 
+                        ? $leagueStore!.unplayedGameweek 
+                        : $leagueStore!.activeGameweek ?? 1;
+                    mergedFixtures = $fixtureWithClubsStore;
+                    resolve(null);
+                })
+            ]);
+            isLoading = false;
+        } catch (error) {
+            console.error('Error loading fixture data:', error);
+        }
+      }
     });
   
     $effect(() => {
         filteredFixtures = mergedFixtures
-        .filter(x => x.fixture.gameweek === $selectedGameweek)
+        .filter(x => x.fixture.gameweek === selectedGameweek)
         .sort((a, b) => Number(a.fixture.kickOff) - Number(b.fixture.kickOff));
     });
 
@@ -54,13 +49,13 @@
     });
   
     const changeGameweek = (delta: number) => {
-      $selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), $selectedGameweek + delta));
+      selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), selectedGameweek + delta));
     };
   
   </script>
   {#if isLoading}
     <LocalSpinner />
-    <p class="pb-4 mb-4 text-center">Loading Fixture Information for Gameweek {$selectedGameweek}</p>
+    <p class="pb-4 mb-4 text-center">Loading Fixture Information for Gameweek {selectedGameweek}</p>
   {:else}
     <div class="flex flex-col">
       <div class="flex flex-col gap-4 sm:flex-row sm:gap-8">

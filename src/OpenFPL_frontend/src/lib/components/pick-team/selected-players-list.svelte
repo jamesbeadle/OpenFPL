@@ -22,7 +22,7 @@
     let { selectedFormation, fantasyTeam, loadAddPlayer, removePlayer, setCaptain, canSellPlayer, sessionAddedPlayers }: Props = $props();
     let gridSetup: number[][] = $state([]);
     $effect(() => {
-      gridSetup = getGridSetup($selectedFormation);
+      gridSetup = getGridSetup(selectedFormation);
     });
 
 </script>
@@ -43,7 +43,7 @@
       </div>
       {#each row as _, colIndex (colIndex)}
         {@const actualIndex = getActualIndex(rowIndex, colIndex, gridSetup)}
-        {@const playerIds = $fantasyTeam?.playerIds ?? []}
+        {@const playerIds = fantasyTeam?.playerIds ?? []}
         {@const playerId = playerIds[actualIndex]}
         {@const player = $playerStore.find((p) => p.id === playerId)}
         {@const team = $clubStore.find((x) => x.id === player?.clubId)}
@@ -55,7 +55,7 @@
               {player.lastName}
             </div>
             <div class="w-1/6 flex items-center">
-              {#if $fantasyTeam?.captainId === playerId}
+              {#if fantasyTeam?.captainId === playerId}
                 <span>
                   <ActiveCaptainIcon className="w-6 h-6" />
                 </span>

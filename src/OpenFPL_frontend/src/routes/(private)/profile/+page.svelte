@@ -38,7 +38,7 @@
     <div class="m-4">
       {#if bannerVisible}
         <WelcomeBanner 
-          bind:visible={bannerVisible}
+          visible={bannerVisible}
         />
       {/if}
       <div class="bg-panel">

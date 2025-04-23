@@ -40,7 +40,7 @@ w<script lang="ts">
 </script>
 
 <div class="flex flex-col">
-    {#if $fantasyTeam}
+    {#if fantasyTeam}
       <div class="flex-1 overflow-x-auto">
         <div
           class="flex justify-between p-2 py-4 border border-gray-700 bg-light-gray"

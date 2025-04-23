@@ -28,13 +28,13 @@
   let gameweeks: number[] = $state([]);
 
   $effect(() => {
-    if ($fantasyTeam && $selectedGameweek && $selectedGameweek > 0) {
+    if (fantasyTeam && selectedGameweek && selectedGameweek > 0) {
       updateGameweekPlayers();
     }
   })
 
   $effect(() => {
-    if ($selectedGameweek) {
+    if (selectedGameweek) {
       isLoading = true;
     }
   })
@@ -44,21 +44,21 @@
     gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1)
     lastGameweek = $leagueStore?.completedGameweek ?? 1;
     activeSeasonName = await seasonStore.getSeasonName($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 0) ?? "";
-    if (!$fantasyTeam) { return; }
+    if (!fantasyTeam) { return; }
     updateGameweekPlayers();
     isLoading = false;
   });
 
   async function updateGameweekPlayers() {
-    let fetchedPlayers = await playerEventsStore.getGameweekPlayers($fantasyTeam!, $leagueStore?.activeSeasonId!, $selectedGameweek!);
-    calculateBonusPoints(fetchedPlayers, $fantasyTeam!);
+    let fetchedPlayers = await playerEventsStore.getGameweekPlayers(fantasyTeam!, $leagueStore?.activeSeasonId!, selectedGameweek!);
+    calculateBonusPoints(fetchedPlayers, fantasyTeam!);
     sortPlayersByPointsThenValue(fetchedPlayers);
     gameweekPlayers.set(fetchedPlayers);
   }
 
   const changeGameweek = (delta: number) => {
     isLoading = true;
-    $selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), $selectedGameweek! + delta));
+    selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), selectedGameweek! + delta));
   };
 
   function closeDetailModal() {
