@@ -111,7 +111,7 @@
                 <span class="text-white">{weeklyPoints}</span>
               </div>
             {/if}
-            <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} lastGameweek={$leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1} />
+            <GameweekFilter {selectedGameweek} {changeGameweek} lastGameweek={$leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1} />
           {/if}
           {#if selectedLeaderboardType === 2}
             <LeaderboardMonthFilter {selectedMonth} {selectedTeamId} {selectedTeamIndex} />

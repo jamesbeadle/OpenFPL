@@ -1,17 +1,36 @@
 <script lang="ts">
-    
+    import { leagueStore } from "$lib/stores/league-store";
+    import { getGameweeks } from "$lib/utils/helpers";
+    import { onMount } from "svelte";
+    import LocalSpinner from "../local-spinner.svelte";
+
     interface Props {
       selectedGameweek: number | null;
-      gameweeks: number[];
       changeGameweek: (gameweek: number) => void;
       lastGameweek: number;
     }
-    let { selectedGameweek, gameweeks, changeGameweek, lastGameweek }: Props = $props();
+    let { selectedGameweek, changeGameweek, lastGameweek }: Props = $props();
 
+    let isLoading = $state(true);
+    let gameweeks: number[] = $state([]);
+
+
+    onMount(async () => {
+      try{
+        gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1);
+      } catch {
+
+      } finally {
+        isLoading = false;
+      }
+    });
 </script>
-<div class="p-4">
-    <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-        <div class="flex items-center">
+{#if isLoading}
+  <LocalSpinner />
+{:else}
+    <div class="p-4">
+        <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+          <div class="flex items-center">
             <button
               class={`${
                 selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
@@ -40,6 +59,7 @@
             >
               &gt;
             </button>
-        </div>
-    </div>
-</div>
+          </div>
+      </div>
+  </div>
+{/if}

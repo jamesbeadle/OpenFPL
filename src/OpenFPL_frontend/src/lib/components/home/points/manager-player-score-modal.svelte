@@ -1,22 +1,37 @@
 <script lang="ts">
-  import { convertPositionToIndex, getFlagComponent, getPlayerName } from "../../utils/helpers";
+  import { convertPositionToIndex, getFlagComponent, getPlayerName } from "../../../utils/helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import Modal from "$lib/components/shared/modal.svelte";
-  import FantasyPlayerDetailRow from "./fantasy-player-detail-row.svelte";
-  import ModalTotalRow from "../shared/modal-total-row.svelte";
+  import FantasyPlayerDetailRow from "../../fantasy-team/fantasy-player-detail-row.svelte";
+  import ModalTotalRow from "../../shared/modal-total-row.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Club } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { onMount } from "svelte";
+    import { clubStore } from "$lib/stores/club-store";
+    import { fixtureStore } from "$lib/stores/fixture-store";
   
   interface Props {
     visible: boolean;
     gameweekData: GameweekData;
-    playerTeam: Club;
-    opponentTeam: Club;
     seasonName: string;
   }
-  let { visible, gameweekData, playerTeam, opponentTeam, seasonName }: Props = $props();
-  
+  let { visible, gameweekData, seasonName }: Props = $props();
 
+  let selectedTeam: Club | undefined = $state(undefined);
+  let selectedOpponentTeam: Club| undefined = $state(undefined);
+
+  onMount(() => {
+      let playerTeamId = gameweekData.player.clubId;
+      selectedTeam = $clubStore.find((x) => x.id === playerTeamId)!;
+  
+      let playerFixture = $fixtureStore.find((x) =>
+          x.gameweek === gameweekData.gameweek &&
+          (x.homeClubId === playerTeamId || x.awayClubId === playerTeamId)
+      );
+      let opponentId = playerFixture?.homeClubId === playerTeamId ? playerFixture?.awayClubId : playerFixture?.homeClubId;
+      selectedOpponentTeam = $clubStore.find((x) => x.id === opponentId)!;
+  });
+    
 </script>
 
 <Modal showModal={visible} onClose={() => {visible = false;}} title="Player Detail">
@@ -33,9 +48,9 @@
       </h3>
     </div>
     <div class="flex flex-col items-center justify-center w-full sm:w-1/3">
-      <BadgeIcon className="w-8 h-8 xs:w-10 xs:h-10 mb-1" club={playerTeam!} />
+      <BadgeIcon className="w-8 h-8 xs:w-10 xs:h-10 mb-1" club={selectedTeam!} />
       <p class="text-sm text-center text-gray-400">
-        {playerTeam?.friendlyName}
+        {selectedTeam?.friendlyName}
       </p>
     </div>
   </div>
@@ -45,7 +60,7 @@
       Gameweek {gameweekData.gameweek}
     </p>
     <p class="flex items-center justify-center w-1/3 pt-2 ml-2 border-gray-600 border-x xs:ml-0">
-      vs <BadgeIcon className="w-5 h-5 mx-1" club={opponentTeam!} /> {opponentTeam?.abbreviatedName}
+      vs <BadgeIcon className="w-5 h-5 mx-1" club={selectedOpponentTeam!} /> {selectedOpponentTeam?.abbreviatedName}
     </p>
     <p class="flex items-center justify-center w-1/3 pt-2 border-r border-gray-600">{seasonName}</p>
   </div>

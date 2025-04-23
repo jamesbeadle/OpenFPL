@@ -4,7 +4,7 @@ w<script lang="ts">
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import GameweekDetailTableRow from "./gameweek-detail-table-row.svelte";
-  import FantasyPlayerDetailModal from "../fantasy-team/fantasy-player-detail-modal.svelte";
+  import FantasyPlayerDetailModal from "../home/points/manager-player-score-modal.svelte";
   import type { FantasyTeamSnapshot, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {

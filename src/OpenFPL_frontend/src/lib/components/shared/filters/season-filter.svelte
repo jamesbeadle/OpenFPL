@@ -1,0 +1,1 @@
+<!-- Seasons come from backend based on league id environment variable -->

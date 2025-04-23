@@ -8,7 +8,7 @@
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { authStore } from "$lib/stores/auth-store";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import FantasyPlayerDetailModal from "../fantasy-team/fantasy-player-detail-modal.svelte";
+  import FantasyPlayerDetailModal from "../home/points/manager-player-score-modal.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import GameweekPointsTable from "../home/points/points-table.svelte";
   import { getGameweeks } from "$lib/utils/helpers";
@@ -95,8 +95,6 @@
 {:else}
   {#if showModal}
     <FantasyPlayerDetailModal
-      playerTeam={selectedTeam!}
-      opponentTeam={selectedOpponentTeam!}
       seasonName={activeSeasonName!}
       visible={showModal}
       gameweekData={selectedGameweekData!}
@@ -105,7 +103,6 @@
   <div class="flex flex-col">
     <GameweekFilter 
       {selectedGameweek} 
-      {gameweeks} 
       {changeGameweek} 
       lastGameweek={$leagueStore!.completedGameweek}
     />

@@ -39,7 +39,7 @@
   <p class="pb-4 mb-4 text-center">Getting League Table for Gameweek {selectedGameweek}</p>
 {:else}
   <div class="flex flex-col gap-4 sm:flex-row sm:gap-8">
-    <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} lastGameweek={$leagueStore!.unplayedGameweek} />
+    <GameweekFilter {selectedGameweek} {changeGameweek} lastGameweek={$leagueStore!.unplayedGameweek} />
   </div>
 
   <div class="flex flex-col">

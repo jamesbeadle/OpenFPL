@@ -38,7 +38,7 @@
     <div class="flex items-center justify-between py-2 bg-light-gray">
       <h1 class="m-2 mx-4 side-panel-header">Fixtures</h1>
     </div>
-    <GameweekFilter {selectedGameweek} {gameweeks} {changeGameweek} lastGameweek={$leagueStore!.totalGameweeks} />
+    <GameweekFilter {selectedGameweek} {changeGameweek} lastGameweek={$leagueStore!.totalGameweeks} />
     <div>
       {#each Object.entries(groupedFixtures) as [date, fixtures]}
         <div class="flex items-center justify-between py-2 border-b border-gray-700 bg-light-gray">
