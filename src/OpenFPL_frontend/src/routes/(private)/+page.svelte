@@ -3,7 +3,7 @@
   import HomepageHeader from "$lib/components/homepage/homepage-header.svelte";
 
   import TabContainer from "$lib/components/shared/tab-container.svelte";
-  import Points from "$lib/components/home/points.svelte";
+  import PointsComponent from "$lib/components/home/points.svelte";
   import LeaderboardsComponent from "$lib/components/home/leaderboards.svelte";
   import FixturesComponent from "$lib/components/home/fixtures.svelte";
   import MvpsComponent from "$lib/components/home/mvps.svelte";
@@ -33,7 +33,7 @@
   <TabContainer {tabs} {activeTab} {setActiveTab} />
   
   {#if activeTab === "points"}
-    <Points />
+    <PointsComponent />
   {:else if activeTab === "leaderboards"}
     <LeaderboardsComponent />
   {:else if activeTab === "fixtures"}

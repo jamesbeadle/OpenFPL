@@ -24,7 +24,6 @@ import DataCanister "canister:data_canister";
 
 import Array "mo:base/Array";
 import Bool "mo:base/Bool";
-import Buffer "mo:base/Buffer";
 import Int "mo:base/Int";
 import Iter "mo:base/Iter";
 import Nat64 "mo:base/Nat64";
@@ -33,10 +32,7 @@ import Option "mo:base/Option";
 import Principal "mo:base/Principal";
 import Result "mo:base/Result";
 import Text "mo:base/Text";
-import Time "mo:base/Time";
 import Timer "mo:base/Timer";
-import List "mo:base/List";
-import Debug "mo:base/Debug";
 import Order "mo:base/Order";
 import Countries "mo:waterway-mops/def/Countries";
 

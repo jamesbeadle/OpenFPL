@@ -1,35 +1,30 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { storeManager } from "$lib/managers/store-manager";
-  import { seasonStore } from "../../stores/season-store";
-  import { managerStore } from "$lib/stores/manager-store";
-  import { playerEventsStore } from "$lib/stores/player-events-store";
   import { authStore } from "$lib/stores/auth-store";
+  import { managerStore } from "$lib/stores/manager-store";
+  import { leagueStore } from "$lib/stores/league-store";
+  import { playerEventsStore } from "$lib/stores/player-events-store";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
+  import type { FantasyTeamSnapshot, SeasonId } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+
+  import LocalSpinner from "../shared/local-spinner.svelte";
+  import SeasonFilter from "../shared/filters/season-filter.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import PointsTable from "./points/points-table.svelte";
-  import { leagueStore } from "$lib/stores/league-store";
-  import LocalSpinner from "../shared/local-spinner.svelte";
-
-  import type { FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import ManagerPlayerScoreModal from "./points/manager-player-score-modal.svelte";
-  import SeasonFilter from "../shared/filters/season-filter.svelte";
-
+  
   let isLoading = $state(true);
-  let showModal = $state(false);
   let selectedSeasonId = $state(0);
   let selectedGameweek = $state(1);
-  
   let gameweekData: GameweekData[] = $state([]);
   let selectedGameweekData: GameweekData| undefined = $state(undefined);
-
-  let activeSeasonName: string = $state("");
   let fantasyTeam: FantasyTeamSnapshot | null = $state(null);
+  let showModal = $state(false);
 
   onMount(async () => {
     try{
       await storeManager.syncStores();
-      activeSeasonName = await seasonStore.getSeasonName($leagueStore!.activeSeasonId ?? 0) ?? "";
       selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.completedGameweek : $leagueStore!.activeGameweek ?? 1;
     } catch {
       
@@ -48,6 +43,10 @@
       loadGameweekPoints(principal);
     }
   });
+
+  function onSelectSeason(seasonId: SeasonId) {
+
+  };
 
   async function loadGameweekPoints(principal: string) {
     
@@ -79,7 +78,7 @@
   <p class="pb-4 mb-4 text-center">Getting Gameweek {selectedGameweek} Data</p>
 {:else}
   <div class="flex flex-col">
-    <SeasonFilter />
+    <SeasonFilter {selectedSeasonId} onSelect={onSelectSeason} />
     <GameweekFilter 
       {selectedGameweek} 
       {changeGameweek} 
@@ -93,6 +92,5 @@
   <ManagerPlayerScoreModal 
     visible={showModal}
     gameweekData={selectedGameweekData!}
-    seasonName={activeSeasonName}
   />
 {/if}

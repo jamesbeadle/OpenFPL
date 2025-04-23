@@ -35,10 +35,14 @@ main {
   @apply hover:border-BrandSlateGray hover:bg-BrandGreen/80;
 }
 
+.inactive-fpl-button {
+  @apply bg-BrandLightGray
+}
+
 .fpl-dropdown {
   background-color: transparent !important;
   border: none;
-  @apply rounded-sm;
+  @apply rounded-sm p-2 text-center min-w-[125px];
 }
 
 .fpl-dropdown option {
@@ -49,6 +53,10 @@ main {
 input {
   background-color: #2e323a !important;
   color: white !important;
+}
+
+.input-header {
+  @apply text-sm BrandLightGray;
 }
 
 .bg-light-gray {

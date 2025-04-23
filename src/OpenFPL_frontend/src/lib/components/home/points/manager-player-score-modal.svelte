@@ -9,16 +9,31 @@
     import { onMount } from "svelte";
     import { clubStore } from "$lib/stores/club-store";
     import { fixtureStore } from "$lib/stores/fixture-store";
+    import { storeManager } from "$lib/managers/store-manager";
+    import { seasonStore } from "$lib/stores/season-store";
+    import { leagueStore } from "$lib/stores/league-store";
   
   interface Props {
     visible: boolean;
     gameweekData: GameweekData;
-    seasonName: string;
   }
-  let { visible, gameweekData, seasonName }: Props = $props();
+  let { visible, gameweekData }: Props = $props();
 
+  let isLoading = $state(true);
   let selectedTeam: Club | undefined = $state(undefined);
   let selectedOpponentTeam: Club| undefined = $state(undefined);
+  let activeSeasonName: string = $state("");
+
+  onMount(async () => {
+    try{
+      await storeManager.syncStores();
+      activeSeasonName = await seasonStore.getSeasonName($leagueStore!.activeSeasonId ?? 0) ?? "";
+    } catch {
+      
+    } finally {
+      isLoading = false;
+    }
+  });
 
   onMount(() => {
       let playerTeamId = gameweekData.player.clubId;
@@ -62,7 +77,7 @@
     <p class="flex items-center justify-center w-1/3 pt-2 ml-2 border-gray-600 border-x xs:ml-0">
       vs <BadgeIcon className="w-5 h-5 mx-1" club={selectedOpponentTeam!} /> {selectedOpponentTeam?.abbreviatedName}
     </p>
-    <p class="flex items-center justify-center w-1/3 pt-2 border-r border-gray-600">{seasonName}</p>
+    <p class="flex items-center justify-center w-1/3 pt-2 border-r border-gray-600">{activeSeasonName}</p>
   </div>
 
   <div class="modal-header-row">

@@ -9,7 +9,7 @@
     import { getGameweeks } from "$lib/utils/helpers";
     import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
     import LeaderboardFilter from "./leaderboards/leaderboard-type-filter.svelte";
-    import LeaderboardMonthFilter from "./leaderboards/leaderboard-month-filter.svelte";
+    import LeaderboardMonthFilter from "../shared/filters/month-filter.svelte";
     import LeaderboardTable from "./leaderboards/leaderboard-table.svelte";
     import LocalSpinner from "../shared/local-spinner.svelte";
     import type { GetWeeklyLeaderboard } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
