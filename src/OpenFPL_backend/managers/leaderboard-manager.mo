@@ -38,55 +38,13 @@ module {
     private var activeCanisterId = "";
     private var MAX_LEADERBOARDS_PER_CANISTER = 500;
 
-    public func getWeeklyCanisterId(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) : async ?Text {
-      let gameweekSeason = Array.find(
-        weeklyLeaderboardCanisters,
-        func(seasonEntry : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, Ids.CanisterId)])) : Bool {
-          seasonEntry.0 == seasonId;
-        },
-      );
+    private let DEFAULT_PAGINATION_COUNT = 10;
 
-      switch (gameweekSeason) {
-        case (?foundGameweekSeason) {
-          let gameweekResult = Array.find(
-            foundGameweekSeason.1,
-            func(gameweekEntry : (FootballDefinitions.GameweekNumber, Ids.CanisterId)) : Bool {
-              gameweekEntry.0 == gameweek;
-            },
-          );
-
-          switch (gameweekResult) {
-            case (?foundGameweek) {
-              return ?foundGameweek.1;
-            };
-            case (null) {};
-          };
-        };
-        case (null) {};
-      };
-
-      return null;
-    };
-
-    public func getSeasonCanisterId(seasonId : FootballIds.SeasonId) : async ?Text {
-      let seasonResult = Array.find(
-        seasonLeaderboardCanisters,
-        func(seasonEntry : (FootballIds.SeasonId, Ids.CanisterId)) : Bool {
-          seasonEntry.0 == seasonId;
-        },
-      );
-
-      switch (seasonResult) {
-        case (?foundSeason) {
-          return ?foundSeason.1;
-        };
-        case (null) {};
-      };
-
-      return null;
-    };
 
     public func getWeeklyLeaderboard(dto : LeaderboardQueries.GetWeeklyLeaderboard) : async Result.Result<LeaderboardQueries.WeeklyLeaderboard, Enums.Error> {
+      
+      // TODO
+      
       if (dto.limit > 100) {
         return #err(#NotAllowed);
       };
@@ -178,6 +136,10 @@ module {
       return null;
     };
 
+    public func getMonthlyLeaderboard(dto: LeaderboardQueries.GetMonthlyLeaderboard) : async Result.Result<LeaderboardQueries.MonthlyLeaderboard, Enums.Error> {
+// TODO
+    };
+
     public func getMonthlyLeaderboardEntry(principalId : Text, seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, clubId : FootballIds.ClubId) : async ?LeaderboardQueries.LeaderboardEntry {
 
       let monthSeason = Array.find(
@@ -214,6 +176,10 @@ module {
       return null;
     };
 
+    public func getSeasonLeaderboard(dto: LeaderboardQueries.GetSeasonLeaderboard) : async Result.Result<LeaderboardQueries.SeasonLeaderboard, Enums.Error> {
+// TODO
+    };
+
     public func getSeasonLeaderboardEntry(principalId : Text, seasonId : FootballIds.SeasonId) : async ?LeaderboardQueries.LeaderboardEntry {
 
       let seasonEntryResult = Array.find(
@@ -238,6 +204,16 @@ module {
       };
       return null;
     };
+
+    public func mostValuableTeamLeaderboard(dto: LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
+      // TODO
+    };
+
+
+
+
+
+    // TODO - ensure this is working correctly with our single canister structure
 
     public func calculateLeaderboards(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, month : BaseDefinitions.CalendarMonth, uniqueManagerCanisterIds : [Ids.CanisterId]) : async () {
       if (activeCanisterId == "") {

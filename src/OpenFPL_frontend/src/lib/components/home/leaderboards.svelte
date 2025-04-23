@@ -28,7 +28,7 @@
     let searchQuery = $state("");
   
     $effect(() => {
-        selectedTeamIndex.set($clubStore.findIndex((team) => team.id === selectedTeamId));
+        selectedTeamIndex = $clubStore.findIndex((team) => team.id === selectedTeamId);
         loadLeaderboardData();
         if (leaderboard && leaderboard.totalEntries) {
             totalPages = Math.ceil(Number(leaderboard.totalEntries) / 25);
@@ -48,6 +48,7 @@
     });
     
     async function loadLeaderboardData() {
+      /*
       if (!selectedGameweek) { return; }
       isLoading = true;
       switch (selectedLeaderboardType) {
@@ -75,6 +76,7 @@
           break;
       }
       isLoading = false;
+      */
     }
   
     const changeGameweek = (delta: number) => {
@@ -101,8 +103,9 @@
       <div class="flex flex-col gap-4 sm:flex-row sm:gap-8">
         <div class="flex flex-col gap-4 sm:flex-row sm:gap-8">
           <LeaderboardFilter {selectedLeaderboardType} {changeLeaderboardType} />
+          <!--  
           {#if selectedLeaderboardType === 1}
-            {#if weeklyPoints !== undefined}
+          {#if weeklyPoints !== undefined}
               <div class="flex items-center gap-2 px-4 py-2 text-lg font-medium rounded-md bg-BrandGray/60">
                 <span class="text-gray-300">Total Gameweek Points:</span>
                 <span class="text-white">{weeklyPoints}</span>
@@ -113,6 +116,7 @@
           {#if selectedLeaderboardType === 2}
             <LeaderboardMonthFilter {selectedMonth} {selectedTeamId} {selectedTeamIndex} />
           {/if}
+          -->
         </div>
       </div>
       <LeaderboardTable {leaderboard} {searchQuery} onPageChange={handlePageChange} {currentPage} {totalPages} {selectedGameweek} />

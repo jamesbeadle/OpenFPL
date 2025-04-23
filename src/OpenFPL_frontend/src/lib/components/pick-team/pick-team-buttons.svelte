@@ -128,7 +128,7 @@
     const newPlayers = fantasyTeam!.playerIds.filter(id => id > 0 && !oldPlayerIds.has(id));
     sessionAddedPlayers = [...sessionAddedPlayers, ...newPlayers];
     
-    teamValue = fantasyTeam;
+    teamValue = updateTeamValue(fantasyTeam);
   }
 
   function playTransferWindow() {
