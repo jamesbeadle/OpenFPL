@@ -35,8 +35,8 @@
   let pointsForYellowCard = -5;
   let pointsForCleanSheet = 10;
 
-  var pointsForGoal = 20;
-  var pointsForAssist = 15;
+  var pointsForGoal = $state(20);
+  var pointsForAssist = $state(15);
   
   $effect(() => {
      

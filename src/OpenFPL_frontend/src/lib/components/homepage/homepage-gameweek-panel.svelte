@@ -12,19 +12,15 @@
     }
     let { seasonName }: Props = $props();
 
-    let loadingRewardRates = true;
-    let loadingManagerCount = true;
-    let managerCount = 0;
-    let weeklyPrizePool = "0.0000";
+    let loadingRewardRates = $state(true);
+    let loadingManagerCount = $state(true);
+    let managerCount = $state(0);
+    let weeklyPrizePool = $state("0.0000");
 
     onMount(() => {
-        let unsub: () => void = () => {};
-        unsub = globalDataLoaded.subscribe((loaded) => {
-            if (loaded) {
-                loadManagerCount();
-                unsub();
-            }
-        });
+        if (globalDataLoaded) {
+            loadManagerCount();
+        }
         rewardRatesStore.subscribe(rewardRates => {
             if(!rewardRates) {return};
             weeklyPrizePool = formatWholeE8s(BigInt(Math.round(Number(rewardRates.weeklyLeaderboardRewardRate)))).toString();

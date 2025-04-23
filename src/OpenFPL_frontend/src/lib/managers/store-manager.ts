@@ -20,7 +20,7 @@ import { PlayerEventsService } from "$lib/services/player-events-service";
 import { FixtureService } from "$lib/services/fixture-service";
 import { replacer } from "$lib/utils/helpers";
 
-export let globalDataLoaded = $state(false);
+export let globalDataLoaded = false;
 
 class StoreManager {
   private dataHashService: DataHashService;

@@ -1,6 +1,5 @@
 <script lang="ts">
     import { getPlayerName } from "$lib/utils/helpers";
-    import { playerEventsStore } from "$lib/stores/player-events-store";
     import { clubStore } from "$lib/stores/club-store";
     
     import AddIcon from "$lib/icons/AddIcon.svelte";
@@ -15,13 +14,12 @@
     }
     let { player, index, selectPlayer, disableReasons }: Props = $props();
 
-    let club: Club | undefined;
+    let club: Club | undefined = $state(undefined);
 
     $effect(() => {
-      
+      club = $clubStore.find((x) => x.id === player.clubId);
     });
 
-    $: club = $clubStore.find((x) => x.id === player.clubId);
 </script>
 
 <div

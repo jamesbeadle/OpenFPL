@@ -24,10 +24,10 @@
       <p class="hidden sm:flex sm:min-w-[15px]">
         {convertPositionToAbbreviation(playerData.player.position)}
       </p>
-      <svelte:component
-        this={getFlagComponent(playerData.player.nationality)}
-        class="hidden sm:flex h-2 w-2 mr-1 sm:h-4 sm:w-4 sm:mx-2 min-w-[15px]"
-      />
+      {#if playerData.player.nationality > 0}
+          {@const flag = getFlagComponent(playerData.player.nationality)}
+          <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
+      {/if}
       <p class="block truncate-50">
         {getPlayerName(playerData.player)} {playerData.player.lastName}
       </p>
