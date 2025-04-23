@@ -6,7 +6,7 @@
     }
     let { visible }: Props = $props();
     
-    let showSecondMessage = false;
+    let showSecondMessage = $state(false);
 
     function dismiss() {
         if (!showSecondMessage) {

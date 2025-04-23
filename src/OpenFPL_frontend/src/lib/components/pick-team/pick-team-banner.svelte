@@ -8,7 +8,7 @@
     let { visible, onDismiss }: Props = $props();
     
     
-    let currentStep = 1;
+    let currentStep = $state(1);
     const totalSteps = 2;
 
     function nextStep() {

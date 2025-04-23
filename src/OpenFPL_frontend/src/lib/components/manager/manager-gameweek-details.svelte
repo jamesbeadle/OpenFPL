@@ -20,7 +20,6 @@
   }
   let { selectedGameweek, fantasyTeam }: Props = $props();
 
-
   let isLoading = $state(false);
   let showModal = $state(false);
   let lastGameweek: number = $state(0);
@@ -72,7 +71,7 @@
   <LocalSpinner />
 {:else}
   <div class="flex flex-col">
-      <GameweekFilter {lastGameweek} {selectedGameweek} {gameweeks} {changeGameweek} {weeklyPoints} />
+      <GameweekFilter {lastGameweek} {selectedGameweek} {gameweeks} {changeGameweek} />
   </div>
   <ManagerGameweekDetailTable {activeSeasonName} {fantasyTeam} {gameweekPlayers} {showModal} />
   <ScoreAbbreviationKey />

@@ -1,13 +1,32 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+  
+  import { seasonStore } from "$lib/stores/season-store";
+  import { leagueStore } from "$lib/stores/league-store";
+  import { globalDataLoaded } from "$lib/managers/store-manager";
     import ContentPanel from "../shared/panels/content-panel.svelte";
     import PageHeader from "../shared/panels/page-header.svelte";
     import HomepageGameweekPanel from "./homepage-gameweek-panel.svelte";
     import HomepageNextGamePanel from "./homepage-next-game-panel.svelte";
 
-    interface Props {
-      seasonName: string
+    let isLoading = true;
+    let seasonName = "";
+
+    onMount(() => {
+    let unsub: () => void = () => {};
+    unsub = globalDataLoaded.subscribe((loaded) => {
+      if (loaded) {
+        loadCurrentStatusDetails();
+        isLoading = false;
+        unsub();
+      }
+    });
+    isLoading = false;
+  });
+
+    async function loadCurrentStatusDetails(){
+      seasonName = await seasonStore.getSeasonName($leagueStore?.activeSeasonId ?? 1) ?? "-";
     }
-    let { seasonName }: Props = $props();
 </script>
 
 <PageHeader>

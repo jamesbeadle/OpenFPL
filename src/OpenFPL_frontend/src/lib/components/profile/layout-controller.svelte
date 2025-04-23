@@ -12,6 +12,7 @@
     import MembershipProfile from '$lib/components/profile/membership-profile.svelte';
     import LandingPage from '$lib/components/landing/landing-page.svelte';
     import FullScreenSpinner from '../shared/full-screen-spinner.svelte';
+    import Sidebar from '$lib/shared/sidebar.svelte';
     
     interface Props {
         children: Snippet;
