@@ -50,6 +50,7 @@ import LeaderboardCanister "./canister_definitions/leaderboard-canister";
 import AppQueries "./queries/app_queries";
 import LeaderboardQueries "./queries/leaderboard_queries";
 import UserQueries "./queries/user_queries";
+import ICFCQueries "./queries/icfc_queries";
 
 /* ----- Commands ----- */
 import UserCommands "./commands/user_commands";
@@ -810,6 +811,11 @@ actor Self {
     assert Principal.toText(caller) == Environment.ICFC_BACKEND_CANISTER_ID;
     let _ = await userManager.updateICFCHash(dto);
     return #ok();
+  };
+
+  public shared ({ caller }) func getICFCProfileLinks(_ : ICFCQueries.GetICFCLinks) : async Result.Result<[ICFCQueries.ICFCLinks], Enums.Error> {
+    assert Principal.toText(caller) == Environment.ICFC_BACKEND_CANISTER_ID;
+    return #ok(userManager.getICFCProfileLinks());
   };
 
   /* ----- Private Motoko Actor Functions ----- */
