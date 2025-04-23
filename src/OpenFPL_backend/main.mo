@@ -7,12 +7,10 @@ import Enums "mo:waterway-mops/Enums";
 import ICFCEnums "mo:waterway-mops/ICFCEnums";
 import CanisterIds "mo:waterway-mops/CanisterIds";
 import Management "mo:waterway-mops/Management";
-import CanisterUtilities "mo:waterway-mops/CanisterUtilities";
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
 import BaseQueries "mo:waterway-mops/queries/BaseQueries";
-import Root "mo:waterway-mops/sns-wrappers/root";
 import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
 import Environment "Environment";
 import LeagueNotificationCommands "mo:waterway-mops/football/LeagueNotificationCommands";
@@ -52,6 +50,7 @@ import LeaderboardCanister "./canister_definitions/leaderboard-canister";
 import AppQueries "./queries/app_queries";
 import LeaderboardQueries "./queries/leaderboard_queries";
 import UserQueries "./queries/user_queries";
+import ICFCQueries "./queries/icfc_queries";
 
 /* ----- Commands ----- */
 import UserCommands "./commands/user_commands";
@@ -564,7 +563,7 @@ actor Self {
   };
 
   public shared ({ caller }) func completeGameweekNotification(dto : LeagueNotificationCommands.CompleteGameweekNotification) : async Result.Result<(), Enums.Error> {
-
+    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
     let _ = leaderboardManager.calculateLeaderboards(dto.seasonId, dto.gameweek, 0, managerCanisterIds);
 
@@ -586,39 +585,37 @@ actor Self {
         var entries : [LeaderboardPayoutCommands.LeaderboardEntry] = [];
         for (entry in Iter.fromArray(foundLeaderboard.entries)) {
           let leaderboardEntry : LeaderboardPayoutCommands.LeaderboardEntry = {
-            principalId = entry.principalId;
+            appPrincipalId = entry.principalId;
             rewardAmount = entry.rewardAmount;
+            payoutStatus = #Pending;
+            payoutDate = null;
           };
           entries := Array.append<LeaderboardPayoutCommands.LeaderboardEntry>(entries, [leaderboardEntry]);
         };
 
         let payoutRequest : LeaderboardPayoutCommands.LeaderboardPayoutRequest = {
-          app = #ICFC;
-          entries = entries;
+          app = #OpenFPL;
+          leaderboard = entries;
           gameweek = dto.gameweek;
           seasonId = dto.seasonId;
-          token = #ICFC;
+          token = BaseUtilities.tokenToText(#ICFC);
         };
 
-        let res = await icfc_backend_canister.requestLeaderboardPayout(payoutRequest);
-
-        switch (res) {
-          case (#ok(_)) {
-            stable_leaderboard_payout_requests := Array.append<LeaderboardPayoutCommands.PayoutRequest>(
-              stable_leaderboard_payout_requests,
-              [{
-                seasonId = dto.seasonId;
-                gameweek = dto.gameweek;
-                payoutStatus = #Pending;
-                payoutDate = null;
-              }],
-            );
-          };
-          case (#err(error)) {
-            return #err(error);
-          };
+        let sendReq = await icfc_backend_canister.requestLeaderboardPayout(payoutRequest);
+        let #ok(_) = sendReq else {
+          return sendReq;
         };
 
+        stable_leaderboard_payout_requests := Array.append<LeaderboardPayoutCommands.PayoutRequest>(
+          stable_leaderboard_payout_requests,
+          [{
+            seasonId = dto.seasonId;
+            gameweek = dto.gameweek;
+            leaderboard = entries;
+            totalEntries = Array.size(entries);
+            totalPaid = 0;
+          }],
+        );
         return #ok();
       };
       case (#err(error)) {
@@ -650,8 +647,9 @@ actor Self {
               return {
                 seasonId = entry.seasonId;
                 gameweek = entry.gameweek;
-                payoutStatus = #Paid;
-                payoutDate = ?Time.now();
+                leaderboard = dto.leaderboard;
+                totalEntries = dto.totalEntries;
+                totalPaid = dto.totalPaid;
               };
             };
             return entry;
@@ -666,21 +664,30 @@ actor Self {
   public shared ({ caller }) func finaliseFixtureNotification(dto : LeagueNotificationCommands.CompleteFixtureNotification) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
 
-    let fixtures = await getFixtures({ leagueId = Environment.LEAGUE_ID; seasonId = dto.seasonId });
+    let fixtures = await getFixtures({
+      leagueId = Environment.LEAGUE_ID;
+      seasonId = dto.seasonId;
+    });
 
-    switch(fixtures){
-      case (#ok foundFixtures){
-        
-        let fixture = Array.find<FixtureQueries.Fixture>(foundFixtures.fixtures, func(entry:FixtureQueries.Fixture) : Bool {
-          entry.id == dto.fixtureId;
-        });
+    switch (fixtures) {
+      case (#ok foundFixtures) {
 
-        switch(fixture){
-          case (?foundFixture){
+        let fixture = Array.find<FixtureQueries.Fixture>(
+          foundFixtures.fixtures,
+          func(entry : FixtureQueries.Fixture) : Bool {
+            entry.id == dto.fixtureId;
+          },
+        );
 
-            let fixtureGameweekFixtures = Array.filter<FixtureQueries.Fixture>(foundFixtures.fixtures, func(entry: FixtureQueries.Fixture){
-              entry.gameweek == foundFixture.gameweek; 
-            });
+        switch (fixture) {
+          case (?foundFixture) {
+
+            let fixtureGameweekFixtures = Array.filter<FixtureQueries.Fixture>(
+              foundFixtures.fixtures,
+              func(entry : FixtureQueries.Fixture) {
+                entry.gameweek == foundFixture.gameweek;
+              },
+            );
 
             let sortedFixtures = Array.sort<DataCanister.Fixture>(
               fixtureGameweekFixtures,
@@ -696,21 +703,21 @@ actor Self {
               var fixtureMonth : BaseDefinitions.CalendarMonth = DateTimeUtilities.unixTimeToMonth(firstGameweekFixture.kickOff);
               let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, dto.seasonId, foundFixture.gameweek, fixtureMonth);
               await seasonManager.updateDataHash("league_status");
-              return #ok();  
+              return #ok();
             };
 
             return #err(#NotFound);
-            
+
           };
-          case (null){
+          case (null) {
             return #err(#NotFound);
-          }
+          };
         };
 
       };
-      case (#err error){
+      case (#err error) {
         return #err(error);
-      }
+      };
     };
 
   };
@@ -804,6 +811,11 @@ actor Self {
     assert Principal.toText(caller) == Environment.ICFC_BACKEND_CANISTER_ID;
     let _ = await userManager.updateICFCHash(dto);
     return #ok();
+  };
+
+  public shared ({ caller }) func getICFCProfileLinks(_ : ICFCQueries.GetICFCLinks) : async Result.Result<[ICFCQueries.ICFCLinks], Enums.Error> {
+    assert Principal.toText(caller) == Environment.ICFC_BACKEND_CANISTER_ID;
+    return #ok(userManager.getICFCProfileLinks());
   };
 
   /* ----- Private Motoko Actor Functions ----- */

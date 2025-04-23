@@ -36,6 +36,7 @@ import SHA224 "mo:waterway-mops/SHA224";
 import IcfcTypes "mo:waterway-mops/ICFCTypes";
 import ICFCCommands "../commands/icfc_commands";
 import Environment "../Environment";
+import ICFCQueries "../queries/icfc_queries";
 
 module {
 
@@ -101,21 +102,21 @@ module {
     };
 
     public func getCombinedProfile(dto : UserQueries.GetProfile) : async Result.Result<UserQueries.CombinedProfile, Enums.Error> {
-      
+
       let icfcProfileResult = await getICFCProfile(dto);
-      
+
       switch (icfcProfileResult) {
         case (#ok(icfcProfile)) {
 
           let userManagerCanisterId = managerCanisterIds.get(dto.principalId);
-       
+
           switch (userManagerCanisterId) {
             case (?foundUserCanisterId) {
               let manager_canister = actor (foundUserCanisterId) : actor {
                 getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
               };
               let manager = await manager_canister.getManager(dto.principalId);
-         
+
               switch (manager) {
                 case (null) {
                   return #err(#NotFound);
@@ -712,6 +713,21 @@ module {
           return #ok();
         };
       };
+    };
+
+    public func getICFCProfileLinks() : [ICFCQueries.ICFCLinks] {
+      let icfcLinks = Iter.toArray(userICFCLinks.entries());
+      var result : [ICFCQueries.ICFCLinks] = [];
+      for (icfcLink in Iter.fromArray(icfcLinks)) {
+        let link : ICFCQueries.ICFCLinks = {
+          icfcPrincipalId = icfcLink.1.principalId;
+          subAppUserPrincipalId = icfcLink.0;
+          membershipType = icfcLink.1.membershipType;
+          subApp = #OpenFPL;
+        };
+        result := Array.append(result, [link]);
+      };
+      return result;
     };
 
     public func saveBonusSelection(dto : UserCommands.PlayBonus, gameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
