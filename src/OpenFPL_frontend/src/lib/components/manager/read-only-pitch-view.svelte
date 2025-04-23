@@ -17,9 +17,9 @@
 
   interface Props {
     fantasyTeam: Writable<FantasyTeamSnapshot | null>;
-      gridSetup: number[][];
-      gameweekPlayers: Writable<GameweekData[]>;
-        selectedGameweek: Writable<GameweekNumber>;
+    gridSetup: number[][];
+    gameweekPlayers: Writable<GameweekData[]>;
+    selectedGameweek: Writable<GameweekNumber>;
   }
   let { fantasyTeam, gridSetup, gameweekPlayers, selectedGameweek }: Props = $props();
   

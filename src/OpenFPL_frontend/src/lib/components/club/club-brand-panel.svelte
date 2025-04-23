@@ -1,8 +1,8 @@
 <script lang="ts">
+    import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
-    import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
+    
     interface Props {
       club: Club;
     }

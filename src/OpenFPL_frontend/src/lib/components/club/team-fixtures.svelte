@@ -16,18 +16,20 @@
   import TeamFixturesTableHeader from "./team-fixtures-table-header.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import LocalSpinner from "../shared/local-spinner.svelte";
-
+  
   interface Props {
     clubId: number;
   }
   let { clubId }: Props = $props();
 
+  let filteredFixtures: FixtureWithClubs[] = $state([]);
   let fixturesWithTeams: FixtureWithClubs[] = [];
   let selectedFixtureType = writable(-1);
 
-  let isLoading = true;
+  let isLoading = $state(true);
 
-  $: filteredFixtures = fixturesWithTeams
+  $effect(() => {
+    filteredFixtures = fixturesWithTeams
     .filter(
       ({ fixture }) => {
         if($selectedFixtureType == -1 ) { return true; }
@@ -35,6 +37,7 @@
         if($selectedFixtureType == 1 && fixture.awayClubId === clubId) { return true; }
       } 
     ).sort((a, b) => a.fixture.gameweek - b.fixture.gameweek)
+  });
 
   onMount(async () => {
       await storeManager.syncStores();

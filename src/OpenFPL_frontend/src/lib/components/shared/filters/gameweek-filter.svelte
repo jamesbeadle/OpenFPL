@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { leagueStore } from "$lib/stores/league-store";
     import type { Writable } from "svelte/store";
     
     interface Props {
@@ -19,7 +18,7 @@
               class={`${
                 $selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
               } default-button mr-1`}
-              on:click={() => changeGameweek(-1)}
+              onclick={() => changeGameweek(-1)}
               disabled={$selectedGameweek === 1}
             >
               &lt;
@@ -38,7 +37,7 @@
                   ? "bg-gray-500"
                   : "fpl-button"
               } default-button ml-3`}
-              on:click={() => changeGameweek(1)}
+              onclick={() => changeGameweek(1)}
               disabled={$selectedGameweek === lastGameweek}
             >
               &gt;

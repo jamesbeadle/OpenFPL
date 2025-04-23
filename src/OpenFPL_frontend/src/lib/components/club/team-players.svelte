@@ -18,17 +18,21 @@
   }
   let { clubId }: Props = $props();
 
+  let filteredPlayers: Player[] = $state([]);
+
   onMount(async () => {
     players = $playerStore.filter((x) => x.clubId == clubId)
   });
 
   let players: Player[] = [];
   let selectedPosition = writable(-1);
-  $: filteredPlayers = $selectedPosition === -1
+  $effect(() => {
+    filteredPlayers = $selectedPosition === -1
       ? players
       : players.filter(
           (p) => convertPositionToIndex(p.position) === $selectedPosition
         );
+  });
   
 </script>
 

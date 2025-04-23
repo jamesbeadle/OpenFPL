@@ -1,4 +1,4 @@
-<script lang="ts">
+w<script lang="ts">
   import { type Writable } from "svelte/store";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { playerStore } from "$lib/stores/player-store";
@@ -72,13 +72,13 @@
           {@const playerTeam = $clubStore.find((x) => x.id === data.player.clubId) ?? null}
           <button
             class="w-full"
-            on:click={() => {
+            onclick={() => {
               showDetailModal(data);
             }}
           >
            <GameweekDetailTableRow fantasyTeam={fantasyTeam} player={playerDTO!} playerTeam={playerTeam!} {data} />
           </button>
-        {/each}
+        {/each} 
       </div>
     {:else}
       <p>No Fantasy Team Data</p>
@@ -90,7 +90,7 @@
       playerTeam={selectedTeam}
       opponentTeam={selectedOpponentTeam}
       seasonName={activeSeasonName}
-      bind:visible={showModal}
+      visible={showModal}
       gameweekData={selectedGameweekData}
     />
   {/if}

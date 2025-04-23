@@ -8,14 +8,17 @@
     }
     let { selectedTeamId, changeTeam }: Props = $props();
     
-    $: if ($clubStore.length && !$selectedTeamId) {
-        $selectedTeamId = $clubStore[0].id;
-    }
+    $effect(() => {
+        if ($clubStore.length && !$selectedTeamId) {
+            $selectedTeamId = $clubStore[0].id;
+        }
+    });
+
 </script>
 
 <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
     <div class="flex items-center">
-        <button class="mr-1 default-button fpl-button" on:click={() => changeTeam(-1)}>
+        <button class="mr-1 default-button fpl-button" onclick={() => changeTeam(-1)}>
             &lt;
         </button>
 
@@ -25,7 +28,7 @@
             {/each}
         </select>
 
-        <button class="ml-3 default-button fpl-button" on:click={() => changeTeam(1)}>
+        <button class="ml-3 default-button fpl-button" onclick={() => changeTeam(1)}>
             &gt;
         </button>
     </div>

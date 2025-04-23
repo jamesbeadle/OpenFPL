@@ -7,7 +7,7 @@
   import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetFavouriteTeam } from "$lib/derived/user.derived";
-  import { getGameweeks, /* // TODO mergeLeaderboardWithRewards */ } from "$lib/utils/helpers";
+  import { getGameweeks } from "$lib/utils/helpers";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import LeaderboardFilter from "./leaderboard-filter.svelte";
   import LeaderboardMonthFilter from "./leaderboard-month-filter.svelte";

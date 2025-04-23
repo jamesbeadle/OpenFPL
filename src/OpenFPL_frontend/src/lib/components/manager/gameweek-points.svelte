@@ -97,7 +97,7 @@
       playerTeam={selectedTeam}
       opponentTeam={selectedOpponentTeam}
       seasonName={activeSeasonName}
-      bind:visible={showModal}
+      visible={showModal}
       gameweekData={selectedGameweekData}
     />
   {/if}

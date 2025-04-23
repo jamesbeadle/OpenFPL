@@ -27,11 +27,11 @@
         {/if}
     </div>
     <div class="flex items-center w-2/12">
-        <svelte:component
+        <component
             this={getFlagComponent(data.player.nationality)}
             class="hidden w-4 h-4 mr-1 md:flex"
             size="100"
-        />
+        ></component>
         <span class="flex items-center">
             <BadgeIcon club={playerTeam} className="w-4 h-4 mr-1 md:hidden" />
             <p class="truncate min-w-[30px] max-w-[30px] xs:min-w-[50px] xs:max-w-[50px] sm:min-w-[60px] sm:max-w-[60px] md:min-w-[75px] md:max-w-[75px]">

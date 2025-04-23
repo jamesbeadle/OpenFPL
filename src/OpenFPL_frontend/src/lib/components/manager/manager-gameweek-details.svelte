@@ -29,13 +29,17 @@
   let gameweekPlayers = writable<GameweekData[]>([]);
   let gameweeks: number[];
 
-  $: if ($fantasyTeam && $selectedGameweek && $selectedGameweek > 0) {
-    updateGameweekPlayers();
-  }
+  $effect(() => {
+    if ($fantasyTeam && $selectedGameweek && $selectedGameweek > 0) {
+      updateGameweekPlayers();
+    }
+  })
 
-  $: if ($selectedGameweek) {
-    isLoading = true;
-  }
+  $effect(() => {
+    if ($selectedGameweek) {
+      isLoading = true;
+    }
+  })
 
   onMount(async () => {
     await storeManager.syncStores();
@@ -68,7 +72,7 @@
   <LocalSpinner />
 {:else}
   <div class="flex flex-col">
-      <GameweekFilter {lastGameweek} {selectedGameweek} {gameweeks} {changeGameweek} />
+      <GameweekFilter {lastGameweek} {selectedGameweek} {gameweeks} {changeGameweek} {weeklyPoints} />
   </div>
   <ManagerGameweekDetailTable {activeSeasonName} {fantasyTeam} {gameweekPlayers} {showModal} />
   <ScoreAbbreviationKey />
