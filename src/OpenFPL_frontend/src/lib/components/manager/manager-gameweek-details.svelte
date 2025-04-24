@@ -70,7 +70,7 @@
   <LocalSpinner />
 {:else}
   <div class="flex flex-col">
-      <GameweekFilter {lastGameweek} {selectedGameweek} {changeGameweek} />
+      <GameweekFilter {selectedGameweek} {changeGameweek} />
   </div>
   <ManagerGameweekDetailTable {activeSeasonName} {fantasyTeam} {gameweekPlayers} {showModal} />
   <ScoreAbbreviationKey />

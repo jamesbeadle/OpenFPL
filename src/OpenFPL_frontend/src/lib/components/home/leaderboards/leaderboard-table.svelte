@@ -9,21 +9,21 @@
     currentPage: number;
     totalPages: number;
     onPageChange: (page: number) => void;
-    searchQuery: string;
+    searchTerm: string;
   }
-  let { leaderboard, selectedGameweek, currentPage, totalPages, onPageChange, searchQuery }: Props = $props();
+  let { leaderboard, selectedGameweek, currentPage, totalPages, onPageChange, searchTerm }: Props = $props();
 
   let searchInput: string = $state("");
 
   function executeSearch() {
-    searchQuery = searchInput;
+    searchTerm = searchInput;
     currentPage = 1;
     onPageChange(1);
   }
 
   function resetSearch() {
     searchInput = "";
-    searchQuery = "";
+    searchTerm = "";
     currentPage = 1;
     onPageChange(1);
   }
@@ -92,7 +92,7 @@
         </a>
       {/each}
       {#if leaderboard.entries.length === 0}
-          <p class="w-full p-4">No managers found matching "{searchQuery}"</p>
+          <p class="w-full p-4">No managers found matching "{searchTerm}"</p>
       {:else}
         <Pagination
           {currentPage}

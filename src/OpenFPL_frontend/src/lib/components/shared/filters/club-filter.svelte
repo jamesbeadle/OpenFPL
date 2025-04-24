@@ -4,15 +4,14 @@
 
     interface Props {
         selectedClubId: ClubId;
-        onSelect: (clubId: ClubId) => void;
     }
-    let { selectedClubId, onSelect }: Props = $props();
+    let { selectedClubId }: Props = $props();
 
 </script>
 
 <div class="flex w-full flex-col">
     <p class="input-header">Select Club:</p>
-    <select class="fpl-dropdown" value={selectedClubId} onselect={() => onSelect(selectedClubId)}>
+    <select class="fpl-dropdown" value={selectedClubId}>
         {#each $clubStore as club}
             <option value={club.id}>{club.friendlyName}</option>
         {/each}

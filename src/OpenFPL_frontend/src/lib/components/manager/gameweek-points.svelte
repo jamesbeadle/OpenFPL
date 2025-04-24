@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { storeManager } from "$lib/managers/store-manager";
-  import { seasonStore } from "../../stores/season-store";
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { managerStore } from "$lib/stores/manager-store";
@@ -26,12 +25,10 @@
   let selectedTeam: Club | undefined = $state(undefined);
   let selectedOpponentTeam: Club | undefined = $state(undefined);
   let selectedGameweekData: GameweekData | undefined = $state(undefined);
-  let activeSeasonName: string | undefined = $state(undefined);
   let fantasyTeam: FantasyTeamSnapshot | null = $state(null);
 
   onMount(async () => {
     await storeManager.syncStores();
-    activeSeasonName = await seasonStore.getSeasonName($leagueStore!.activeSeasonId ?? 0) ?? "";
     gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1);
     selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.completedGameweek : $leagueStore!.activeGameweek ?? 1;
     isInitialLoad = false;
@@ -95,7 +92,6 @@
 {:else}
   {#if showModal}
     <FantasyPlayerDetailModal
-      seasonName={activeSeasonName!}
       visible={showModal}
       gameweekData={selectedGameweekData!}
     />
@@ -104,7 +100,6 @@
     <GameweekFilter 
       {selectedGameweek} 
       {changeGameweek} 
-      lastGameweek={$leagueStore!.completedGameweek}
     />
     <GameweekPointsTable {gameweekData} {showDetailModal} />
   </div>

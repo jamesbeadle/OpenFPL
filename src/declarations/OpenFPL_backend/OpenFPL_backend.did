@@ -131,37 +131,37 @@ type RewardRates =
 type Result_9 = 
  variant {
    err: Error;
-   ok: PostponedFixtures;
+   ok: PlayersSnapshot;
  };
 type Result_8 = 
  variant {
    err: Error;
-   ok: CombinedProfile;
+   ok: PostponedFixtures;
  };
 type Result_7 = 
  variant {
    err: Error;
-   ok: ProjectCanisters;
+   ok: CombinedProfile;
  };
 type Result_6 = 
  variant {
    err: Error;
-   ok: SeasonLeaderboard;
+   ok: ProjectCanisters;
  };
 type Result_5 = 
  variant {
    err: Error;
-   ok: Seasons;
+   ok: SeasonLeaderboard;
  };
 type Result_4 = 
  variant {
    err: Error;
-   ok: TeamSetup;
+   ok: Seasons;
  };
 type Result_3 = 
  variant {
    err: Error;
-   ok: nat;
+   ok: TeamSetup;
  };
 type Result_28 = 
  variant {
@@ -211,7 +211,7 @@ type Result_20 =
 type Result_2 = 
  variant {
    err: Error;
-   ok: WeeklyLeaderboard;
+   ok: nat;
  };
 type Result_19 = 
  variant {
@@ -241,32 +241,32 @@ type Result_15 =
 type Result_14 = 
  variant {
    err: Error;
-   ok: PlayerDetails;
+   ok: MostValuableTeamLeaderboard;
  };
 type Result_13 = 
  variant {
    err: Error;
-   ok: PlayerDetailsForGameweek;
+   ok: PlayerDetails;
  };
 type Result_12 = 
  variant {
    err: Error;
-   ok: Players;
+   ok: PlayerDetailsForGameweek;
  };
 type Result_11 = 
  variant {
    err: Error;
-   ok: PlayersMap;
+   ok: Players;
  };
 type Result_10 = 
  variant {
    err: Error;
-   ok: PlayersSnapshot;
+   ok: PlayersMap;
  };
 type Result_1 = 
  variant {
    err: Error;
-   ok: MostValuableTeamLeaderboard;
+   ok: WeeklyLeaderboard;
  };
 type Result = 
  variant {
@@ -497,7 +497,7 @@ type MostValuableTeamLeaderboard =
  };
 type MonthlyLeaderboard = 
  record {
-   club: ClubId;
+   clubId: ClubId;
    entries: vec LeaderboardEntry__1;
    month: GameweekNumber;
    seasonId: SeasonId;
@@ -655,7 +655,7 @@ type GetMostValuableTeamLeaderboard =
  };
 type GetMonthlyLeaderboard = 
  record {
-   club: ClubId;
+   clubId: ClubId;
    month: GameweekNumber;
    page: nat;
    seasonId: SeasonId;
@@ -934,23 +934,24 @@ service : {
   getManagerByUsername: (GetManagerByUsername) -> (Result_17);
   getManagerCanisterIds: () -> (Result_16);
   getMonthlyLeaderboard: (GetMonthlyLeaderboard) -> (Result_15);
-  getPlayerDetails: (GetPlayerDetails) -> (Result_14);
-  getPlayerEvents: (GetPlayerDetailsForGameweek) -> (Result_13);
-  getPlayers: (GetPlayers) -> (Result_12);
-  getPlayersMap: (GetPlayersMap) -> (Result_11);
-  getPlayersSnapshot: (GetPlayersSnapshot) -> (Result_10);
-  getPostponedFixtures: (GetPostponedFixtures) -> (Result_9);
-  getProfile: () -> (Result_8);
-  getProjectCanisters: () -> (Result_7);
-  getSeasonLeaderboard: (GetSeasonLeaderboard) -> (Result_6);
-  getSeasons: (GetSeasons) -> (Result_5);
-  getTeamSelection: () -> (Result_4);
-  getTotalManagers: () -> (Result_3);
-  getWeeklyLeaderboard: (GetWeeklyLeaderboard) -> (Result_2);
+  getMostValuableTeamLeaderboard: (GetMostValuableTeamLeaderboard) ->
+   (Result_14);
+  getPlayerDetails: (GetPlayerDetails) -> (Result_13);
+  getPlayerEvents: (GetPlayerDetailsForGameweek) -> (Result_12);
+  getPlayers: (GetPlayers) -> (Result_11);
+  getPlayersMap: (GetPlayersMap) -> (Result_10);
+  getPlayersSnapshot: (GetPlayersSnapshot) -> (Result_9);
+  getPostponedFixtures: (GetPostponedFixtures) -> (Result_8);
+  getProfile: () -> (Result_7);
+  getProjectCanisters: () -> (Result_6);
+  getSeasonLeaderboard: (GetSeasonLeaderboard) -> (Result_5);
+  getSeasons: (GetSeasons) -> (Result_4);
+  getTeamSelection: () -> (Result_3);
+  getTotalManagers: () -> (Result_2);
+  getWeeklyLeaderboard: (GetWeeklyLeaderboard) -> (Result_1);
   leaderboardPaid: (CompleteLeaderboardPayout) -> (Result);
   linkICFCProfile: () -> (Result);
   loanPlayerNotification: (PlayerChangeNotification) -> (Result);
-  mostValuableTeamLeaderboard: (GetMostValuableTeamLeaderboard) -> (Result_1);
   noitifyAppofICFCHashUpdate: (UpdateICFCProfile) -> (Result);
   notifyAppLink: (NotifyAppofLink) -> (Result);
   notifyAppRemoveLink: (NotifyAppofRemoveLink) -> (Result);

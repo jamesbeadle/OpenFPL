@@ -130,8 +130,8 @@ module {
     };
 
     public func getMonthlyLeaderboard(dto: LeaderboardQueries.GetMonthlyLeaderboard) : async Result.Result<LeaderboardQueries.MonthlyLeaderboard, Enums.Error> {
-// TODO
-return #err(#NotFound);
+      // TODO
+      return #err(#NotFound);
     };
 
     public func getMonthlyLeaderboardEntry(principalId : Text, seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, clubId : FootballIds.ClubId) : async ?LeaderboardQueries.LeaderboardEntry {
@@ -171,8 +171,8 @@ return #err(#NotFound);
     };
 
     public func getSeasonLeaderboard(dto: LeaderboardQueries.GetSeasonLeaderboard) : async Result.Result<LeaderboardQueries.SeasonLeaderboard, Enums.Error> {
-// TODO
-return #err(#NotFound);
+      // TODO
+      return #err(#NotFound);
     };
 
     public func getSeasonLeaderboardEntry(principalId : Text, seasonId : FootballIds.SeasonId) : async ?LeaderboardQueries.LeaderboardEntry {
@@ -200,13 +200,10 @@ return #err(#NotFound);
       return null;
     };
 
-    public func mostValuableTeamLeaderboard(dto: LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
+    public func getMostValuableTeamLeaderboard(dto: LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
       // TODO
-return #err(#NotFound);
+      return #err(#NotFound);
     };
-
-
-
 
 
     // TODO - ensure this is working correctly with our single canister structure

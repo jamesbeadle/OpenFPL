@@ -4,15 +4,14 @@
 
     interface Props {
         selectedSeasonId: SeasonId;
-        onSelect: (seasonId: SeasonId) => void;
     }
-    let { selectedSeasonId, onSelect }: Props = $props();
+    let { selectedSeasonId }: Props = $props();
 
 </script>
 
 <div class="flex w-full flex-col">
     <p class="input-header">Select Season:</p>
-    <select class="fpl-dropdown" value={selectedSeasonId} onselect={() => onSelect(selectedSeasonId)}>
+    <select class="fpl-dropdown" value={selectedSeasonId}>
         {#each $seasonStore as season}
             <option value={season.id}>{season.name}</option>
         {/each}

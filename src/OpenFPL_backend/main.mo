@@ -389,8 +389,8 @@ actor Self {
     return await leaderboardManager.getSeasonLeaderboard(dto);
   };
 
-  public shared func mostValuableTeamLeaderboard(dto : LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
-    return await leaderboardManager.mostValuableTeamLeaderboard(dto);
+  public shared func getMostValuableTeamLeaderboard(dto : LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
+    return await leaderboardManager.getMostValuableTeamLeaderboard(dto);
   };
 
   public shared ({ caller }) func getLeagueStatus() : async Result.Result<DataCanister.LeagueStatus, Enums.Error> {

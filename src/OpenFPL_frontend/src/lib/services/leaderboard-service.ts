@@ -3,9 +3,14 @@ import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "../utils/helpers";
 import { toasts } from "$lib/stores/toasts-store";
 import type {
+  GetMonthlyLeaderboard,
+  GetMostValuableTeamLeaderboard,
+  GetSeasonLeaderboard,
   GetWeeklyLeaderboard,
+  MonthlyLeaderboard,
+  MostValuableTeamLeaderboard,
+  SeasonLeaderboard,
   WeeklyLeaderboard,
-  WeeklyRewardsLeaderboard,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class LeaderboardService {
@@ -32,6 +37,60 @@ export class LeaderboardService {
       toasts.addToast({
         type: "error",
         message: "Error fetching weekly leaderboard.",
+      });
+    }
+  }
+
+  async getMonthlyLeaderboard(
+    dto: GetMonthlyLeaderboard,
+  ): Promise<MonthlyLeaderboard | undefined> {
+    try {
+      const result = await this.actor.getMonthlyLeaderboard(dto);
+      if (isError(result)) {
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Failed to get monthly leaderboard: ", error);
+      toasts.addToast({
+        type: "error",
+        message: "Error fetching monthly leaderboard.",
+      });
+    }
+  }
+
+  async getSeasonLeaderboard(
+    dto: GetSeasonLeaderboard,
+  ): Promise<SeasonLeaderboard | undefined> {
+    try {
+      const result = await this.actor.getSeasonLeaderboard(dto);
+      if (isError(result)) {
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Failed to get season leaderboard: ", error);
+      toasts.addToast({
+        type: "error",
+        message: "Error fetching season leaderboard.",
+      });
+    }
+  }
+
+  async getMostValuableTeamLeaderboard(
+    dto: GetMostValuableTeamLeaderboard,
+  ): Promise<MostValuableTeamLeaderboard | undefined> {
+    try {
+      const result = await this.actor.getMostValuableTeamLeaderboard(dto);
+      if (isError(result)) {
+        return;
+      }
+      return result.ok;
+    } catch (error) {
+      console.error("Failed to get most valuable team leaderboard: ", error);
+      toasts.addToast({
+        type: "error",
+        message: "Error fetching most valuable team leaderboard.",
       });
     }
   }

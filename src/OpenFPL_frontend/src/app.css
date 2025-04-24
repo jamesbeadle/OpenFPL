@@ -36,7 +36,7 @@ main {
 }
 
 .inactive-fpl-button {
-  @apply bg-BrandLightGray
+  @apply bg-BrandLightGray;
 }
 
 .fpl-dropdown {

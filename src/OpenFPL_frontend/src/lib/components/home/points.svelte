@@ -11,6 +11,7 @@
   import LocalSpinner from "../shared/local-spinner.svelte";
   import SeasonFilter from "../shared/filters/season-filter.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
+  
   import PointsTable from "./points/points-table.svelte";
   import ManagerPlayerScoreModal from "./points/manager-player-score-modal.svelte";
   
@@ -82,7 +83,6 @@
     <GameweekFilter 
       {selectedGameweek} 
       {changeGameweek} 
-      lastGameweek={$leagueStore!.completedGameweek}
     />
     <PointsTable {gameweekData} showDetailModal={() => showModal = true} />
   </div>

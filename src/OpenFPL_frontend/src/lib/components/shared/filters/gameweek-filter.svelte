@@ -6,18 +6,18 @@
 
     interface Props {
       selectedGameweek: number | null;
-      changeGameweek: (gameweek: number) => void;
-      lastGameweek: number;
     }
-    let { selectedGameweek, changeGameweek, lastGameweek }: Props = $props();
+    let { selectedGameweek }: Props = $props();
 
     let isLoading = $state(true);
     let gameweeks: number[] = $state([]);
+    let lastGameweek: number = $state(0);
 
 
     onMount(async () => {
       try{
         gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1);
+        lastGameweek = $leagueStore?.totalGameweeks ?? 0;
       } catch {
 
       } finally {
@@ -35,7 +35,7 @@
   <div class="flex items-center">
     <button
       class={`${ selectedGameweek === 1 ? "inactive-fpl-button" : "fpl-button" } default-button mr-1`}
-      onclick={() => changeGameweek(-1)}
+      onclick={() => {selectedGameweek && selectedGameweek > 0 ? selectedGameweek - 1 : selectedGameweek}}
       disabled={selectedGameweek === 1}
     >
       &lt;
@@ -50,7 +50,7 @@
     </select>
     <button
       class={`${ selectedGameweek === lastGameweek ? "inactive-fpl-button" : "fpl-button" } default-button ml-3`}
-      onclick={() => changeGameweek(1)}
+      onclick={() => {selectedGameweek && selectedGameweek < lastGameweek ? selectedGameweek + 1 : selectedGameweek}}
       disabled={selectedGameweek === lastGameweek}
     >
       &gt;

@@ -37,14 +37,14 @@ module LeaderboardQueries = {
     public type GetMonthlyLeaderboard = {
         seasonId : FootballIds.SeasonId;
         month : FootballDefinitions.GameweekNumber;
-        club: FootballIds.ClubId;
+        clubId: FootballIds.ClubId;
         page : Nat;
     };
 
     public type MonthlyLeaderboard = {
         seasonId : FootballIds.SeasonId;
         month : FootballDefinitions.GameweekNumber;
-        club: FootballIds.ClubId;
+        clubId: FootballIds.ClubId;
         entries : [LeaderboardEntry];
         totalEntries : Nat;
     };

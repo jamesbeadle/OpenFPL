@@ -1,24 +1,9 @@
 <script lang="ts">
-    import TeamFilter from "../../homepage/team-filter.svelte";
-    import { clubStore } from "$lib/stores/club-store";
 
     interface Props {
-        selectedTeamIndex: number;
-        selectedTeamId: number;
         selectedMonth: number;
     }
-    let { selectedTeamIndex, selectedTeamId, selectedMonth }: Props = $props();
-
-    function changeTeam(delta: number) {
-        selectedTeamIndex =
-        (selectedTeamIndex + delta + $clubStore.length) % $clubStore.length;
-
-        if (selectedTeamIndex > $clubStore.length - 1) {
-            selectedTeamIndex = 0;
-        }
-
-        selectedTeamId = $clubStore[selectedTeamIndex].id;
-    }
+    let { selectedMonth }: Props = $props();
 
     function changeMonth(delta: number) {
         selectedMonth += delta;
@@ -30,8 +15,6 @@
     }
 
 </script>
-
-<TeamFilter {selectedTeamId} {changeTeam}  />
 
 <div class="flex w-full flex-col">
     <p class="input-header">Select Month:</p>
