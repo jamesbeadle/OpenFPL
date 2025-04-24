@@ -7,7 +7,7 @@
   import { convertFixtureStatus, formatUnixTimeToTime, getFixturesWithTeams, reduceFilteredFixtures } from "../../utils/helpers";
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
-  import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
+  import GameweekFilter from "./filters/gameweek-filter.svelte";
 
   let fixturesWithTeams: FixtureWithClubs[] = [];
   let selectedGameweek = $state(1);

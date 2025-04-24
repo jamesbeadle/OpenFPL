@@ -5,12 +5,12 @@
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
 
   import { seasonStore } from "$lib/stores/season-store";
-  import PageHeader from "../shared/panels/page-header.svelte";
+  import PageHeader from "../../shared/panels/page-header.svelte";
   import { leagueStore } from "$lib/stores/league-store";
-  import ContentPanel from "../shared/panels/content-panel.svelte";
-  import HeaderContentPanel from "../shared/panels/header-content-panel.svelte";
-  import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
-  import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import ContentPanel from "../../shared/panels/content-panel.svelte";
+  import HeaderContentPanel from "../../shared/panels/header-content-panel.svelte";
+  import HeaderCountdownPanel from "../../shared/panels/header-countdown-panel.svelte";
+  import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
  
   interface Props {
     fantasyTeam: TeamSetup | undefined;

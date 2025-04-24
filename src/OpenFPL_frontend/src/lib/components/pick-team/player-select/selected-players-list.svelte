@@ -8,7 +8,7 @@
     import { getActualIndex } from "$lib/utils/helpers";
     import { playerStore } from "$lib/stores/player-store";
     import { clubStore } from "$lib/stores/club-store";
-    import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
     interface Props {
       selectedFormation: string;

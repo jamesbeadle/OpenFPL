@@ -9,8 +9,8 @@
   import DesktopButtons from "./desktop-buttons.svelte";
   import MobileButtons from "./mobile-buttons.svelte";
   import { toasts } from "$lib/stores/toasts-store";
-  import LocalSpinner from "../shared/local-spinner.svelte";
-  import type { AppStatus, TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import LocalSpinner from "../../shared/local-spinner.svelte";
+  import type { AppStatus, TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     interface Props {
       fantasyTeam: TeamSetup | undefined;

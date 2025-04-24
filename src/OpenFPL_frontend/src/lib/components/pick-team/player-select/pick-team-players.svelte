@@ -5,13 +5,13 @@
   import { playerStore } from "$lib/stores/player-store";
   import { canAddPlayerToCurrentFormation, findValidFormationWithPlayer, getAvailablePositionIndex, getHighestValuedPlayerId, getTeamFormation, repositionPlayersForNewFormation } from "$lib/utils/pick-team.helpers";
   
-  import ConfirmCaptainChange from "./modals/confirm-captain-change-modal.svelte";
-  import AddPlayerModal from "./modals/add-player-modal.svelte";
+  import ConfirmCaptainChange from "../modals/confirm-captain-change-modal.svelte";
+  import AddPlayerModal from "../modals/add-player-modal.svelte";
   import SelectedPlayersPitch from "./selected-players-pitch.svelte";
   import SelectedPlayersList from "./selected-players-list.svelte";
   import { convertPositionToIndex } from "$lib/utils/helpers";
-  import LocalSpinner from "../shared/local-spinner.svelte";
-  import type { TeamSetup, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import LocalSpinner from "../../shared/local-spinner.svelte";
+  import type { TeamSetup, Player } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   interface Props {
     fantasyTeam: TeamSetup | undefined;

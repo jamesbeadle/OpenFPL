@@ -1,6 +1,6 @@
 <script lang="ts">
     import { leagueStore } from "$lib/stores/league-store";
-    import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     interface Props {
       pitchViewActive: boolean;

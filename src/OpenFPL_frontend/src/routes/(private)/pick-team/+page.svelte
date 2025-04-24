@@ -7,12 +7,12 @@
   import type { PlayerId, TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { allFormations } from "$lib/utils/pick-team.helpers";
   
-  import PickTeamButtons from "$lib/components/pick-team/pick-team-buttons.svelte";
-  import PickTeamHeader from "$lib/components/pick-team/pick-team-header.svelte";
-  import SimpleFixtures from "$lib/components/pick-team/simple-fixtures.svelte";
-  import OnHold from "$lib/components/pick-team/on-hold.svelte";
-  import PickTeamLeftPanel from "$lib/components/pick-team/pick-team-left-panel.svelte";
-  import PickTeamBanner from "$lib/components/pick-team/pick-team-banner.svelte";
+  import PickTeamButtons from "$lib/components/pick-team/header/pick-team-buttons.svelte";
+  import PickTeamHeader from "$lib/components/pick-team/header/pick-team-header.svelte";
+  import PickTeamPlayers from "$lib/components/pick-team/player-select/pick-team-players.svelte";
+  import BonusPanel from "$lib/components/pick-team/bonus-select/bonus-panel.svelte";
+  import LeagueFixtures from "$lib/components/shared/league-fixtures.svelte";
+  import PickTeamBanner from "$lib/components/pick-team/header/pick-team-banner.svelte";
   import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
     
   let fantasyTeam = $state<TeamSetup | undefined>(undefined);
@@ -79,7 +79,10 @@
     <LocalSpinner />
   {:else}
     {#if $appStore?.onHold}
-      <OnHold />
+            
+      <div class="relative w-full xl:w-1/2 mt-2">
+        <p>The system is currently under going maintenance. Please check back soon.</p>
+      </div>
     {:else}
     <div>
       {#if showWelcomeBanner}
@@ -99,16 +102,23 @@
       />
       <div class="flex flex-col mt-2 xl:flex-row xl:mt-0 xl:space-x-2">
         <div class="xl:w-[800px]">
-          <PickTeamLeftPanel
-            {fantasyTeam}
-            {pitchView}
-            {selectedFormation}
-            {teamValue}
-            {sessionAddedPlayers}
-          />
+            
+          <div class="flex flex-col w-full">
+            <PickTeamPlayers 
+              {fantasyTeam} 
+              {pitchView} 
+              {selectedFormation} 
+              {teamValue} 
+              {sessionAddedPlayers} 
+            />
+            <div class="w-full mt-2">
+              <BonusPanel {fantasyTeam} />
+            </div>
+          </div> 
+            
         </div>
         <div class="hidden xl:block xl:flex-1">
-          <SimpleFixtures />
+          <LeagueFixtures />
         </div>
       </div>
     </div>
