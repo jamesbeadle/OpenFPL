@@ -1,7 +1,5 @@
 <script lang="ts">
   
-  import HomepageHeader from "$lib/components/home/header/homepage-header.svelte";
-
   import TabContainer from "$lib/components/shared/global/tab-container.svelte";
   import PointsComponent from "$lib/components/home/points.svelte";
   import LeaderboardsComponent from "$lib/components/home/leaderboards.svelte";
@@ -9,6 +7,10 @@
   import MvpsComponent from "$lib/components/home/mvps.svelte";
   import LeagueTableComponent from "$lib/components/home/league-table.svelte";
   import TrophyRoomComponent from "$lib/components/home/trophy-room.svelte";
+    import PageHeader from "$lib/components/shared/panels/page-header.svelte";
+    import ContentPanel from "$lib/components/shared/panels/content-panel.svelte";
+    import HomepageGameweekPanel from "$lib/components/home/header/homepage-gameweek-panel.svelte";
+    import HomepageNextGamePanel from "$lib/components/home/header/homepage-next-game-panel.svelte";
 
   let activeTab: string = "points";
 
@@ -27,7 +29,14 @@
 
 </script>
 
-<HomepageHeader />
+<PageHeader>
+  <ContentPanel>
+    <HomepageGameweekPanel />
+  </ContentPanel>
+  <ContentPanel>
+    <HomepageNextGamePanel />
+  </ContentPanel>
+</PageHeader>
 
 <div class="bg-panel">
   <TabContainer {tabs} {activeTab} {setActiveTab} />
