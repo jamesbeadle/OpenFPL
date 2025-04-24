@@ -1,6 +1,6 @@
 <script lang="ts">
   
-  import HomepageHeader from "$lib/components/homepage/homepage-header.svelte";
+  import HomepageHeader from "$lib/components/home/header/homepage-header.svelte";
 
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import PointsComponent from "$lib/components/home/points.svelte";

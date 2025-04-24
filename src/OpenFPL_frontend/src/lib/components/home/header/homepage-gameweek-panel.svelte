@@ -3,7 +3,7 @@
     import { managerStore } from "$lib/stores/manager-store";
     import { leagueStore } from "$lib/stores/league-store";
     import { formatWholeE8s } from "$lib/utils/helpers";
-    import HeaderContentPanel from "../shared/panels/header-content-panel.svelte";
+    import HeaderContentPanel from "../../shared/panels/header-content-panel.svelte";
     import { rewardRatesStore } from "$lib/stores/reward-pool-store";
     import { globalDataLoaded } from "$lib/managers/store-manager";
 

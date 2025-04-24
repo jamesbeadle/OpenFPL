@@ -12,13 +12,12 @@
     } from "../../utils/helpers";
     import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
     import PlayerAgePanel from "./player-age-panel.svelte";
-    import HeaderFixturePanel from "../homepage/homepage-header-fixture-panel.svelte";
+    import HeaderFixturePanel from "../home/header/homepage-header-fixture-panel.svelte";
     import PlayerShirtPanel from "./player-shirt-panel.svelte";
     import PlayerCountryPanel from "./player-country-panel.svelte";
     import PageHeader from "../shared/panels/page-header.svelte";
     import ContentPanel from "../shared/panels/content-panel.svelte";
     import type { Club, Fixture, GameweekNumber, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
     
     interface Props {
       player: Player;
