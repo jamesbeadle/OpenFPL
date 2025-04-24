@@ -11,7 +11,7 @@
   import PortalHost from 'svelte-portal';
   import LayoutController from "$lib/components/profile/layout-controller.svelte";
   import FullScreenSpinner from "$lib/components/shared/full-screen-spinner.svelte";
-  import Toasts from "$lib/components/toasts/toasts.svelte";
+  import Toasts from "$lib/components/shared/toasts/toasts.svelte";
   import "../app.css";
 
   interface Props { children: Snippet }

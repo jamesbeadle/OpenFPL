@@ -9,7 +9,7 @@
   
   import PickTeamButtons from "$lib/components/pick-team/pick-team-buttons.svelte";
   import PickTeamHeader from "$lib/components/pick-team/pick-team-header.svelte";
-  import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
+  import SimpleFixtures from "$lib/components/pick-team/simple-fixtures.svelte";
   import OnHold from "$lib/components/pick-team/on-hold.svelte";
   import PickTeamLeftPanel from "$lib/components/pick-team/pick-team-left-panel.svelte";
   import PickTeamBanner from "$lib/components/pick-team/pick-team-banner.svelte";

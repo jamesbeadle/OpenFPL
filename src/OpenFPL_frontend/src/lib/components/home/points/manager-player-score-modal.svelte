@@ -2,7 +2,7 @@
   import { convertPositionToIndex, getFlagComponent, getPlayerName } from "../../../utils/helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import Modal from "$lib/components/shared/modal.svelte";
-  import FantasyPlayerDetailRow from "../../fantasy-team/fantasy-player-detail-row.svelte";
+  import FantasyPlayerDetailRow from "../../manager/fantasy-player-detail-row.svelte";
   import ModalTotalRow from "../../shared/modal-total-row.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Club } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
