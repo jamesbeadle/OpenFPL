@@ -1,7 +1,7 @@
 import type { AppStatus } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { AppService } from "$lib/services/app-service";
 import { toasts } from "./toasts-store";
-import { isError } from "$lib/utils/helpers";
+import { isError } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
 
 function createAppStore() {

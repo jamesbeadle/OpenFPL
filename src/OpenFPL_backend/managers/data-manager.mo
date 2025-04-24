@@ -63,13 +63,6 @@ module {
       return await data_canister.getPlayerDetails(dto);
     };
 
-    public func getPostponedFixtures(dto : DataCanister.GetPostponedFixtures) : async Result.Result<DataCanister.PostponedFixtures, Enums.Error> {
-      let data_canister = actor (CanisterIds.ICFC_DATA_CANISTER_ID) : actor {
-        getPostponedFixtures : shared (dto : DataCanister.GetPostponedFixtures) -> async Result.Result<DataCanister.PostponedFixtures, Enums.Error>;
-      };
-      return await data_canister.getPostponedFixtures(dto);
-    };
-
   };
 
 };

@@ -465,11 +465,6 @@ actor Self {
     return await dataManager.getPlayerDetails(dto);
   };
 
-  public shared ({ caller }) func getPostponedFixtures(dto : DataCanister.GetPostponedFixtures) : async Result.Result<DataCanister.PostponedFixtures, Enums.Error> {
-    assert not Principal.isAnonymous(caller);
-    return await dataManager.getPostponedFixtures(dto);
-  };
-
   // Temp Test function
   public shared func getAllUserICFCLinks() : async [(Ids.PrincipalId, AppTypes.ICFCLink)] {
     return await userManager.getAllUserICFCLinks();
@@ -753,7 +748,9 @@ actor Self {
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     assert dto.leagueId == Environment.LEAGUE_ID;
 
-    //TODO
+    // TODO
+      //if a player has been removed from a team in the premier league because they were on loan here but the parent club is outside the parent league
+        //remove player from fantasy teams
 
     return #ok();
   };

@@ -1,6 +1,6 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../utils/actor.factory";
-import { isError } from "../utils/helpers";
+import { isError } from "$lib/utils/Helpers";
 import { toasts } from "$lib/stores/toasts-store";
 import type {
   GetMonthlyLeaderboard,
@@ -12,22 +12,19 @@ import type {
   SeasonLeaderboard,
   WeeklyLeaderboard,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import { authStore } from "$lib/stores/auth-store";
 
 export class LeaderboardService {
-  private actor: any;
-
-  constructor() {
-    this.actor = ActorFactory.createActor(
-      idlFactory,
-      process.env.OPENFPL_BACKEND_CANISTER_ID,
-    );
-  }
 
   async getWeeklyLeaderboard(
     dto: GetWeeklyLeaderboard,
   ): Promise<WeeklyLeaderboard | undefined> {
     try {
-      const result = await this.actor.getWeeklyLeaderboard(dto);
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      const result = await identityActor.getWeeklyLeaderboard(dto);
       if (isError(result)) {
         return;
       }
@@ -45,7 +42,11 @@ export class LeaderboardService {
     dto: GetMonthlyLeaderboard,
   ): Promise<MonthlyLeaderboard | undefined> {
     try {
-      const result = await this.actor.getMonthlyLeaderboard(dto);
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      const result = await identityActor.getMonthlyLeaderboard(dto);
       if (isError(result)) {
         return;
       }
@@ -63,7 +64,11 @@ export class LeaderboardService {
     dto: GetSeasonLeaderboard,
   ): Promise<SeasonLeaderboard | undefined> {
     try {
-      const result = await this.actor.getSeasonLeaderboard(dto);
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      const result = await identityActor.getSeasonLeaderboard(dto);
       if (isError(result)) {
         return;
       }
@@ -81,7 +86,11 @@ export class LeaderboardService {
     dto: GetMostValuableTeamLeaderboard,
   ): Promise<MostValuableTeamLeaderboard | undefined> {
     try {
-      const result = await this.actor.getMostValuableTeamLeaderboard(dto);
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
+      );
+      const result = await identityActor.getMostValuableTeamLeaderboard(dto);
       if (isError(result)) {
         return;
       }

@@ -48,15 +48,6 @@ module Enums {
     #Rejected;
   };
 
-  public type TimerType = {
-    #LoanComplete;
-    #GameweekBegin;
-    #GameKickOff;
-    #GameComplete;
-    #InjuryExpired;
-    #TransferWindow;
-  };
-
   public type MembershipType = {
     #Monthly;
     #Seasonal;

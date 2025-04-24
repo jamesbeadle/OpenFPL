@@ -1,4 +1,4 @@
-import { isError } from "../utils/helpers";
+import { isError } from "$lib/utils/Helpers";
 import { ActorFactory } from "$lib/utils/actor.factory";
 import type { AppStatus } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { authStore } from "$lib/stores/auth-store";

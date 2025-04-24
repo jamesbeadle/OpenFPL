@@ -1,11 +1,10 @@
 import { authStore } from "$lib/stores/auth-store";
 import { ActorFactory } from "../utils/actor.factory";
-import { isError } from "../utils/helpers";
+import { isError } from "$lib/utils/Helpers";
 import { toasts } from "$lib/stores/toasts-store";
 import type { Countries } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class CountryService {
-  private actor: any;
 
   constructor() {}
 

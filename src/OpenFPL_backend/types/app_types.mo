@@ -166,12 +166,6 @@ module AppTypes {
     totalEntries : Nat;
   };
 
-  public type LoanTimer = {
-    timerInfo : BaseTypes.TimerInfo;
-    playerId : Nat16;
-    expires : Int;
-  };
-
   public type DataHashes = {
     dataHashes : [BaseTypes.DataHash];
   };
