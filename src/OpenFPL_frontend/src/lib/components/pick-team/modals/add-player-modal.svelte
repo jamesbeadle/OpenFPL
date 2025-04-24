@@ -7,12 +7,12 @@
   import { countPlayersByTeam, reasonToDisablePlayer, sortPlayersByClubThenValue } from "$lib/utils/pick-team.helpers";
   import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/helpers";
   
-  import Modal from "$lib/components/shared/modal.svelte";
+  import Modal from "$lib/components/shared/global/modal.svelte";
   import AddPlayerModalPagination from "./add-player-modal-pagination.svelte";
   import AddPlayerTableRow from "./add-player-table-row.svelte";
   import AddPlayerFilterRow from "./add-player-filter-row.svelte";
   import AddPlayerTableHaeder from "./add-player-table-haeder.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
   import type { Player, TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 

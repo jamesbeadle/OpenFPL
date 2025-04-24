@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Modal from "$lib/components/shared/modal.svelte";
+  import Modal from "$lib/components/shared/global/modal.svelte";
 
   interface Props {
     visible: boolean;

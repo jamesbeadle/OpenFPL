@@ -5,9 +5,9 @@
 
   import ProfileDetail from "$lib/components/profile/details/profile-detail.svelte";
   import ProfileManagerGameweeks from "$lib/components/manager/profile-manager-gameweeks.svelte";
-  import TabContainer from "$lib/components/shared/tab-container.svelte";
+  import TabContainer from "$lib/components/shared/global/tab-container.svelte";
   import WelcomeBanner from "$lib/components/profile/welcome-banner.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
 
   const tabs = [
     { id: "details", label: "Details", authOnly: false },

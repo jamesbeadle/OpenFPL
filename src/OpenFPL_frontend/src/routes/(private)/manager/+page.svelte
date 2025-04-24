@@ -9,9 +9,9 @@
   import { getGridSetup, getTeamFormationReadOnly } from "$lib/utils/pick-team.helpers";
   import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
   import ReadOnlyPitchView from "$lib/components/manager/read-only-pitch-view.svelte";
-  import TabContainer from "$lib/components/shared/tab-container.svelte";
+  import TabContainer from "$lib/components/shared/global/tab-container.svelte";
   import ManagerHeader from "$lib/components/manager/manager-header.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
     
   let id = $state(page.url.searchParams.get("id"));
   let gw = $state(page.url.searchParams.get("gw"));

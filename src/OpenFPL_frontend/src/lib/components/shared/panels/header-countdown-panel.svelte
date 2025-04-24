@@ -1,5 +1,5 @@
 <script lang="ts">
-    import LoadingDots from "../loading-dots.svelte";
+    import LoadingDots from "../global/loading-dots.svelte";
     
     interface Props {
         countdownTime: { days: number; hours: number; minutes: number; }

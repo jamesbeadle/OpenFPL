@@ -13,7 +13,7 @@
   import BonusPanel from "$lib/components/pick-team/bonus-select/bonus-panel.svelte";
   import LeagueFixtures from "$lib/components/shared/league-fixtures.svelte";
   import PickTeamBanner from "$lib/components/pick-team/header/pick-team-banner.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
     
   let fantasyTeam = $state<TeamSetup | undefined>(undefined);
   let availableFormations = $state(Object.keys(allFormations));   

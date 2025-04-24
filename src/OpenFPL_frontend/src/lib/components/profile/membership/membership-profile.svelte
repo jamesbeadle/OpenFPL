@@ -1,5 +1,5 @@
 <script lang="ts">
-  import FullScreenSpinner from "../../shared/full-screen-spinner.svelte";
+  import FullScreenSpinner from "../../shared/global/full-screen-spinner.svelte";
   import CopyPrincipal from "../details/copy-principal.svelte";
   import MembershipLinkedModal from "./membership-linked-modal.svelte";
   import { toasts } from "$lib/stores/toasts-store";

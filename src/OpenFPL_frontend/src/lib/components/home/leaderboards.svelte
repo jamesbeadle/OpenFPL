@@ -8,7 +8,7 @@
     import { userGetFavouriteTeam } from "$lib/derived/user.derived";
     import { LeaderboardType } from "$lib/enums/LeaderboardType";
 
-    import LocalSpinner from "../shared/local-spinner.svelte";
+    import LocalSpinner from "../shared/global/local-spinner.svelte";
     import LeaderboardTypeFilter from "./leaderboards/leaderboard-type-filter.svelte";
     import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
     import ClubFilter from "../shared/filters/club-filter.svelte";

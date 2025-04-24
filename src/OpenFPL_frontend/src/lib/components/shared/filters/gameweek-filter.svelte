@@ -2,7 +2,7 @@
     import { leagueStore } from "$lib/stores/league-store";
     import { getGameweeks } from "$lib/utils/helpers";
     import { onMount } from "svelte";
-    import LocalSpinner from "../local-spinner.svelte";
+    import LocalSpinner from "../global/local-spinner.svelte";
 
     interface Props {
       selectedGameweek: number | null;

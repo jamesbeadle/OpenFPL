@@ -10,7 +10,7 @@
   import { storeManager } from "$lib/managers/store-manager";
   import { goto } from "$app/navigation";
   import SortIcon from "$lib/icons/SortIcon.svelte";
-  import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/global/local-spinner.svelte";
   import type { FantasyTeamSnapshot, Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {

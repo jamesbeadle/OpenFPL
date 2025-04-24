@@ -4,7 +4,7 @@
     import { onMount } from "svelte";
     import { storeManager } from "$lib/managers/store-manager";
     import { getDateFromBigInt } from "$lib/utils/helpers";
-    import LoadingDots from "../../shared/loading-dots.svelte";
+    import LoadingDots from "../../shared/global/loading-dots.svelte";
     import CopyPrincipal from "./copy-principal.svelte";
 
     let isLoading = $state(true);

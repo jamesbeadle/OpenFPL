@@ -10,7 +10,7 @@
   import PlayerTableHaeder from "./player-table-header.svelte";
   import PlayerTableRow from "./player-table-row.svelte";
   import PlayerModalPagination from "./player-modal-pagination.svelte";
-  import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/global/local-spinner.svelte";
   import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {

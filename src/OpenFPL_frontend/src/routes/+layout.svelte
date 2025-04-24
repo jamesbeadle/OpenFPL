@@ -10,7 +10,7 @@
   
   import PortalHost from 'svelte-portal';
   import LayoutController from "$lib/components/profile/layout-controller.svelte";
-  import FullScreenSpinner from "$lib/components/shared/full-screen-spinner.svelte";
+  import FullScreenSpinner from "$lib/components/shared/global/full-screen-spinner.svelte";
   import Toasts from "$lib/components/shared/toasts/toasts.svelte";
   import "../app.css";
 

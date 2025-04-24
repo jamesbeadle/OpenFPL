@@ -7,9 +7,9 @@
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { calculateBonusPoints, sortPlayersByPointsThenValue } from "$lib/utils/pick-team.helpers";
   import ManagerGameweekDetailTable from "./manager-gameweek-detail-table.svelte";
-  import ScoreAbbreviationKey from "../shared/score-abbreviation-key.svelte";
+  import ScoreAbbreviationKey from "./score-abbreviation-key.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
-  import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/global/local-spinner.svelte";
   import type { FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   interface Props {

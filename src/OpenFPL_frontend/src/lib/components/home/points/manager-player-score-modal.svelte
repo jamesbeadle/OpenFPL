@@ -1,9 +1,8 @@
 <script lang="ts">
   import { convertPositionToIndex, getFlagComponent, getPlayerName } from "../../../utils/helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import Modal from "$lib/components/shared/modal.svelte";
+  import Modal from "$lib/components/shared/global/modal.svelte";
   import FantasyPlayerDetailRow from "../../manager/fantasy-player-detail-row.svelte";
-  import ModalTotalRow from "../../shared/modal-total-row.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Club } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { onMount } from "svelte";
@@ -12,6 +11,7 @@
     import { storeManager } from "$lib/managers/store-manager";
     import { seasonStore } from "$lib/stores/season-store";
     import { leagueStore } from "$lib/stores/league-store";
+    import HeaderContentPanel from "$lib/components/shared/panels/header-content-panel.svelte";
   
   interface Props {
     visible: boolean;
@@ -131,19 +131,19 @@
   {/if}
 
   <div class="border-t-2 border-b border-BrandLightGray/80">
-    <ModalTotalRow header="Player Points" content={gameweekData.points.toString()} />
+    <HeaderContentPanel header="Player Points" content={gameweekData.points.toString()} />
   </div>
   <div class="border-y border-BrandLightGray/80">
-    <ModalTotalRow header="Bonus Points" content={gameweekData.bonusPoints.toString()} />
+    <HeaderContentPanel header="Bonus Points" content={gameweekData.bonusPoints.toString()} />
   </div>
 
   {#if gameweekData.isCaptain}
     <div class="border-y border-BrandLightGray/80">
-      <ModalTotalRow header="Captain Points" content={gameweekData.points.toString()} />
+      <HeaderContentPanel header="Captain Points" content={gameweekData.points.toString()} />
     </div>
   {/if}
 
   <div class="border-y border-BrandLightGray/80">
-    <ModalTotalRow header="Total Points" content={gameweekData.totalPoints.toString()} />
+    <HeaderContentPanel header="Total Points" content={gameweekData.totalPoints.toString()} />
   </div>
 </Modal>

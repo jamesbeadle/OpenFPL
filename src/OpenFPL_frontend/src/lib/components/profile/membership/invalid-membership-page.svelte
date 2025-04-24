@@ -1,7 +1,7 @@
 <script lang="ts">
     import CopyPrincipal from "../details/copy-principal.svelte";
     import WarningIcon from "$lib/icons/WarningIcon.svelte";
-    import FullScreenSpinner from "../../shared/full-screen-spinner.svelte";
+    import FullScreenSpinner from "../../shared/global/full-screen-spinner.svelte";
     import { userStore } from "$lib/stores/user-store";
     import { toasts } from "$lib/stores/toasts-store";
 

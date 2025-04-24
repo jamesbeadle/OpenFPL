@@ -1,7 +1,7 @@
 <script lang="ts">
   import { formatE8s } from "$lib/utils/helpers";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import Pagination from "../../shared/pagination.svelte";
+  import Pagination from "../../shared/global/pagination.svelte";
 
   interface Props {
     leaderboard: any;

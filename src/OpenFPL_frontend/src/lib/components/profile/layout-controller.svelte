@@ -11,7 +11,7 @@
     import InvalidMembershipPage from '$lib/components/profile/membership/invalid-membership-page.svelte';
     import MembershipProfile from '$lib/components/profile/membership/membership-profile.svelte';
     import LandingPage from '$lib/components/landing/landing-page.svelte';
-    import FullScreenSpinner from '../shared/full-screen-spinner.svelte';
+    import FullScreenSpinner from '../shared/global/full-screen-spinner.svelte';
     import Sidebar from '$lib/shared/sidebar.svelte';
     
     interface Props {

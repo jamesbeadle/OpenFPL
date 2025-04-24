@@ -11,7 +11,7 @@
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import GameweekPointsTable from "../home/points/points-table.svelte";
   import { leagueStore } from "$lib/stores/league-store";
-  import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/global/local-spinner.svelte";
 
   import type { FantasyTeamSnapshot, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 

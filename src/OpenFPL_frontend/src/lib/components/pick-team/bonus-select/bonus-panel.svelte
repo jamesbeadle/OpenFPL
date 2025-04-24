@@ -6,7 +6,7 @@
   import type { Bonus } from "$lib/types/bonus";
 
   import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
-  import Tooltip from "$lib/components/shared/tooltip.svelte";
+  import Tooltip from "$lib/components/shared/global/tooltip.svelte";
   import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {

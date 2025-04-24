@@ -9,7 +9,7 @@
   import { getActualIndex } from "$lib/utils/helpers";
   import SponsorshipBoard from "./sponsorship-board.svelte";
   import PitchPlayer from "./pitch-player.svelte";
-  import LocalSpinner from "../../shared/local-spinner.svelte";
+  import LocalSpinner from "../../shared/global/local-spinner.svelte";
   import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {

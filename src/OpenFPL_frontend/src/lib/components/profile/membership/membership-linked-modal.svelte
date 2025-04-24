@@ -1,6 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import Modal from "../../shared/modal.svelte";
+    import Modal from "../../shared/global/modal.svelte";
     
     interface Props {
       visible: boolean; 

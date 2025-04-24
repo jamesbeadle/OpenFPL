@@ -4,7 +4,7 @@
     import { clubStore } from "$lib/stores/club-store";
     import { formatUnixDateToSmallReadable, formatUnixTimeToTime, getCountdownTime } from "../../../utils/helpers";
     import HeaderCountdownPanel from "../../shared/panels/header-countdown-panel.svelte";
-    import LoadingDots from "../../shared/loading-dots.svelte";
+    import LoadingDots from "../../shared/global/loading-dots.svelte";
     import type { Club, Fixture } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import HeaderFixturePanel from "$lib/components/shared/panels/header-fixture-panel.svelte";
 

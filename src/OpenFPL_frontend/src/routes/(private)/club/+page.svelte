@@ -3,11 +3,11 @@
   import { page } from "$app/state";
   import { storeManager } from "$lib/managers/store-manager";
 
-  import TeamPlayers from "$lib/components/club/team-players.svelte";
-  import TeamFixtures from "$lib/components/club/team-fixtures.svelte";
-  import TabContainer from "$lib/components/shared/tab-container.svelte";
+  import ClubPlayers from "$lib/components/club/club-players.svelte";
+  import ClubFixtures from "$lib/components/club/club-fixtures.svelte";
+  import TabContainer from "$lib/components/shared/global/tab-container.svelte";
   import ClubHeader from "$lib/components/club/club-header.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+  import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
 
   let isLoading = $state(true);
   
@@ -40,9 +40,9 @@
     <div class="bg-panel">
       <TabContainer {activeTab} {setActiveTab} {tabs} />
       {#if activeTab === "players"}
-        <TeamPlayers clubId={id} />
+        <ClubPlayers clubId={id} />
       {:else if activeTab === "fixtures"}
-        <TeamFixtures clubId={id} />
+        <ClubFixtures clubId={id} />
       {/if}
     </div>
   {/if}

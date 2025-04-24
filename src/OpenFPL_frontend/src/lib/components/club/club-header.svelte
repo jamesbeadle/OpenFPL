@@ -6,14 +6,14 @@
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
-  import HeaderContentPanel from "$lib/components/shared/panels/header-content-panel.svelte";
   import HeaderFixturePanel from "$lib/components/shared/panels/header-fixture-panel.svelte";
   import { getFixturesWithTeams, updateTableData } from "$lib/utils/helpers";
-  import ClubBrandPanel from "./club-brand-panel.svelte";
+  import ClubBrandPanel from "../shared/panels/club-icon-panel.svelte";
   import PageHeader from "../shared/panels/page-header.svelte";
   import ContentPanel from "../shared/panels/content-panel.svelte";
-  import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/global/local-spinner.svelte";
   import type { Club, ClubId, Fixture, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import HeaderContentPanel from "../shared/panels/header-content-panel.svelte";
   
   interface Props {
     clubId: ClubId;

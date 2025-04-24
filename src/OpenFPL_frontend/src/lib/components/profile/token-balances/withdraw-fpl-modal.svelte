@@ -2,8 +2,8 @@
   import { userStore } from "$lib/stores/user-store";
   import { toasts } from "$lib/stores/toasts-store";
   import { convertToE8s, isAmountValid, isPrincipalValid } from "$lib/utils/helpers";
-  import Modal from "$lib/components/shared/modal.svelte";
-  import LocalSpinner from "../../shared/local-spinner.svelte";
+  import Modal from "$lib/components/shared/global/modal.svelte";
+  import LocalSpinner from "../../shared/global/local-spinner.svelte";
   
   
   interface Props {

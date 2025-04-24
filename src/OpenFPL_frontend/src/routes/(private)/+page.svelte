@@ -2,7 +2,7 @@
   
   import HomepageHeader from "$lib/components/home/header/homepage-header.svelte";
 
-  import TabContainer from "$lib/components/shared/tab-container.svelte";
+  import TabContainer from "$lib/components/shared/global/tab-container.svelte";
   import PointsComponent from "$lib/components/home/points.svelte";
   import LeaderboardsComponent from "$lib/components/home/leaderboards.svelte";
   import FixturesComponent from "$lib/components/home/fixtures.svelte";

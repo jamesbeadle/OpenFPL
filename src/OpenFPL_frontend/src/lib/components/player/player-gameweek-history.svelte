@@ -13,7 +13,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import PlayerGameweekHistoryHeader from "./player-gameweek-history-header.svelte";
-  import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/global/local-spinner.svelte";
   import type { Club, PlayerDetails, PlayerGameweek } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   let isLoading = $state(true);

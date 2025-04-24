@@ -11,8 +11,8 @@
   import type { Bonus } from "$lib/types/bonus";
   import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { authStore } from "$lib/stores/auth-store";
-  import Modal from "$lib/components/shared/modal.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+  import Modal from "$lib/components/shared/global/modal.svelte";
+  import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
   
 
   interface Props {

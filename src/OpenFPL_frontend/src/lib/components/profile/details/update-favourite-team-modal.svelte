@@ -3,9 +3,9 @@
   import { userStore } from "$lib/stores/user-store";
   import { clubStore } from "$lib/stores/club-store";
   import { storeManager } from "$lib/managers/store-manager";
-    import Modal from "$lib/components/shared/modal.svelte";
+    import Modal from "$lib/components/shared/global/modal.svelte";
     import { toasts } from "$lib/stores/toasts-store";
-    import LocalSpinner from "../../shared/local-spinner.svelte";
+    import LocalSpinner from "../../shared/global/local-spinner.svelte";
     import { authStore } from "$lib/stores/auth-store";
 
   

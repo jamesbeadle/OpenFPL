@@ -11,7 +11,7 @@
   import ManagerPitchPlayer from "./manager-pitch-player.svelte";
   import { playerStore } from "$lib/stores/player-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/global/local-spinner.svelte";
   import type { FantasyTeamSnapshot, GameweekNumber, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {

@@ -8,7 +8,7 @@
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import type { FantasyTeamSnapshot, SeasonId } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-  import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/global/local-spinner.svelte";
   import SeasonFilter from "../shared/filters/season-filter.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   

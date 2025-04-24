@@ -10,7 +10,7 @@
   import SelectedPlayersPitch from "./selected-players-pitch.svelte";
   import SelectedPlayersList from "./selected-players-list.svelte";
   import { convertPositionToIndex } from "$lib/utils/helpers";
-  import LocalSpinner from "../../shared/local-spinner.svelte";
+  import LocalSpinner from "../../shared/global/local-spinner.svelte";
   import type { TeamSetup, Player } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   interface Props {
