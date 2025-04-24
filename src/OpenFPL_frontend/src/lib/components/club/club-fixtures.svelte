@@ -8,7 +8,7 @@
     formatUnixDateToSmallReadable,
     formatUnixTimeToTime,
     getFixturesWithTeams,
-  } from "../../utils/helpers";
+  } from "$lib/utils/Helpers";
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
   import { storeManager } from "$lib/managers/store-manager";
   import FixtureTypeFilter from "../shared/filters/fixture-type-filter.svelte";

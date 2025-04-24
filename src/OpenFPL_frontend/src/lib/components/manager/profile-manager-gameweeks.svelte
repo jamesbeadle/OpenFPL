@@ -4,7 +4,7 @@
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import { getBonusIcon, getFlagComponent, getPlayerName } from "$lib/utils/helpers";
+  import { getBonusIcon, getFlagComponent, getPlayerName } from "$lib/utils/Helpers";
   import { countryStore } from "$lib/stores/country-store";
   import { authStore } from "$lib/stores/auth-store";
   import { storeManager } from "$lib/managers/store-manager";

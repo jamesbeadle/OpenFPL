@@ -1,6 +1,6 @@
 <script lang="ts">
     import { leagueStore } from "$lib/stores/league-store";
-    import { getGameweeks } from "$lib/utils/helpers";
+    import { getGameweeks } from "$lib/utils/Helpers";
     import { onMount } from "svelte";
     import LocalSpinner from "../global/local-spinner.svelte";
 

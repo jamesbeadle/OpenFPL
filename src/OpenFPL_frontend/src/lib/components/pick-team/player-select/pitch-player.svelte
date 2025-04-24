@@ -3,7 +3,7 @@
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
     import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
     import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
-    import { convertPositionToIndex, getFlagComponent, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
+    import { convertPositionToIndex, getFlagComponent, getPlayerName, getPositionAbbreviation } from "$lib/utils/Helpers";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import type { TeamSetup, Club, Player } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     

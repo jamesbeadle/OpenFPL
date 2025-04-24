@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { fixtureStore } from "$lib/stores/fixture-store";
     import { clubStore } from "$lib/stores/club-store";
-    import { formatUnixDateToSmallReadable, formatUnixTimeToTime, getCountdownTime } from "../../../utils/helpers";
+    import { formatUnixDateToSmallReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/Helpers";
     import LoadingDots from "../../shared/global/loading-dots.svelte";
     import type { Club, Fixture } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";

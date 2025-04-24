@@ -4,7 +4,7 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
-  import { convertFixtureStatus, formatUnixTimeToTime, getFixturesWithTeams, reduceFilteredFixtures } from "../../utils/helpers";
+  import { convertFixtureStatus, formatUnixTimeToTime, getFixturesWithTeams, reduceFilteredFixtures } from "$lib/utils/Helpers";
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
   import GameweekFilter from "./filters/gameweek-filter.svelte";

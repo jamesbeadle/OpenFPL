@@ -1,6 +1,6 @@
 <script lang="ts">
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
-    import { convertPositionToIndex, getPositionIndexToText } from "$lib/utils/helpers";
+    import { convertPositionToIndex, getPositionIndexToText } from "$lib/utils/Helpers";
     import type { Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     interface Props {

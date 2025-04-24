@@ -6,7 +6,7 @@
     convertPositionToIndex,
     getFlagComponent,
     getPositionAbbreviation
-  } from "../../utils/helpers";
+  } from "$lib/utils/Helpers";
   import { playerStore } from "$lib/stores/player-store";
   import PositionFilter from "../shared/filters/position-filter.svelte";
   import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";

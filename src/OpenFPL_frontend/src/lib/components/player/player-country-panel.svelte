@@ -1,6 +1,6 @@
 <script lang="ts">
     import { countryStore } from "$lib/stores/country-store";
-    import { getFlagComponent } from "$lib/utils/helpers";
+    import { getFlagComponent } from "$lib/utils/Helpers";
     import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
     interface Props {

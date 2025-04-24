@@ -1,7 +1,6 @@
 <script lang="ts">
     import { Position } from "$lib/enums/Position";
-    import { getPositionIndexToText } from "$lib/utils/helpers";
-
+    import { getPositionIndexToText } from "$lib/utils/Helpers";
 
     interface Props {
       selectedPosition: number;

@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 import { PlayerEventsService } from "$lib/services/player-events-service";
 import type { GameweekData } from "$lib/interfaces/GameweekData";
 import { playerStore } from "./player-store";
-import { calculatePlayerScore, extractPlayerData } from "$lib/utils/helpers";
+import { calculatePlayerScore, extractPlayerData } from "$lib/utils/Helpers";
 import { fixtureStore } from "./fixture-store";
 import { getTotalBonusPoints } from "$lib/utils/pick-team.helpers";
 import { appStore } from "./app-store";

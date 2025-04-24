@@ -4,7 +4,7 @@
   import { playerStore } from "$lib/stores/player-store";
   import { leagueStore } from "$lib/stores/league-store";
   import { sortPlayersByClubThenValue } from "$lib/utils/pick-team.helpers";
-  import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/helpers";
+  import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/Helpers";
   
   import PlayerFilterRow from "./player-filter-row.svelte";
   import PlayerTableHaeder from "./player-table-header.svelte";

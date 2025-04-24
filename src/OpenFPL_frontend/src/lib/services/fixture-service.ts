@@ -10,7 +10,6 @@ import type {
 import { isError } from "$lib/utils/Helpers";
 
 export class FixtureService {
-
   constructor() {}
 
   async getFixtures(): Promise<Fixtures | undefined> {

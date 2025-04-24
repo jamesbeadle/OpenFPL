@@ -5,7 +5,7 @@
     import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
     import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
     import RemovePlayerIcon from "$lib/icons/RemovePlayerIcon.svelte";
-    import { getActualIndex } from "$lib/utils/helpers";
+    import { getActualIndex } from "$lib/utils/Helpers";
     import { playerStore } from "$lib/stores/player-store";
     import { clubStore } from "$lib/stores/club-store";
     import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";

@@ -39,10 +39,10 @@ export interface ClubSummary {
   mvp: MostValuablePlayer;
   clubId: ClubId;
   clubName: string;
-  totalMFValue: number;
-  totalGKValue: number;
+  totalMFValue: bigint;
+  totalGKValue: bigint;
   totalPlayers: number;
-  totalValue: number;
+  totalValue: bigint;
   totalDefenders: number;
   totalForwards: number;
   positionText: string;
@@ -50,12 +50,12 @@ export interface ClubSummary {
   totalGoalkeepers: number;
   gender: Gender;
   shirtType: ShirtType;
-  totalDFValue: number;
+  totalDFValue: bigint;
   thirdColour: string;
   secondaryColour: string;
-  totalFWValue: number;
+  totalFWValue: bigint;
   position: bigint;
-  priorValue: number;
+  priorValue: bigint;
   leagueId: LeagueId;
   totalMidfielders: number;
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { convertPositionToIndex, getFlagComponent, getPlayerName } from "../../../utils/helpers";
+  import { convertPositionToIndex, getFlagComponent, getPlayerName } from "$lib/utils/Helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import Modal from "$lib/components/shared/global/modal.svelte";
   import FantasyPlayerDetailRow from "../../manager/fantasy-player-detail-row.svelte";
@@ -131,19 +131,19 @@
   {/if}
 
   <div class="border-t-2 border-b border-BrandLightGray/80">
-    <HeaderContentPanel header="Player Points" content={gameweekData.points.toString()} />
+    <HeaderContentPanel loading={false} header="Player" footer="Points" content={gameweekData.points.toString()} />
   </div>
   <div class="border-y border-BrandLightGray/80">
-    <HeaderContentPanel header="Bonus Points" content={gameweekData.bonusPoints.toString()} />
+    <HeaderContentPanel loading={false} header="Bonus" footer="Points" content={gameweekData.bonusPoints.toString()} />
   </div>
 
   {#if gameweekData.isCaptain}
     <div class="border-y border-BrandLightGray/80">
-      <HeaderContentPanel header="Captain Points" content={gameweekData.points.toString()} />
+      <HeaderContentPanel loading={false} header="Captain" footer="Points" content={gameweekData.points.toString()} />
     </div>
   {/if}
 
   <div class="border-y border-BrandLightGray/80">
-    <HeaderContentPanel header="Total Points" content={gameweekData.totalPoints.toString()} />
+    <HeaderContentPanel loading={false} header="Total" footer="Points" content={gameweekData.totalPoints.toString()} />
   </div>
 </Modal>

@@ -5,7 +5,7 @@
   import { leagueStore } from "$lib/stores/league-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { countPlayersByTeam, reasonToDisablePlayer, sortPlayersByClubThenValue } from "$lib/utils/pick-team.helpers";
-  import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/helpers";
+  import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/Helpers";
   
   import Modal from "$lib/components/shared/global/modal.svelte";
   import AddPlayerModalPagination from "./add-player-modal-pagination.svelte";

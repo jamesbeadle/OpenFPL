@@ -7,7 +7,7 @@
   import { playerStore } from "$lib/stores/player-store";
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
   import HeaderFixturePanel from "$lib/components/shared/panels/header-fixture-panel.svelte";
-  import { getFixturesWithTeams, updateTableData } from "$lib/utils/helpers";
+  import { getFixturesWithTeams, updateTableData } from "$lib/utils/Helpers";
   import ClubBrandPanel from "../shared/panels/club-icon-panel.svelte";
   import PageHeader from "../shared/panels/page-header.svelte";
   import ContentPanel from "../shared/panels/content-panel.svelte";

@@ -9,7 +9,10 @@ import type {
   LeagueStatus,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { playerStore } from "$lib/stores/player-store";
-import { calculateAgeFromNanoseconds, convertPositionToIndex } from "./helpers";
+import {
+  calculateAgeFromNanoseconds,
+  convertPositionToIndex,
+} from "$lib/utils/Helpers";
 
 export const allFormations: Record<string, FormationDetails> = {
   "3-4-3": { positions: [0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3] },

@@ -3,7 +3,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import { convertPositionToAbbreviation, getFlagComponent, getPlayerName } from "$lib/utils/helpers";
+  import { convertPositionToAbbreviation, getFlagComponent, getPlayerName } from "$lib/utils/Helpers";
   import type { Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {

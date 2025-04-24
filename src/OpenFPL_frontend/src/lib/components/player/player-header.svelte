@@ -9,15 +9,15 @@
       formatUnixDateToSmallReadable,
       formatUnixTimeToTime,
       getCountdownTime,
-    } from "../../utils/helpers";
+    } from "../../utils/Helpers";
     import HeaderCountdownPanel from "../shared/panels/header-countdown-panel.svelte";
     import PlayerAgePanel from "./player-age-panel.svelte";
-    import HeaderFixturePanel from "../home/header/homepage-header-fixture-panel.svelte";
     import PlayerShirtPanel from "./player-shirt-panel.svelte";
     import PlayerCountryPanel from "./player-country-panel.svelte";
     import PageHeader from "../shared/panels/page-header.svelte";
     import ContentPanel from "../shared/panels/content-panel.svelte";
     import type { Club, Fixture, GameweekNumber, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import HeaderFixturePanel from "../shared/panels/header-fixture-panel.svelte";
     
     interface Props {
       player: Player;
@@ -62,7 +62,7 @@
   </ContentPanel>
   <ContentPanel>
     {#if nextFixture}
-      <HeaderFixturePanel loading={isLoading} nextFixtureHomeTeam={nextFixtureHomeTeam!} nextFixtureAwayTeam={nextFixtureAwayTeam!} />
+      <HeaderFixturePanel header="Next Fixture" nextFixtureHomeTeam={nextFixtureHomeTeam!} nextFixtureAwayTeam={nextFixtureAwayTeam!} />
       <div class="vertical-divider"></div>
       <HeaderCountdownPanel loading={isLoading} {countdownTime} header="Upcoming Fixture" footer={`${formatUnixDateToSmallReadable(nextFixture.kickOff).toString()} ${formatUnixTimeToTime(nextFixture.kickOff)}`} />
     {:else}

@@ -5,7 +5,7 @@
     import { clubStore } from "$lib/stores/club-store";
     import { fixtureStore } from "$lib/stores/fixture-store";
     import { toasts } from "$lib/stores/toasts-store";
-    import { getFixturesWithTeams, updateTableData } from "../../utils/helpers";
+    import { getFixturesWithTeams, updateTableData } from "$lib/utils/Helpers";
     import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
     import LocalSpinner from "../shared/global/local-spinner.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";

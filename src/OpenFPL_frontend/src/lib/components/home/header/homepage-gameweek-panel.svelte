@@ -4,7 +4,7 @@
     import { leagueStore } from "$lib/stores/league-store";
     import { seasonStore } from "$lib/stores/season-store";
     import { rewardRatesStore } from "$lib/stores/reward-pool-store";
-    import { formatWholeE8s } from "$lib/utils/helpers";
+    import { formatWholeE8s } from "$lib/utils/Helpers";
     import { globalDataLoaded } from "$lib/managers/store-manager";
     import HeaderContentPanel from "$lib/components/shared/panels/header-content-panel.svelte";
 

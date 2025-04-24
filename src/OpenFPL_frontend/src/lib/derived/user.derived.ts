@@ -1,5 +1,5 @@
 import { userStore } from "$lib/stores/user-store";
-import { uint8ArrayToBase64 } from "$lib/utils/helpers";
+import { uint8ArrayToBase64 } from "$lib/utils/Helpers";
 import { derived, type Readable } from "svelte/store";
 
 export const userGetProfilePicture: Readable<string> = derived(

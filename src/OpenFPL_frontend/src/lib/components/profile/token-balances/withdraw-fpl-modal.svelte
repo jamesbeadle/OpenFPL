@@ -1,7 +1,7 @@
 <script lang="ts">
   import { userStore } from "$lib/stores/user-store";
   import { toasts } from "$lib/stores/toasts-store";
-  import { convertToE8s, isAmountValid, isPrincipalValid } from "$lib/utils/helpers";
+  import { convertToE8s, isAmountValid, isPrincipalValid } from "$lib/utils/Helpers";
   import Modal from "$lib/components/shared/global/modal.svelte";
   import LocalSpinner from "../../shared/global/local-spinner.svelte";
   

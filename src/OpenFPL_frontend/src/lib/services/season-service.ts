@@ -9,7 +9,6 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class SeasonService {
-
   constructor() {}
 
   async getSeasons(): Promise<Seasons | undefined> {

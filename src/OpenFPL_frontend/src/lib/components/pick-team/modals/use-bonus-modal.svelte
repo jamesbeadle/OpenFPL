@@ -6,7 +6,7 @@
   import { BonusType } from "$lib/enums/BonusType";
   import type { BonusType as BonusName } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { countryStore } from "$lib/stores/country-store";
-  import { convertPositionToIndex } from "$lib/utils/helpers";
+  import { convertPositionToIndex } from "$lib/utils/Helpers";
   import { leagueStore } from "$lib/stores/league-store";
   import type { Bonus } from "$lib/types/bonus";
   import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";

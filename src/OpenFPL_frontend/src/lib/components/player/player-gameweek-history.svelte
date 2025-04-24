@@ -8,7 +8,7 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
-  import { getFixturesWithTeams } from "$lib/utils/helpers";
+  import { getFixturesWithTeams } from "$lib/utils/Helpers";
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";

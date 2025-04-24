@@ -11,7 +11,6 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class PlayerService {
-
   constructor() {}
 
   async getPlayers(): Promise<Players | undefined> {

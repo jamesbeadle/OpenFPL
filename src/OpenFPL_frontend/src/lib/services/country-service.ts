@@ -5,7 +5,6 @@ import { toasts } from "$lib/stores/toasts-store";
 import type { Countries } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class CountryService {
-
   constructor() {}
 
   async getCountries(): Promise<Countries | undefined> {

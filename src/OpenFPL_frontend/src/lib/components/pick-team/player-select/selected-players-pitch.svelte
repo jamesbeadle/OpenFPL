@@ -6,7 +6,7 @@
   import { clubStore } from "$lib/stores/club-store";
   import AddPlayerIcon from "$lib/icons/AddPlayerIcon.svelte";
   import { getGridSetup } from "$lib/utils/pick-team.helpers";
-  import { getActualIndex } from "$lib/utils/helpers";
+  import { getActualIndex } from "$lib/utils/Helpers";
   import SponsorshipBoard from "./sponsorship-board.svelte";
   import PitchPlayer from "./pitch-player.svelte";
   import LocalSpinner from "../../shared/global/local-spinner.svelte";

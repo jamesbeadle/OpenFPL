@@ -15,7 +15,6 @@ import type {
 import { authStore } from "$lib/stores/auth-store";
 
 export class LeaderboardService {
-
   async getWeeklyLeaderboard(
     dto: GetWeeklyLeaderboard,
   ): Promise<WeeklyLeaderboard | undefined> {

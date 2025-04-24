@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { calculateAgeFromNanoseconds, convertDateToReadable } from "$lib/utils/helpers";
+    import { calculateAgeFromNanoseconds, convertDateToReadable } from "$lib/utils/Helpers";
     import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
     interface Props {

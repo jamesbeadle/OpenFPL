@@ -9,7 +9,6 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class ClubService {
-
   constructor() {}
 
   async getClubs(): Promise<Clubs | undefined> {

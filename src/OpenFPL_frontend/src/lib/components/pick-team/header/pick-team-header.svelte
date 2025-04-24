@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { updateTeamValue } from "$lib/utils/pick-team.helpers";
-  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/helpers";
+  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "$lib/utils/Helpers";
 
   import { seasonStore } from "$lib/stores/season-store";
   import PageHeader from "../../shared/panels/page-header.svelte";

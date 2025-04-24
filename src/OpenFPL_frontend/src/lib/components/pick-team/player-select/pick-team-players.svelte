@@ -9,7 +9,7 @@
   import AddPlayerModal from "../modals/add-player-modal.svelte";
   import SelectedPlayersPitch from "./selected-players-pitch.svelte";
   import SelectedPlayersList from "./selected-players-list.svelte";
-  import { convertPositionToIndex } from "$lib/utils/helpers";
+  import { convertPositionToIndex } from "$lib/utils/Helpers";
   import LocalSpinner from "../../shared/global/local-spinner.svelte";
   import type { TeamSetup, Player } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   

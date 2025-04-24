@@ -1,6 +1,6 @@
 <script lang="ts">
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { getFlagComponent } from "../../utils/helpers";
+  import { getFlagComponent } from "$lib/utils/Helpers";
   import Modal from "$lib/components/shared/global/modal.svelte";
   import type { Club, PlayerDetails, PlayerEventData, PlayerGameweek } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 

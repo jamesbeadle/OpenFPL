@@ -3,7 +3,7 @@
     import { userStore } from "$lib/stores/user-store";
     import { onMount } from "svelte";
     import { storeManager } from "$lib/managers/store-manager";
-    import { getDateFromBigInt } from "$lib/utils/helpers";
+    import { getDateFromBigInt } from "$lib/utils/Helpers";
     import LoadingDots from "../../shared/global/loading-dots.svelte";
     import CopyPrincipal from "./copy-principal.svelte";
 

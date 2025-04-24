@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { GameweekData } from "$lib/interfaces/GameweekData";
-    import { convertPositionToIndex, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
+    import { convertPositionToIndex, getPlayerName, getPositionAbbreviation } from "$lib/utils/Helpers";
     import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
     
     interface Props {

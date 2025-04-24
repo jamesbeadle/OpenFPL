@@ -3,7 +3,7 @@
     import { storeManager } from "$lib/managers/store-manager";
     import { leagueStore } from "$lib/stores/league-store";
     import { toasts } from "$lib/stores/toasts-store";
-    import { formatUnixTimeToTime, reduceFilteredFixtures } from "../../utils/helpers";
+    import { formatUnixTimeToTime, reduceFilteredFixtures } from "$lib/utils/Helpers";
     import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
     import LocalSpinner from "../shared/global/local-spinner.svelte";
     import FixtureStatus from "../shared/badges/fixture-status.svelte";

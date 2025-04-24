@@ -18,7 +18,7 @@ import { ClubService } from "$lib/services/club-service";
 import { PlayerService } from "$lib/services/player-service";
 import { PlayerEventsService } from "$lib/services/player-events-service";
 import { FixtureService } from "$lib/services/fixture-service";
-import { replacer } from "$lib/utils/helpers";
+import { replacer } from "$lib/utils/Helpers";
 
 export let globalDataLoaded = false;
 
