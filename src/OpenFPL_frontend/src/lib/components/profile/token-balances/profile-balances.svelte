@@ -1,7 +1,7 @@
 <script lang="ts">
     import { userStore } from "$lib/stores/user-store";
     import { onMount } from "svelte";
-    import LoadingDots from "../shared/loading-dots.svelte";
+    import LoadingDots from "../../shared/loading-dots.svelte";
     import WithdrawFplModal from "./withdraw-fpl-modal.svelte";
     import ICFCCoinIcon from "$lib/icons/ICFCCoinIcon.svelte";
 

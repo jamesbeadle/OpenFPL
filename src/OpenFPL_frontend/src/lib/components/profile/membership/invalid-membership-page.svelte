@@ -1,7 +1,7 @@
 <script lang="ts">
-    import CopyPrincipal from "./copy-principal.svelte";
+    import CopyPrincipal from "../details/copy-principal.svelte";
     import WarningIcon from "$lib/icons/WarningIcon.svelte";
-    import FullScreenSpinner from "../shared/full-screen-spinner.svelte";
+    import FullScreenSpinner from "../../shared/full-screen-spinner.svelte";
     import { userStore } from "$lib/stores/user-store";
     import { toasts } from "$lib/stores/toasts-store";
 
@@ -59,7 +59,7 @@
             </p>
             
             <div class="my-6">
-                <CopyPrincipal />
+                <CopyPrincipal  bgColor="gray" borderColor="white"/>
             </div>
 
             <div class="flex justify-center pt-4 space-x-4">

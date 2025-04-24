@@ -3,7 +3,7 @@
   import { toasts } from "$lib/stores/toasts-store";
   import { convertToE8s, isAmountValid, isPrincipalValid } from "$lib/utils/helpers";
   import Modal from "$lib/components/shared/modal.svelte";
-  import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../../shared/local-spinner.svelte";
   
   
   interface Props {

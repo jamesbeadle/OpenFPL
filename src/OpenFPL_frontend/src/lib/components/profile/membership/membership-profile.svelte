@@ -1,7 +1,6 @@
 <script lang="ts">
-  import FullScreenSpinner from "../shared/full-screen-spinner.svelte";
-  import Header from "$lib/shared/header.svelte";
-  import CopyPrincipal from "./copy-principal.svelte";
+  import FullScreenSpinner from "../../shared/full-screen-spinner.svelte";
+  import CopyPrincipal from "../details/copy-principal.svelte";
   import MembershipLinkedModal from "./membership-linked-modal.svelte";
   import { toasts } from "$lib/stores/toasts-store";
   import { userStore } from "$lib/stores/user-store";
@@ -121,7 +120,6 @@
 <FullScreenSpinner message={loadingMessage} />
 {:else}
 <div class="flex flex-col w-full h-full mx-auto">
-  <Header />
   <div class="flex-1 w-full p-6 mx-auto">
     <div class="p-8 rounded-lg shadow-xl bg-gray-900/50">
       <div class="mb-8 border-b border-BrandGreen">
@@ -142,7 +140,7 @@
           Please link your OpenFPL principal ID within your ICFC profile to play and then click the button below to refresh your status.
         </p>
         <div class="mb-6">
-          <CopyPrincipal bgColor="bg-transparent" borderColor="border-BrandGreen" />
+          <CopyPrincipal  bgColor="gray" borderColor="white"/>
         </div>
         {#if !notLinked}
           <p class="px-2 mb-4 text-lg text-BrandGreen">

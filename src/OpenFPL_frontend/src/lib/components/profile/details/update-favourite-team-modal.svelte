@@ -5,7 +5,7 @@
   import { storeManager } from "$lib/managers/store-manager";
     import Modal from "$lib/components/shared/modal.svelte";
     import { toasts } from "$lib/stores/toasts-store";
-    import LocalSpinner from "../shared/local-spinner.svelte";
+    import LocalSpinner from "../../shared/local-spinner.svelte";
     import { authStore } from "$lib/stores/auth-store";
 
   

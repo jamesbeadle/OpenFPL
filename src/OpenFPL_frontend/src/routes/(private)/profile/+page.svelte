@@ -3,7 +3,7 @@
   import { userStore } from "$lib/stores/user-store";
   import { browser } from "$app/environment";
 
-  import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
+  import ProfileDetail from "$lib/components/profile/details/profile-detail.svelte";
   import ProfileManagerGameweeks from "$lib/components/manager/profile-manager-gameweeks.svelte";
   import TabContainer from "$lib/components/shared/tab-container.svelte";
   import WelcomeBanner from "$lib/components/profile/welcome-banner.svelte";
