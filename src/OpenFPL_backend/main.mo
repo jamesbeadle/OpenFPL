@@ -65,6 +65,7 @@ import CanisterCommands "mo:waterway-mops/canister-management/CanisterCommands";
 import CanisterQueries "mo:waterway-mops/canister-management/CanisterQueries";
 import CanisterManager "mo:waterway-mops/canister-management/CanisterManager";
 import FixtureQueries "mo:waterway-mops/queries/football-queries/FixtureQueries";
+import MvpQueries "queries/mvp_queries";
 
 /* ----- Only Stable Variables Should Use Types ----- */
 
@@ -391,6 +392,10 @@ actor Self {
 
   public shared func getMostValuableTeamLeaderboard(dto : LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
     return await leaderboardManager.getMostValuableTeamLeaderboard(dto);
+  };
+
+  public shared func getMostValuableGameweekPlayers(dto: MvpQueries.GetMostValuableGameweekPlayers) : async Result.Result<MvpQueries.MostValuableGameweekPlayers, Enums.Error> {
+    return #err(#NotFound); // TODO
   };
 
   public shared ({ caller }) func getLeagueStatus() : async Result.Result<DataCanister.LeagueStatus, Enums.Error> {

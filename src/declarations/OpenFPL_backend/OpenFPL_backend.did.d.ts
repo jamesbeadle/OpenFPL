@@ -232,6 +232,10 @@ export interface GetMonthlyLeaderboard {
   page: bigint;
   seasonId: SeasonId;
 }
+export interface GetMostValuableGameweekPlayers {
+  seasonId: SeasonId;
+  gameweek: GameweekNumber;
+}
 export interface GetMostValuableTeamLeaderboard {
   page: bigint;
   seasonId: SeasonId;
@@ -371,6 +375,20 @@ export interface MonthlyLeaderboard {
   totalEntries: bigint;
   seasonId: SeasonId;
   entries: Array<LeaderboardEntry__1>;
+}
+export interface MostValuableGameweekPlayers {
+  totalEntries: bigint;
+  seasonId: SeasonId;
+  entries: Array<MostValuablePlayer>;
+  gameweek: GameweekNumber;
+}
+export interface MostValuablePlayer {
+  fixtureId: FixtureId;
+  playerId: PlayerId;
+  totalRewardAmount: bigint;
+  selectedByCount: bigint;
+  rewardPerManager: bigint;
+  points: number;
 }
 export interface MostValuableTeamLeaderboard {
   totalEntries: bigint;
@@ -575,21 +593,22 @@ export type Result_11 = { ok: Players } | { err: Error };
 export type Result_12 = { ok: PlayerDetailsForGameweek } | { err: Error };
 export type Result_13 = { ok: PlayerDetails } | { err: Error };
 export type Result_14 = { ok: MostValuableTeamLeaderboard } | { err: Error };
-export type Result_15 = { ok: MonthlyLeaderboard } | { err: Error };
-export type Result_16 = { ok: Array<CanisterId> } | { err: Error };
-export type Result_17 = { ok: Manager } | { err: Error };
-export type Result_18 = { ok: LeagueStatus } | { err: Error };
-export type Result_19 = { ok: Array<ICFCLinks> } | { err: Error };
+export type Result_15 = { ok: MostValuableGameweekPlayers } | { err: Error };
+export type Result_16 = { ok: MonthlyLeaderboard } | { err: Error };
+export type Result_17 = { ok: Array<CanisterId> } | { err: Error };
+export type Result_18 = { ok: Manager } | { err: Error };
+export type Result_19 = { ok: LeagueStatus } | { err: Error };
 export type Result_2 = { ok: bigint } | { err: Error };
-export type Result_20 = { ok: ICFCLinkStatus } | { err: Error };
-export type Result_21 = { ok: string } | { err: Error };
-export type Result_22 = { ok: Fixtures } | { err: Error };
-export type Result_23 = { ok: FantasyTeamSnapshot } | { err: Error };
-export type Result_24 = { ok: Array<DataHash> } | { err: Error };
-export type Result_25 = { ok: Countries } | { err: Error };
-export type Result_26 = { ok: Clubs } | { err: Error };
-export type Result_27 = { ok: AppStatus } | { err: Error };
-export type Result_28 = { ok: RewardRates } | { err: Error };
+export type Result_20 = { ok: Array<ICFCLinks> } | { err: Error };
+export type Result_21 = { ok: ICFCLinkStatus } | { err: Error };
+export type Result_22 = { ok: string } | { err: Error };
+export type Result_23 = { ok: Fixtures } | { err: Error };
+export type Result_24 = { ok: FantasyTeamSnapshot } | { err: Error };
+export type Result_25 = { ok: Array<DataHash> } | { err: Error };
+export type Result_26 = { ok: Countries } | { err: Error };
+export type Result_27 = { ok: Clubs } | { err: Error };
+export type Result_28 = { ok: AppStatus } | { err: Error };
+export type Result_29 = { ok: RewardRates } | { err: Error };
 export type Result_3 = { ok: TeamSetup } | { err: Error };
 export type Result_4 = { ok: Seasons } | { err: Error };
 export type Result_5 = { ok: SeasonLeaderboard } | { err: Error };
@@ -732,24 +751,28 @@ export interface _SERVICE {
     [CompleteFixtureNotification],
     Result
   >;
-  getActiveLeaderboardCanisterId: ActorMethod<[], Result_21>;
-  getActiveRewardRates: ActorMethod<[], Result_28>;
+  getActiveLeaderboardCanisterId: ActorMethod<[], Result_22>;
+  getActiveRewardRates: ActorMethod<[], Result_29>;
   getAllUserICFCLinks: ActorMethod<[], Array<[PrincipalId, ICFCLink]>>;
-  getAppStatus: ActorMethod<[], Result_27>;
-  getClubs: ActorMethod<[GetClubs], Result_26>;
-  getCountries: ActorMethod<[], Result_25>;
-  getDataHashes: ActorMethod<[], Result_24>;
-  getFantasyTeamSnapshot: ActorMethod<[GetFantasyTeamSnapshot], Result_23>;
-  getFixtures: ActorMethod<[GetFixtures], Result_22>;
-  getICFCDataHash: ActorMethod<[], Result_21>;
-  getICFCLinkStatus: ActorMethod<[], Result_20>;
-  getICFCProfileLinks: ActorMethod<[GetICFCLinks], Result_19>;
-  getLeaderboardCanisterIds: ActorMethod<[], Result_16>;
-  getLeagueStatus: ActorMethod<[], Result_18>;
-  getManager: ActorMethod<[GetManager], Result_17>;
-  getManagerByUsername: ActorMethod<[GetManagerByUsername], Result_17>;
-  getManagerCanisterIds: ActorMethod<[], Result_16>;
-  getMonthlyLeaderboard: ActorMethod<[GetMonthlyLeaderboard], Result_15>;
+  getAppStatus: ActorMethod<[], Result_28>;
+  getClubs: ActorMethod<[GetClubs], Result_27>;
+  getCountries: ActorMethod<[], Result_26>;
+  getDataHashes: ActorMethod<[], Result_25>;
+  getFantasyTeamSnapshot: ActorMethod<[GetFantasyTeamSnapshot], Result_24>;
+  getFixtures: ActorMethod<[GetFixtures], Result_23>;
+  getICFCDataHash: ActorMethod<[], Result_22>;
+  getICFCLinkStatus: ActorMethod<[], Result_21>;
+  getICFCProfileLinks: ActorMethod<[GetICFCLinks], Result_20>;
+  getLeaderboardCanisterIds: ActorMethod<[], Result_17>;
+  getLeagueStatus: ActorMethod<[], Result_19>;
+  getManager: ActorMethod<[GetManager], Result_18>;
+  getManagerByUsername: ActorMethod<[GetManagerByUsername], Result_18>;
+  getManagerCanisterIds: ActorMethod<[], Result_17>;
+  getMonthlyLeaderboard: ActorMethod<[GetMonthlyLeaderboard], Result_16>;
+  getMostValuableGameweekPlayers: ActorMethod<
+    [GetMostValuableGameweekPlayers],
+    Result_15
+  >;
   getMostValuableTeamLeaderboard: ActorMethod<
     [GetMostValuableTeamLeaderboard],
     Result_14
