@@ -10,7 +10,6 @@
   import FantasyPlayerDetailModal from "../home/points/manager-player-score-modal.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
   import GameweekPointsTable from "../home/points/points-table.svelte";
-  import { getGameweeks } from "$lib/utils/helpers";
   import { leagueStore } from "$lib/stores/league-store";
   import LocalSpinner from "../shared/local-spinner.svelte";
 
@@ -19,7 +18,6 @@
   let isLoading = $state(true);
   let selectedGameweek = $state(1);
   let isInitialLoad = $state(true);
-  let gameweeks: number[] = $state([]);
   let showModal = $state(false);
   let gameweekData = $state<GameweekData[]>([]);
   let selectedTeam: Club | undefined = $state(undefined);
@@ -29,7 +27,6 @@
 
   onMount(async () => {
     await storeManager.syncStores();
-    gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1);
     selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.completedGameweek : $leagueStore!.activeGameweek ?? 1;
     isInitialLoad = false;
     isLoading = false;
@@ -67,10 +64,6 @@
     isLoading = false;
   }
 
-  const changeGameweek = (delta: number) => {
-    selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), selectedGameweek + delta));
-  };
-
   async function showDetailModal(gameweekData: GameweekData) {
     selectedGameweekData = gameweekData;
     let playerTeamId = gameweekData.player.clubId;
@@ -97,10 +90,7 @@
     />
   {/if}
   <div class="flex flex-col">
-    <GameweekFilter 
-      {selectedGameweek} 
-      {changeGameweek} 
-    />
+    <GameweekFilter {selectedGameweek} />
     <GameweekPointsTable {gameweekData} {showDetailModal} />
   </div>
 {/if}

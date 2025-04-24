@@ -14,6 +14,7 @@
   
   import PointsTable from "./points/points-table.svelte";
   import ManagerPlayerScoreModal from "./points/manager-player-score-modal.svelte";
+  import { toasts } from "$lib/stores/toasts-store";
   
   let isLoading = $state(true);
   let selectedSeasonId = $state(0);
@@ -27,8 +28,9 @@
     try{
       await storeManager.syncStores();
       selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.completedGameweek : $leagueStore!.activeGameweek ?? 1;
+      selectedSeasonId = $leagueStore?.activeSeasonId ?? 0;
     } catch {
-      
+      toasts.addToast({type: 'error', message: 'Error loading active season information'});
     } finally {
       isLoading = false;
     }
@@ -68,10 +70,6 @@
     gameweekData = unsortedData.sort((a, b) => b.points - a.points);
     isLoading = false;
   }
-
-  const changeGameweek = (delta: number) => {
-    selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), selectedGameweek + delta));
-  };
 </script>
   
 {#if isLoading}
@@ -79,11 +77,8 @@
   <p class="pb-4 mb-4 text-center">Getting Gameweek {selectedGameweek} Data</p>
 {:else}
   <div class="flex flex-col">
-    <SeasonFilter {selectedSeasonId} onSelect={onSelectSeason} />
-    <GameweekFilter 
-      {selectedGameweek} 
-      {changeGameweek} 
-    />
+    <SeasonFilter {selectedSeasonId} />
+    <GameweekFilter {selectedGameweek} />
     <PointsTable {gameweekData} showDetailModal={() => showModal = true} />
   </div>
 {/if}

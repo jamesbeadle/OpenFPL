@@ -1173,21 +1173,6 @@ export function getBonusIcon(snapshot: FantasyTeamSnapshot): string {
     return "-";
   }
 }
-/*
-export function mergeLeaderboardWithRewards(
-  leaderboardEntries: LeaderboardEntry[],
-  rewards: Reward[],
-): LeaderboardEntryDTO[] {
-  const rewardMap = new Map(
-    rewards.map((reward) => [reward.principalId, reward.amount]),
-  );
-
-  return leaderboardEntries.map((entry) => ({
-    ...entry,
-    reward: rewardMap.get(entry.principalId) ?? 0,
-  }));
-}
-  */
 
 export function getGameweeks(totalGameweeks: number): number[] {
   return Array.from({ length: totalGameweeks }, (_, i) => i + 1);

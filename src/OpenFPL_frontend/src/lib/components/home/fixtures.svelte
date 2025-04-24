@@ -1,40 +1,31 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    
+    import { storeManager } from "$lib/managers/store-manager";
     import { leagueStore } from "$lib/stores/league-store";
-    
-    import { formatUnixTimeToTime, getGameweeks, reduceFilteredFixtures } from "../../utils/helpers";
-    import { globalDataLoaded } from "$lib/managers/store-manager";
-    import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
-    import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import { fixtureWithClubsStore } from "$lib/derived/fixtures-with-clubs.derived";
+    import { toasts } from "$lib/stores/toasts-store";
+    import { formatUnixTimeToTime, reduceFilteredFixtures } from "../../utils/helpers";
     import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
     import LocalSpinner from "../shared/local-spinner.svelte";
     import FixtureStatus from "../homepage/fixture-status.svelte";
-  
+    import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
+    import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+    
     let isLoading = $state(true);
-    let gameweeks = getGameweeks(Number(process.env.TOTAL_GAMEWEEKS));
+    let selectedSeasonId = $state(0);
     let selectedGameweek = $state(1);
     let filteredFixtures: FixtureWithClubs[] = [];
     let mergedFixtures: FixtureWithClubs[] = [];
     let groupedFixtures: { [key: string]: FixtureWithClubs[]; } = $state({ ['']: [] });
     
     onMount(async () => {
-      if (globalDataLoaded) {
-        try {
-            await Promise.all([
-                new Promise(resolve => {
-                    selectedGameweek = $leagueStore!.activeGameweek == 0 
-                        ? $leagueStore!.unplayedGameweek 
-                        : $leagueStore!.activeGameweek ?? 1;
-                    mergedFixtures = $fixtureWithClubsStore;
-                    resolve(null);
-                })
-            ]);
-            isLoading = false;
-        } catch (error) {
-            console.error('Error loading fixture data:', error);
-        }
+      try{
+        await storeManager.syncStores();
+        selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.completedGameweek : $leagueStore!.activeGameweek ?? 1;
+        selectedSeasonId = $leagueStore?.activeSeasonId ?? 0;
+      } catch {
+        toasts.addToast({type: 'error', message: 'Error loading active season information'});
+      } finally {
+        isLoading = false;
       }
     });
   
@@ -48,10 +39,6 @@
         groupedFixtures = reduceFilteredFixtures(filteredFixtures);
     });
   
-    const changeGameweek = (delta: number) => {
-      selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), selectedGameweek + delta));
-    };
-  
   </script>
   {#if isLoading}
     <LocalSpinner />
@@ -59,7 +46,7 @@
   {:else}
     <div class="flex flex-col">
       <div class="flex flex-col gap-4 sm:flex-row sm:gap-8">
-        <GameweekFilter {selectedGameweek} {changeGameweek} />
+        <GameweekFilter {selectedGameweek} />
       </div>
       <div>
         {#each Object.entries(groupedFixtures) as [date, fixtures]}
@@ -94,7 +81,6 @@
   
                 <div class="hidden md:flex md:w-2/12 lg:w-2/12">
                   <FixtureStatus fixtureStatus={Object.keys(fixture.fixture.status)[0]} />
-  
                   <span class="ml-4 text-left md:ml-0">
                     {#if Object.keys(fixture.fixture.status)[0] == "Unplayed"}Unplayed{/if}
                     {#if Object.keys(fixture.fixture.status)[0] == "Active"}Active{/if}

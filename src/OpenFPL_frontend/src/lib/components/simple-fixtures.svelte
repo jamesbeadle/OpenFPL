@@ -4,14 +4,13 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
-  import { convertFixtureStatus, formatUnixTimeToTime, getFixturesWithTeams, getGameweeks, reduceFilteredFixtures } from "../utils/helpers";
+  import { convertFixtureStatus, formatUnixTimeToTime, getFixturesWithTeams, reduceFilteredFixtures } from "../utils/helpers";
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
   import GameweekFilter from "./shared/filters/gameweek-filter.svelte";
 
   let fixturesWithTeams: FixtureWithClubs[] = [];
   let selectedGameweek = $state(1);
-  let gameweeks = getGameweeks(Number(process.env.TOTAL_GAMEWEEKS));
   let filteredFixtures: FixtureWithClubs[] = $state([]);
   let groupedFixtures: {[key: string]: FixtureWithClubs[];} = $state({['']: []});
   
@@ -27,10 +26,6 @@
     selectedGameweek = $leagueStore!.unplayedGameweek;
     fixturesWithTeams = getFixturesWithTeams($clubStore, $fixtureStore);
   });
-
-  const changeGameweek = (delta: number) => {
-    selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), selectedGameweek + delta));
-  };
 </script>
 
 <div class="bg-panel">
@@ -38,7 +33,7 @@
     <div class="flex items-center justify-between py-2 bg-light-gray">
       <h1 class="m-2 mx-4 side-panel-header">Fixtures</h1>
     </div>
-    <GameweekFilter {selectedGameweek} {changeGameweek} />
+    <GameweekFilter {selectedGameweek} />
     <div>
       {#each Object.entries(groupedFixtures) as [date, fixtures]}
         <div class="flex items-center justify-between py-2 border-b border-gray-700 bg-light-gray">

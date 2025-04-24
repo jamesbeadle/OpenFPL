@@ -9,7 +9,6 @@
   import ManagerGameweekDetailTable from "./manager-gameweek-detail-table.svelte";
   import ScoreAbbreviationKey from "../shared/score-abbreviation-key.svelte";
   import GameweekFilter from "../shared/filters/gameweek-filter.svelte";
-  import { getGameweeks } from "$lib/utils/helpers";
   import LocalSpinner from "../shared/local-spinner.svelte";
   import type { FantasyTeamSnapshot } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
@@ -25,7 +24,6 @@
   let activeSeasonName: string = $state("");
 
   let gameweekPlayers = $state<GameweekData[]>([]);
-  let gameweeks: number[] = $state([]);
 
   $effect(() => {
     if (fantasyTeam && selectedGameweek && selectedGameweek > 0) {
@@ -41,7 +39,6 @@
 
   onMount(async () => {
     await storeManager.syncStores();
-    gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1)
     lastGameweek = $leagueStore?.completedGameweek ?? 1;
     activeSeasonName = await seasonStore.getSeasonName($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 0) ?? "";
     if (!fantasyTeam) { return; }
@@ -55,22 +52,13 @@
     sortPlayersByPointsThenValue(fetchedPlayers);
     gameweekPlayers = fetchedPlayers;
   }
-
-  const changeGameweek = (delta: number) => {
-    isLoading = true;
-    selectedGameweek = Math.max(1, Math.min(Number(process.env.TOTAL_GAMEWEEKS), selectedGameweek! + delta));
-  };
-
-  function closeDetailModal() {
-    showModal = false;
-  }
 </script>
 
 {#if isLoading}
   <LocalSpinner />
 {:else}
   <div class="flex flex-col">
-      <GameweekFilter {selectedGameweek} {changeGameweek} />
+      <GameweekFilter {selectedGameweek} />
   </div>
   <ManagerGameweekDetailTable {activeSeasonName} {fantasyTeam} {gameweekPlayers} {showModal} />
   <ScoreAbbreviationKey />
