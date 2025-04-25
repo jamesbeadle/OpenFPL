@@ -1,24 +1,15 @@
 <script lang="ts">
   
     interface Props {
-      searchTerm: string;
+      executeSearch: (searchTerm: string) => void;
     }
-    let { searchTerm }: Props = $props();
+    let { executeSearch }: Props = $props();
   
     let searchInput: string = $state("");
   
-    function executeSearch() {
-      searchTerm = searchInput;
-    }
-  
-    function resetSearch() {
-      searchInput = "";
-      searchTerm = "";
-    }
-  
     function handleKeydown(event: KeyboardEvent) {
       if (event.key === 'Enter') {
-        executeSearch();
+        executeSearch(searchInput);
       }
     }
   </script>
@@ -38,13 +29,13 @@
         </svg>
       </div>
       <button
-        onclick={executeSearch}
+        onclick={() => executeSearch(searchInput)}
         class="px-4 py-2 text-white transition-colors border border-gray-700 rounded-lg bg-BrandGray hover:bg-BrandGrayShade1 focus:outline-none focus:border-BrandGreen"
       >
         Search
       </button>
       <button
-        onclick={resetSearch}
+        onclick={() => searchInput = ""}
         class="px-4 py-2 text-white transition-colors border border-gray-700 rounded-lg bg-BrandGray hover:bg-BrandGrayShade1 focus:outline-none focus:border-BrandGreen"
       >
         Reset

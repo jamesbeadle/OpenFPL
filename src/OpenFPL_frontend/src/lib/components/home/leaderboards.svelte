@@ -99,6 +99,10 @@
       selectedLeaderboardType += change;
       selectedLeaderboardType = selectedLeaderboardType > 3 ? 1 : (selectedLeaderboardType < 1) ? 3 : selectedLeaderboardType;
     }
+
+    function executeSearch(newSearchTerm: string){
+      searchTerm = newSearchTerm;
+    };
   </script>
   
   {#if isLoading}
@@ -125,7 +129,7 @@
 
         <UserLeaderboardEntry />
 
-        <LeaderboardSearch {searchTerm} />
+        <LeaderboardSearch {executeSearch} />
 
         <LeaderboardTable {leaderboard}  {selectedGameweek} />
 
