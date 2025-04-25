@@ -17,6 +17,8 @@
     import LeaderboardTable from "./leaderboards/leaderboard-table.svelte";
     import UserLeaderboardEntry from "./leaderboards/user-leaderboard-entry.svelte";
     import { toasts } from "$lib/stores/toasts-store";
+    import Pagination from "../shared/global/pagination.svelte";
+    import LeaderboardSearch from "./leaderboards/leaderboard-search.svelte";
     
     let isLoading = $state(true);
     let selectedLeaderboardType = $state(LeaderboardType.WEEKLY);
@@ -105,19 +107,33 @@
   {:else}
     <div class="flex flex-col">
 
-      <LeaderboardTypeFilter {selectedLeaderboardType} {changeLeaderboardType} />
-      <SeasonFilter {selectedSeasonId} />
+      {#if leaderboard.entries.length === 0}
+          <p class="w-full p-4">No managers found matching "{searchTerm}"</p>
+      {:else}
 
-      {#if selectedLeaderboardType == LeaderboardType.WEEKLY}
-        <GameweekFilter {selectedGameweek} />
-      {/if}
-    
-      {#if selectedLeaderboardType == LeaderboardType.MONTHLY}
-        <MonthFilter {selectedMonth} />
-        <ClubFilter {selectedClubId} />
-      {/if}
+        <LeaderboardTypeFilter {selectedLeaderboardType} {changeLeaderboardType} />
+        <SeasonFilter {selectedSeasonId} />
 
-      <UserLeaderboardEntry />
-      <LeaderboardTable {leaderboard} {searchTerm} onPageChange={handlePageChange} {currentPage} {totalPages} {selectedGameweek} />
+        {#if selectedLeaderboardType == LeaderboardType.WEEKLY}
+          <GameweekFilter {selectedGameweek} />
+        {/if}
+      
+        {#if selectedLeaderboardType == LeaderboardType.MONTHLY}
+          <MonthFilter {selectedMonth} />
+          <ClubFilter {selectedClubId} />
+        {/if}
+
+        <UserLeaderboardEntry />
+
+        <LeaderboardSearch {searchTerm} />
+
+        <LeaderboardTable {leaderboard}  {selectedGameweek} />
+
+        <Pagination
+          {currentPage}
+          {totalPages}
+          onPageChange={handlePageChange}
+        />
+      {/if}
     </div>
   {/if}
