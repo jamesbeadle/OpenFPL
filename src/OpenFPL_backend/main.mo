@@ -379,27 +379,39 @@ actor Self {
 
   /* ----- Leaderboard Queries ----- */
 
-  public shared func getWeeklyLeaderboard(dto : LeaderboardQueries.GetWeeklyLeaderboard) : async Result.Result<LeaderboardQueries.WeeklyLeaderboard, Enums.Error> {
+  public shared ({ caller }) func getWeeklyLeaderboard(dto : LeaderboardQueries.GetWeeklyLeaderboard) : async Result.Result<LeaderboardQueries.WeeklyLeaderboard, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     return await leaderboardManager.getWeeklyLeaderboard(dto);
   };
 
-  public shared func getMonthlyLeaderboard(dto : LeaderboardQueries.GetMonthlyLeaderboard) : async Result.Result<LeaderboardQueries.MonthlyLeaderboard, Enums.Error> {
+  public shared ({ caller }) func getMonthlyLeaderboard(dto : LeaderboardQueries.GetMonthlyLeaderboard) : async Result.Result<LeaderboardQueries.MonthlyLeaderboard, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     return await leaderboardManager.getMonthlyLeaderboard(dto);
   };
 
-  public shared func getSeasonLeaderboard(dto : LeaderboardQueries.GetSeasonLeaderboard) : async Result.Result<LeaderboardQueries.SeasonLeaderboard, Enums.Error> {
+  public shared ({ caller }) func getSeasonLeaderboard(dto : LeaderboardQueries.GetSeasonLeaderboard) : async Result.Result<LeaderboardQueries.SeasonLeaderboard, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     return await leaderboardManager.getSeasonLeaderboard(dto);
   };
 
-  public shared func getMostValuableTeamLeaderboard(dto : LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
+  public shared ({ caller }) func getMostValuableTeamLeaderboard(dto : LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     return await leaderboardManager.getMostValuableTeamLeaderboard(dto);
   };
 
-  public shared func getMostValuableGameweekPlayers(dto: MvpQueries.GetMostValuableGameweekPlayers) : async Result.Result<MvpQueries.MostValuableGameweekPlayers, Enums.Error> {
+  public shared ({ caller }) func getMostValuableGameweekPlayers(dto: MvpQueries.GetMostValuableGameweekPlayers) : async Result.Result<MvpQueries.MostValuableGameweekPlayers, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     return #err(#NotFound); // TODO
   };
 
-  public shared func getAllTimeHighScores(dto: AllTimeHighScoreQueries.GetAllTimeHighScores) : async Result.Result<AllTimeHighScoreQueries.AllTimeHighScores, Enums.Error> {
+  public shared ({ caller }) func getAllTimeHighScores(dto: AllTimeHighScoreQueries.GetAllTimeHighScores) : async Result.Result<AllTimeHighScoreQueries.AllTimeHighScores, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     return #err(#NotFound); // TODO
   };
 
@@ -478,6 +490,7 @@ actor Self {
   /* ----- Football God Callback Canister Interface ----- */
 
   public shared ({ caller }) func addInitialFixtureNotification(dto : LeagueNotificationCommands.AddInitialFixtureNotification) : async Result.Result<(), Enums.Error> {
+    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     await seasonManager.resetAllDataHashes();
     await userManager.resetFantasyTeams();
     return #ok();
