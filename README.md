@@ -23,8 +23,6 @@ To run OpenFPL you will need to setup a local version of the NNS containing the 
 
 To get to this state follow these steps:
 
-Here’s a more polished version of your updated README with improvements in wording, formatting, and organization, while **bolding all changes** for you to spot them easily.
-
 ---
 
 ### Updated README
