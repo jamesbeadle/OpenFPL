@@ -5,8 +5,8 @@
   "description": "Decentralised Fantasy Football",
   "keywords": [
     "Open FPL",
-    "FPL",
-    "IC",
+    "ICFC",
+    "Fantasy Football",
     "ICP"
   ],
   "scripts": {
@@ -18,8 +18,7 @@
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
     "format": "prettier --plugin-search-dir . --write .",
     "prebuild": "npm run generate",
-    "generate": "dfx generate && node ./update.types.mjs && npm run format",
-    "test": "vitest"
+    "generate": "dfx generate && node ./update.types.mjs && npm run format"
   },
   "devDependencies": {
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
@@ -27,37 +26,33 @@
     "@sveltejs/adapter-static": "^3.0.8",
     "@sveltejs/kit": "^2.15.0",
     "@sveltejs/vite-plugin-svelte": "^4.0.4",
-    "@types/isomorphic-fetch": "^0.0.39",
     "@types/node": "^20.10.2",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
     "autoprefixer": "^10.4.16",
     "eslint-config-prettier": "^9.0.0",
-    "isomorphic-fetch": "^3.0.0",
     "sass": "^1.69.5",
     "svelte": "^5.15.0",
     "svelte-check": "^4.0.5",
     "svelte-preprocess": "^6.0.3",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
-    "vite": "^5.4.11",
-    "vitest": "^3.0.5"
+    "vite": "^5.4.11"
   },
   "type": "module",
   "dependencies": {
-    "@dfinity/agent": "^2.1.2",
-    "@dfinity/auth-client": "^2.1.2",
-    "@dfinity/candid": "^2.1.2",
+    "@dfinity/agent": "^2.3.0",
+    "@dfinity/auth-client": "^2.3.0",
+    "@dfinity/candid": "^2.3.0",
     "@dfinity/nns": "^7.0.1",
     "@dfinity/nns-proto": "^2.0.1",
-    "@dfinity/principal": "^2.1.2",
+    "@dfinity/principal": "^2.3.0",
     "@dfinity/sns": "^3.2.2",
     "@dfinity/utils": "^2.5.2",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "dompurify": "^3.1.7",
     "dotenv": "^16.4.5",
     "esbuild": "^0.24.0",
-    "idb": "^8.0.2",
     "postcss": "^8.4.47",
     "svelte-flag-icons": "^1.0.3",
     "svelte-portal": "^2.2.1",
