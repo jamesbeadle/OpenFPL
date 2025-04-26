@@ -605,7 +605,6 @@ actor Self {
           gameweek = dto.gameweek;
           seasonId = dto.seasonId;
           token = BaseUtilities.tokenToText(#ICFC);
-          totalEntries = Array.size(entries);
         };
 
         let sendReq = await icfc_backend_canister.requestLeaderboardPayout(payoutRequest);
@@ -655,8 +654,6 @@ actor Self {
                 seasonId = entry.seasonId;
                 gameweek = entry.gameweek;
                 leaderboard = dto.leaderboard;
-                totalEntries = dto.totalEntries;
-                totalPaid = dto.totalPaid;
               };
             };
             return entry;
