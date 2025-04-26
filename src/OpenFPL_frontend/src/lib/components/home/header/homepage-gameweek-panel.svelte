@@ -5,7 +5,6 @@
     import { seasonStore } from "$lib/stores/season-store";
     import { rewardRatesStore } from "$lib/stores/reward-pool-store";
     import { formatWholeE8s } from "$lib/utils/Helpers";
-    import { globalDataLoaded } from "$lib/managers/store-manager";
     import HeaderContentPanel from "$lib/components/shared/panels/header-content-panel.svelte";
 
     let loadingRewardRates = $state(true);
@@ -15,10 +14,8 @@
     let seasonName = $state("");
 
     onMount(() => {
-        if (globalDataLoaded) {
-            loadManagerCount();
-            loadCurrentStatusDetails();
-        }
+        loadManagerCount();
+        loadCurrentStatusDetails();
         rewardRatesStore.subscribe(rewardRates => {
             if(!rewardRates) {return};
             weeklyPrizePool = formatWholeE8s(BigInt(Math.round(Number(rewardRates.weeklyLeaderboardRewardRate)))).toString();
