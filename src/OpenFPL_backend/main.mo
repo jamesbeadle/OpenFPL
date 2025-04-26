@@ -584,9 +584,12 @@ actor Self {
           };
           leaderboard := Array.append<LeaderboardPayoutCommands.LeaderboardEntry>(leaderboard, [leaderboardEntry]);
         };
+        let ?appText = BaseUtilities.appToText(#OpenFPL) else {
+          return #err(#NotFound);
+        };
 
         let payoutRequest : LeaderboardPayoutCommands.LeaderboardPayoutRequest = {
-          app = #OpenFPL;
+          app = appText;
           leaderboard = leaderboard;
           gameweek = dto.gameweek;
           seasonId = dto.seasonId;
