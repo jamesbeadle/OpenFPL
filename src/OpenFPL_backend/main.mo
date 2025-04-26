@@ -72,7 +72,6 @@ import FixtureQueries "mo:waterway-mops/queries/football-queries/FixtureQueries"
 
 /* ----- Only Stable Variables Should Use Types ----- */
 
-
 actor Self {
 
   /* ----- Stable Canister Variables ----- */
@@ -103,7 +102,7 @@ actor Self {
   private stable var stable_monthly_ath_prize_pool : Nat64 = 0;
   private stable var stable_season_ath_prize_pool : Nat64 = 0;
   private stable var stable_active_leaderbord_canister_id : Ids.CanisterId = "";
-  private stable var stable_leaderboard_payout_requests : [LeaderboardPayoutCommands.PayoutRequest] = [];
+  private stable var stable_leaderboard_payouts : [AppTypes.LeaderboardPayout] = [];
 
   //Season Manager stable variables
   private stable var stable_app_status : BaseTypes.AppStatus = {
@@ -574,7 +573,8 @@ actor Self {
 
     switch (weeklyLeaderboardResult) {
       case (#ok(foundLeaderboard)) {
-        var entries : [LeaderboardPayoutCommands.LeaderboardEntry] = [];
+        var leaderboard : [LeaderboardPayoutCommands.LeaderboardEntry] = [];
+
         for (entry in Iter.fromArray(foundLeaderboard.entries)) {
           let leaderboardEntry : LeaderboardPayoutCommands.LeaderboardEntry = {
             appPrincipalId = entry.principalId;
@@ -582,30 +582,33 @@ actor Self {
             payoutStatus = #Pending;
             payoutDate = null;
           };
-          entries := Array.append<LeaderboardPayoutCommands.LeaderboardEntry>(entries, [leaderboardEntry]);
+          leaderboard := Array.append<LeaderboardPayoutCommands.LeaderboardEntry>(leaderboard, [leaderboardEntry]);
         };
 
         let payoutRequest : LeaderboardPayoutCommands.LeaderboardPayoutRequest = {
           app = #OpenFPL;
-          leaderboard = entries;
+          leaderboard = leaderboard;
           gameweek = dto.gameweek;
           seasonId = dto.seasonId;
           token = BaseUtilities.tokenToText(#ICFC);
         };
 
         let sendReq = await icfc_backend_canister.requestLeaderboardPayout(payoutRequest);
-        let #ok(_) = sendReq else {
-          return sendReq;
+        switch (sendReq) {
+          case (#err(error)) {
+            return #err(error);
+          };
+          case (#ok(_)) {};
         };
 
-        stable_leaderboard_payout_requests := Array.append<LeaderboardPayoutCommands.PayoutRequest>(
-          stable_leaderboard_payout_requests,
+        stable_leaderboard_payouts := Array.append<AppTypes.LeaderboardPayout>(
+          stable_leaderboard_payouts,
           [{
             seasonId = dto.seasonId;
             gameweek = dto.gameweek;
-            leaderboard = entries;
-            totalEntries = Array.size(entries);
-            totalPaid = 0;
+            leaderboard = leaderboard;
+            totalEntries = Array.size(leaderboard);
+            totalEntriesPaid = 0;
           }],
         );
         return #ok();
@@ -621,9 +624,9 @@ actor Self {
   public shared ({ caller }) func leaderboardPaid(dto : LeaderboardPayoutCommands.CompleteLeaderboardPayout) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_BACKEND_CANISTER_ID;
 
-    let foundPayoutRequest = Array.find<LeaderboardPayoutCommands.PayoutRequest>(
-      stable_leaderboard_payout_requests,
-      func(entry : LeaderboardPayoutCommands.PayoutRequest) : Bool {
+    let foundPayoutRequest = Array.find<AppTypes.LeaderboardPayout>(
+      stable_leaderboard_payouts,
+      func(entry : AppTypes.LeaderboardPayout) : Bool {
         entry.seasonId == dto.seasonId and entry.gameweek == dto.gameweek;
       },
     );
@@ -632,16 +635,23 @@ actor Self {
         return #err(#NotFound);
       };
       case (foundPayoutRequest) {
-        stable_leaderboard_payout_requests := Array.map(
-          stable_leaderboard_payout_requests,
-          func(entry : LeaderboardPayoutCommands.PayoutRequest) : LeaderboardPayoutCommands.PayoutRequest {
+        stable_leaderboard_payouts := Array.map(
+          stable_leaderboard_payouts,
+          func(entry : AppTypes.LeaderboardPayout) : AppTypes.LeaderboardPayout {
             if (entry.seasonId == dto.seasonId and entry.gameweek == dto.gameweek) {
               return {
                 seasonId = entry.seasonId;
                 gameweek = entry.gameweek;
                 leaderboard = dto.leaderboard;
-                totalEntries = dto.totalEntries;
-                totalPaid = dto.totalPaid;
+                totalEntries = Array.size(dto.leaderboard);
+                totalEntriesPaid = Array.size(
+                  Array.filter<LeaderboardPayoutCommands.LeaderboardEntry>(
+                    dto.leaderboard,
+                    func(entry : LeaderboardPayoutCommands.LeaderboardEntry) : Bool {
+                      return entry.payoutStatus == #Paid;
+                    },
+                  )
+                );
               };
             };
             return entry;
