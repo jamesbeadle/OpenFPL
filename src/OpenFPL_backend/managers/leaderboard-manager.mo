@@ -216,7 +216,9 @@ module {
       var leaderboard_canister = actor (activeCanisterId) : actor {
         getTotalLeaderboards : () -> async Nat;
         addLeaderboardChunk : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber, clubId : FootballIds.ClubId, entriesChunk : [AppTypes.LeaderboardEntry]) -> async ();
-        prepareForUpdate : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber, clubId : FootballIds.ClubId) -> async ();
+        prepareForWeeklyUpdate : (seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) -> async ();
+        prepareForMonthlyUpdate : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, clubId : FootballIds.ClubId) -> async ();
+        prepareForSeasonUpdate : (seasonId : FootballIds.SeasonId) -> async ();
         finaliseUpdate : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber) -> async ();
       };
 
@@ -229,7 +231,9 @@ module {
       leaderboard_canister := actor (activeCanisterId) : actor {
         getTotalLeaderboards : () -> async Nat;
         addLeaderboardChunk : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber, clubId : FootballIds.ClubId, entriesChunk : [AppTypes.LeaderboardEntry]) -> async ();
-        prepareForUpdate : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber, clubId : FootballIds.ClubId) -> async ();
+        prepareForWeeklyUpdate : (seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) -> async ();
+        prepareForMonthlyUpdate : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, clubId : FootballIds.ClubId) -> async ();
+        prepareForSeasonUpdate : (seasonId : FootballIds.SeasonId) -> async ();
         finaliseUpdate : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber) -> async ();
       };
 
@@ -237,14 +241,14 @@ module {
       /*
       if(month > 0){
         for(clubId in Iter.fromArray(clubIds)){
-          await leaderboard_canister.prepareForUpdate(seasonId, month, gameweek, clubId);
+          await leaderboard_canister.prepareForMonthlyUpdate(seasonId, month, clubId);
         };
       } else {
-        await leaderboard_canister.prepareForUpdate(seasonId, month, gameweek, 0);
+        await leaderboard_canister.prepareForSeasonUpdate(seasonId);
       };
       */
 
-      await leaderboard_canister.prepareForUpdate(seasonId, 0, gameweek, 0);
+      await leaderboard_canister.prepareForWeeklyUpdate(seasonId, gameweek);
       for (canisterId in Iter.fromArray(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
           getOrderedSnapshots : (seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) -> async [AppTypes.FantasyTeamSnapshot];

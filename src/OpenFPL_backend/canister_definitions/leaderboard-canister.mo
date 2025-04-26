@@ -23,43 +23,16 @@ actor class _LeaderboardCanister() {
   private stable var weekly_leaderboards : [AppTypes.WeeklyLeaderboard] = [];
   private stable var monthly_leaderboards : [AppTypes.MonthlyLeaderboard] = [];
   private stable var season_leaderboards : [AppTypes.SeasonLeaderboard] = [];
-
+  
   private stable var entryUpdatesAllowed = false;
 
   private let LEADERBOARD_ROW_COUNT_LIMIT = 25;
 
-  public shared ({ caller }) func prepareForUpdate(
-    seasonId : FootballIds.SeasonId,
-    month : BaseDefinitions.CalendarMonth,
-    gameweek : FootballDefinitions.GameweekNumber,
-    clubId : FootballIds.ClubId,
-  ) : async () {
+  public shared ({ caller }) func prepareForWeeklyUpdate(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber){
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
-
-    if (month == 0 and gameweek == 0) {
-      season_leaderboards := Array.filter<AppTypes.SeasonLeaderboard>(
-        season_leaderboards,
-        func(leaderboard : AppTypes.SeasonLeaderboard) : Bool {
-          leaderboard.seasonId != seasonId;
-        },
-      );
-      return;
-    };
-
-    if (month > 0) {
-      monthly_leaderboards := Array.filter<AppTypes.MonthlyLeaderboard>(
-        monthly_leaderboards,
-        func(leaderboard : AppTypes.MonthlyLeaderboard) : Bool {
-          not (
-            leaderboard.seasonId == seasonId and leaderboard.month == month and leaderboard.clubId == clubId
-          );
-        },
-      );
-      return;
-    };
-
+    
     weekly_leaderboards := Array.filter<AppTypes.WeeklyLeaderboard>(
       weekly_leaderboards,
       func(leaderboard : AppTypes.WeeklyLeaderboard) : Bool {
@@ -68,7 +41,34 @@ actor class _LeaderboardCanister() {
         );
       },
     );
-    entryUpdatesAllowed := true;
+  };
+
+  public shared ({ caller }) func prepareForMonthlyUpdate(seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, clubId : FootballIds.ClubId){
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+
+    monthly_leaderboards := Array.filter<AppTypes.MonthlyLeaderboard>(
+      monthly_leaderboards,
+      func(leaderboard : AppTypes.MonthlyLeaderboard) : Bool {
+        not (
+          leaderboard.seasonId == seasonId and leaderboard.month == month and leaderboard.clubId == clubId
+        );
+      },
+    );
+  };
+
+  public shared ({ caller }) func prepareForSeasonUpdate(seasonId : FootballIds.SeasonId){
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == CanisterIds.OPENFPL_BACKEND_CANISTER_ID;
+    
+    season_leaderboards := Array.filter<AppTypes.SeasonLeaderboard>(
+      season_leaderboards,
+      func(leaderboard : AppTypes.SeasonLeaderboard) : Bool {
+        leaderboard.seasonId != seasonId;
+      },
+    );
   };
 
   public shared ({ caller }) func addLeaderboardChunk(seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber, clubId : FootballIds.ClubId, entriesChunk : [AppTypes.LeaderboardEntry]) : async () {

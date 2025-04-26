@@ -1,16 +1,14 @@
-
-// John should just be commands queries ids enums
-import Base "mo:waterway-mops/BaseTypes";
-import Ids "mo:waterway-mops/Ids";
-import IcfcTypes "mo:waterway-mops/ICFCTypes";
-import Enums "mo:waterway-mops/Enums";
-import BaseTypes "mo:waterway-mops/BaseTypes";
-import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
-import FootballIds "mo:waterway-mops/football/FootballIds";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
-import FootballEnums "mo:waterway-mops/football/FootballEnums";
 import BaseUtilities "mo:waterway-mops/BaseUtilities";
 import DateTimeUtilities "mo:waterway-mops/DateTimeUtilities";
+import Enums "mo:waterway-mops/Enums";
+import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
+import FootballEnums "mo:waterway-mops/football/FootballEnums";
+import FootballIds "mo:waterway-mops/football/FootballIds";
+import Ids "mo:waterway-mops/Ids";
+
+import IcfcTypes "mo:waterway-mops/ICFCTypes"; // TODO - I think gameweek number should be in football definitions
+
 import DataCanister "canister:data_canister";
 
 
