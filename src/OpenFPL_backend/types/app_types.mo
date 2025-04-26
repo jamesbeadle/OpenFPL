@@ -5,11 +5,11 @@ import ICFCEnums "mo:waterway-mops/ICFCEnums";
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
+import IcfcEnums "mo:waterway-mops/ICFCEnums";
 import AppEnums "../enums/app_enums";
 
 module AppTypes {
 
-  public type TokenId = Nat16; // TODO Move
 
   //Manager types
 
@@ -208,22 +208,14 @@ module AppTypes {
     allTimeSeasonHighScoreRewardRate : Nat64;
   };
 
-  public type TokenInfo = {
-    id : TokenId;
-    ticker : Text;
-    canisterId : Ids.CanisterId;
-    tokenImageURL : Text;
-    fee : Nat;
-  };
-
   public type MembershipClaim = {
-    membershipType : AppEnums.MembershipType;
+    membershipType : IcfcEnums.MembershipType;
     purchasedOn : Int;
     expiresOn : ?Int;
   };
 
   public type ICFCLink = {
-    membershipType : AppEnums.MembershipType;
+    membershipType : IcfcEnums.MembershipType;
     principalId : Ids.PrincipalId;
     linkStatus : ICFCEnums.ICFCLinkStatus;
     dataHash : Text;
