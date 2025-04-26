@@ -605,6 +605,7 @@ actor Self {
           gameweek = dto.gameweek;
           seasonId = dto.seasonId;
           token = BaseUtilities.tokenToText(#ICFC);
+          totalEntries = Array.size(entries);
         };
 
         let sendReq = await icfc_backend_canister.requestLeaderboardPayout(payoutRequest);
