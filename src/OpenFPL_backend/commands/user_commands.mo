@@ -32,25 +32,4 @@ module UserCommands = {
         countryId : Ids.CountryId;
     };
 
-    public type MembershipClaim = {
-        membershipType : IcfcEnums.MembershipType;
-        purchasedOn : Int;
-        expiresOn : ?Int;
-    };
-
-    public type ICFCProfile = {
-        principalId : Ids.PrincipalId;
-        username : Text;
-        displayName : Text;
-        membershipType : IcfcEnums.MembershipType;
-        membershipClaims : [MembershipClaim];
-        createdOn : Int;
-        profilePicture : ?Blob;
-        termsAgreed : Bool;
-        membershipExpiryTime : Int;
-        favouriteLeagueId : ?FootballIds.LeagueId;
-        favouriteClubId : ?FootballIds.ClubId;
-        nationalityId : ?Ids.CountryId;
-    };
-
 };

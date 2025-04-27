@@ -772,7 +772,7 @@ module {
 
     //need to think when the new manager object is created
 
-    private func createNewManager(dto : AppTypes.ICFCLink, icfc_profile : UserCommands.ICFCProfile) : async Result.Result<(AppTypes.Manager), Enums.Error> {
+    private func createNewManager(dto : AppTypes.ICFCLink, icfc_profile : UserQueries.ICFCProfile) : async Result.Result<(AppTypes.Manager), Enums.Error> {
 
       if (activeManagerCanisterId == "") {
         activeManagerCanisterId := await createManagerCanister();

@@ -39,16 +39,6 @@ module {
       { category = "league_status"; hash = "OPENFPL_2" },
     ];
 
-    /*
-
-    //TODO I don't use this
-
-    private var leagueGameweekStatuses : [AppTypes.LeagueGameweekStatus] = [];
-    private var leagueMonthStatuses : [AppTypes.LeagueMonthStatus] = [];
-    private var leagueSeasonStatuses : [AppTypes.LeagueSeasonStatus] = [];
-
-    */
-
     private var playersSnapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])] = [];
 
     public func updateDataHash(category : Text) : async () {
@@ -196,9 +186,6 @@ module {
     };
 
     public func resetAllDataHashes() : async () {
-
-      //todo it's best to keep a copy in the backend canister so we can call with a query call
-
       await updateDataHash("weekly_leaderboard");
       await updateDataHash("monthly_leaderboards");
       await updateDataHash("season_leaderboard");
@@ -211,57 +198,6 @@ module {
       await updateDataHash("seasons");
       await updateDataHash("players");
       await updateDataHash("league_status");
-    };
-
-    //Stable variable functions
-
-    public func getStableAppStatus() : AppTypes.AppStatus {
-      return appStatus;
-    };
-
-    public func setStableAppStatus(stable_app_status : AppTypes.AppStatus) {
-      appStatus := stable_app_status;
-    };
-
-    /* Don't think we need
-    public func getStableLeagueGameweekStatuses() : [AppTypes.LeagueGameweekStatus] {
-      return leagueGameweekStatuses;
-    };
-
-    public func setStableLeagueGameweekStatuses(stable_league_gameweek_statuses : [AppTypes.LeagueGameweekStatus]) {
-      leagueGameweekStatuses := stable_league_gameweek_statuses;
-    };
-
-    public func getStableLeagueMonthStatuses() : [AppTypes.LeagueMonthStatus] {
-      return leagueMonthStatuses;
-    };
-
-    public func setStableLeagueMonthStatuses(stable_league_month_statuses : [AppTypes.LeagueMonthStatus]) {
-      leagueMonthStatuses := stable_league_month_statuses;
-    };
-
-    public func getStableLeagueSeasonStatuses() : [AppTypes.LeagueSeasonStatus] {
-      return leagueSeasonStatuses;
-    };
-
-    public func setStableLeagueSeasonStatuses(stable_league_season_statuses : [AppTypes.LeagueSeasonStatus]) {
-      leagueSeasonStatuses := stable_league_season_statuses;
-    };
-    */
-
-    public func getStableDataHashes() : [Base.DataHash] {
-      return dataHashes;
-    };
-
-    public func setStableDataHashes(stable_data_hashes : [Base.DataHash]) {
-      dataHashes := stable_data_hashes;
-    };
-/*
-    public func getStablePlayersSnapshots() : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])] {
-      return playersSnapshots;
-    };
-    public func setStablePlayersSnapshots(stable_players_snapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])]) {
-      playersSnapshots := stable_players_snapshots;
     };
 
     public func putOnHold() : async () {
@@ -280,12 +216,36 @@ module {
       await updateDataHash("app_status");
     };
 
-*/
     public func updateSystemStatus(dto : AppCommands.UpdateSystemStatus) {
       appStatus := {
         onHold = dto.onHold;
         version = dto.version;
       };
+    };
+
+    //Stable variable functions
+
+    public func getStableAppStatus() : AppTypes.AppStatus {
+      return appStatus;
+    };
+
+    public func setStableAppStatus(stable_app_status : AppTypes.AppStatus) {
+      appStatus := stable_app_status;
+    };
+
+    public func getStableDataHashes() : [Base.DataHash] {
+      return dataHashes;
+    };
+
+    public func setStableDataHashes(stable_data_hashes : [Base.DataHash]) {
+      dataHashes := stable_data_hashes;
+    };
+    
+    public func getStablePlayersSnapshots() : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])] {
+      return playersSnapshots;
+    };
+    public func setStablePlayersSnapshots(stable_players_snapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])]) {
+      playersSnapshots := stable_players_snapshots;
     };
   }
 

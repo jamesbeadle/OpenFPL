@@ -1,3 +1,6 @@
+
+// TODO Move to football mops
+
 module RewardPercentages {
 
   public let percentages : [Float] = [

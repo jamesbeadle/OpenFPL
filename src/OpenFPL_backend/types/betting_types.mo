@@ -1,13 +1,12 @@
-
-import Base "mo:waterway-mops/BaseTypes";
-import FootballTypes "mo:waterway-mops/FootballTypes";
+import FootballIds "mo:waterway-mops/football/FootballIds";
+import Ids "mo:waterway-mops/Ids";
 
 module BettingTypes {
 
     /* Match odds related types */
 
     public type MatchOdds = {
-        fixtureId : FootballTypes.FixtureId;
+        fixtureId : FootballIds.FixtureId;
         correctResults : TeamSelectionOdds;
         correctScores : [ScoreSelectionOdds];
         halfTimeScores : [ScoreSelectionOdds];
@@ -42,7 +41,7 @@ module BettingTypes {
     };
 
     public type PlayerSelectionOdds = {
-        playerId : FootballTypes.PlayerId;
+        playerId : FootballIds.PlayerId;
         odds : Float;
     };
 
@@ -62,13 +61,13 @@ module BettingTypes {
     };
 
     public type SplitHalfTeamSelectionOdds = {
-        firstHalfClubId : FootballTypes.ClubId;
-        secondHalfClubId : FootballTypes.ClubId;
+        firstHalfClubId : FootballIds.ClubId;
+        secondHalfClubId : FootballIds.ClubId;
         odds : Float;
     };
 
     public type ClubAndYesNoSelectionOdds = {
-        clubId : FootballTypes.ClubId;
+        clubId : FootballIds.ClubId;
         isYes : Bool;
         isNo : Bool;
     };
@@ -77,7 +76,7 @@ module BettingTypes {
 
     public type BetSlip = {
         id : Nat;
-        placedBy : Base.PrincipalId;
+        placedBy : Ids.PrincipalId;
         placedOn : Int;
         status : SelectionStatus;
         result : BetResult;
@@ -95,7 +94,7 @@ module BettingTypes {
         result : BetResult;
         odds : Float;
         stake : Nat64;
-        fixtureId : FootballTypes.FixtureId;
+        fixtureId : FootballIds.FixtureId;
         winnings : Float;
     };
 
@@ -112,7 +111,7 @@ module BettingTypes {
     };
 
     public type Event = {
-        fixtureId : FootballTypes.FixtureId;
+        fixtureId : FootballIds.FixtureId;
         results : EventResults;
     };
 
@@ -142,7 +141,7 @@ module BettingTypes {
     };
 
     public type ClubEventDetail = {
-        clubId : FootballTypes.ClubId;
+        clubId : FootballIds.ClubId;
     };
 
     public type ScoreDetail = {
@@ -151,14 +150,14 @@ module BettingTypes {
     };
 
     public type PlayerEventDetail = {
-        clubId : FootballTypes.ClubId;
-        playerId : FootballTypes.PlayerId;
+        clubId : FootballIds.ClubId;
+        playerId : FootballIds.PlayerId;
         minute : Nat8;
     };
 
     public type PlayerGroupEventDetail = {
-        clubId : FootballTypes.ClubId;
-        playerId : FootballTypes.PlayerId;
+        clubId : FootballIds.ClubId;
+        playerId : FootballIds.PlayerId;
     };
 
     public type BothTeamsToScoreDetail = {

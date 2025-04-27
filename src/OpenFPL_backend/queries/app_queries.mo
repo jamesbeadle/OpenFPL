@@ -1,5 +1,6 @@
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
+import Ids "mo:waterway-mops/Ids";
 import DataCanister "canister:data_canister";
 
 module AppQueries {
@@ -25,5 +26,21 @@ module AppQueries {
 
     public type PlayersSnapshot = {
         players: [DataCanister.Player]
+    };
+
+    public type GetAllTimeHighScores = {};
+
+    public type AllTimeHighScores = {
+        weeklyHighScore: ?HighScoreRecord;
+        monthlyHighScore: ?HighScoreRecord;
+        seasonHighScore: ?HighScoreRecord;
+    };
+
+    public type HighScoreRecord = {
+        recordPoints: Nat16;
+        recordHolderPrincipalId: Ids.PrincipalId;
+        recordHolderUsername: Text;
+        recordHolderProfilePicture: ?Blob;
+        recordPrizePool: Nat64;
     };
 }

@@ -66,7 +66,6 @@ import CanisterQueries "mo:waterway-mops/canister-management/CanisterQueries";
 import CanisterManager "mo:waterway-mops/canister-management/CanisterManager";
 import FixtureQueries "mo:waterway-mops/queries/football-queries/FixtureQueries";
 import MvpQueries "queries/mvp_queries";
-import AllTimeHighScoreQueries "queries/all_time_high_score_queries";
 
 /* ----- Only Stable Variables Should Use Types ----- */
 
@@ -409,7 +408,7 @@ actor Self {
     return #err(#NotFound); // TODO
   };
 
-  public shared ({ caller }) func getAllTimeHighScores(dto: AllTimeHighScoreQueries.GetAllTimeHighScores) : async Result.Result<AllTimeHighScoreQueries.AllTimeHighScores, Enums.Error> {
+  public shared ({ caller }) func getAllTimeHighScores(dto: AppQueries.GetAllTimeHighScores) : async Result.Result<AppQueries.AllTimeHighScores, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     return #err(#NotFound); // TODO

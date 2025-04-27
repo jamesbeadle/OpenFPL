@@ -51,7 +51,6 @@ import AppTypes "../types/app_types";
 
 /* ----- Application Environment & Utility Files ----- */ 
 
-import PickTeamUtilities "../utilities/pick_team_utilities";
 import Environment "../Environment";
 
 
