@@ -98,7 +98,7 @@
   });
 </script>
 
-<Modal showModal={visible} onClose={closeDetailModal} title="Player Detail">
+<Modal onClose={closeDetailModal} title="Player Detail">
   {#if playerDetail}
   <div class="mx-4 p-4">
     <div class="flex justify-start items-center w-full">

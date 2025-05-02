@@ -1,6 +1,7 @@
 type WaterwayLabsApp = 
  variant {
    FootballGod;
+   GolfPad;
    ICF1;
    ICFC;
    ICGC;

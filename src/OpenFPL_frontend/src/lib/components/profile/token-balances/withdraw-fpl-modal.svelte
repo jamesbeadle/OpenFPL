@@ -67,7 +67,7 @@
   }
 </script>
 
-<Modal showModal={visible} onClose={closeModal} title="Withdraw ICFC">
+<Modal onClose={closeModal} title="Withdraw ICFC">
   {#if isLoading}
     <LocalSpinner />
   {:else}

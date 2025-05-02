@@ -63,7 +63,7 @@
   }
 </script>
 
-<Modal showModal={visible} onClose={cancelModal} title="Update Favourite Team">
+<Modal onClose={cancelModal} title="Update Favourite Team">
   {#if isLoading}
     <LocalSpinner />
   {:else}

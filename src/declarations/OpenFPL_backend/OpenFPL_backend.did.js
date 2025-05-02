@@ -103,7 +103,7 @@ export const idlFactory = ({ IDL }) => {
     monthlyHighScore: IDL.Opt(HighScoreRecord),
   });
   const Result_28 = IDL.Variant({ ok: AllTimeHighScores, err: Error });
-  const MembershipType__1 = IDL.Variant({
+  const MembershipType = IDL.Variant({
     Founding: IDL.Null,
     NotClaimed: IDL.Null,
     Seasonal: IDL.Null,
@@ -118,7 +118,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const ICFCLink = IDL.Record({
     dataHash: IDL.Text,
-    membershipType: MembershipType__1,
+    membershipType: MembershipType,
     linkStatus: ICFCLinkStatus,
     principalId: PrincipalId,
   });
@@ -250,15 +250,6 @@ export const idlFactory = ({ IDL }) => {
     FootballGod: IDL.Null,
     TransferKings: IDL.Null,
     JeffBets: IDL.Null,
-  });
-  const MembershipType = IDL.Variant({
-    Founding: IDL.Null,
-    NotClaimed: IDL.Null,
-    Seasonal: IDL.Null,
-    Lifetime: IDL.Null,
-    Monthly: IDL.Null,
-    NotEligible: IDL.Null,
-    Expired: IDL.Null,
   });
   const ICFCLinks = IDL.Record({
     icfcPrincipalId: PrincipalId,
@@ -687,10 +678,8 @@ export const idlFactory = ({ IDL }) => {
     payoutDate: IDL.Opt(IDL.Int),
   });
   const CompleteLeaderboardPayout = IDL.Record({
-    totalEntries: IDL.Nat,
     leaderboard: IDL.Vec(LeaderboardEntry),
     seasonId: SeasonId,
-    totalPaid: IDL.Nat,
     gameweek: GameweekNumber,
   });
   const UpdateICFCProfile = IDL.Record({

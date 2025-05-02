@@ -87,10 +87,8 @@ export interface CompleteGameweekNotification {
   leagueId: LeagueId;
 }
 export interface CompleteLeaderboardPayout {
-  totalEntries: bigint;
   leaderboard: Array<LeaderboardEntry>;
   seasonId: SeasonId;
-  totalPaid: bigint;
   gameweek: GameweekNumber;
 }
 export interface CompleteSeasonNotification {
@@ -290,7 +288,7 @@ export interface HighScoreRecord {
 }
 export interface ICFCLink {
   dataHash: string;
-  membershipType: MembershipType__1;
+  membershipType: MembershipType;
   linkStatus: ICFCLinkStatus;
   principalId: PrincipalId;
 }
@@ -364,14 +362,6 @@ export interface MembershipClaim {
   membershipType: MembershipType;
 }
 export type MembershipType =
-  | { Founding: null }
-  | { NotClaimed: null }
-  | { Seasonal: null }
-  | { Lifetime: null }
-  | { Monthly: null }
-  | { NotEligible: null }
-  | { Expired: null };
-export type MembershipType__1 =
   | { Founding: null }
   | { NotClaimed: null }
   | { Seasonal: null }

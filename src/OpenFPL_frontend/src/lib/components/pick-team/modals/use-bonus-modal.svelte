@@ -330,7 +330,7 @@
 
 </script>
 
-<Modal showModal={visible} onClose={closeBonusModal} title="Use Bonus">
+<Modal onClose={closeBonusModal} title="Use Bonus">
   <div class="p-4 mx-4">
     <img src={bonus.image} class="block w-16 mx-auto" alt={bonus.name} />
     {#if !isSubmitting}

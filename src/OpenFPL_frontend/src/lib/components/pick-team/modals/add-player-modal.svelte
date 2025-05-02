@@ -128,7 +128,7 @@ $effect(() => {
   }
 </script>
 
-<Modal showModal={visible} onClose={closeModal} title="Select Player">
+<Modal onClose={closeModal} title="Select Player">
   {#if isLoading}
     <LocalSpinner />
   {:else}

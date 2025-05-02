@@ -49,7 +49,7 @@
     
 </script>
 
-<Modal showModal={visible} onClose={() => {visible = false;}} title="Player Detail">
+<Modal onClose={() => {visible = false;}} title="Player Detail">
   <div class="flex flex-row items-center w-full mb-4 space-y-4">
     <div class="flex items-center justify-center w-full sm:w-1/3">
       {#if gameweekData.nationalityId > 0}

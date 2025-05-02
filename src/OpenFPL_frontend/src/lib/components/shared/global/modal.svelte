@@ -1,87 +1,157 @@
 <script lang="ts">
-    import { onDestroy, onMount, type Snippet } from "svelte";
-    import CrossIcon from "$lib/icons/CrossIcon.svelte";
-  
-    interface Props {
-      showModal: boolean;
-      onClose: () => void;
-      title: string;
-      closeOnClickOutside?: boolean;
-      children: Snippet;
+  import { quintOut } from 'svelte/easing';
+  import { fade, scale } from 'svelte/transition';
+  import { onMount } from 'svelte';
+  import type { Snippet } from 'svelte';
+  import CloseIcon from '$lib/icons/CloseIcon.svelte';
+ 
+  interface ModalOptions {
+    selector?: string;
+    backdropClass?: string;
+    onClickOutside?: (event: MouseEvent) => void;
+    onEscape?: (event: KeyboardEvent) => void;
+  }
+
+  function modal(node: HTMLElement, options?: ModalOptions) {
+    const { selector, backdropClass, onClickOutside, onEscape } = options || {};
+
+    let modalParent: HTMLElement;
+    if (selector) {
+      const query = document.querySelector(selector);
+      if (query) modalParent = query as HTMLElement;
+      else throw new Error(`No existing node that matches selector "${selector}"`);
+    } else {
+      modalParent = document.body;
     }
 
-    let { showModal, onClose, title, closeOnClickOutside = true, children }: Props = $props();
-  
-    let modalElement: HTMLDivElement | undefined = $state(undefined);
-    let startOnBackdrop = false;
-  
-    const handleKeydown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && showModal) {
-        onClose();
+    const backdrop = document.createElement('div');
+    if (backdropClass) backdrop.classList.add(...backdropClass.split(' ').filter(Boolean));
+    backdrop.append(node);
+    modalParent.append(backdrop);
+
+    const onClick = (e: MouseEvent) => {
+      console.log('Backdrop clicked', e.target, e.currentTarget);
+      const eventPath = e.composedPath();
+      const modalContent = node.querySelector('[data-modal-content]');
+      console.log('Modal content found:', modalContent);
+      console.log('Event path:', eventPath);
+
+      const isClickInsideModal = modalContent && eventPath.includes(modalContent);
+      if (isClickInsideModal) {
+        console.log('Click was inside modal content, ignoring');
+        return;
+      }
+
+      console.log('Click was outside modal content, calling onClickOutside');
+      onClickOutside?.(e);
+    };
+
+    if (onClickOutside) backdrop.addEventListener('click', onClick);
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onEscape?.(e);
+    };
+    if (onEscape) window.addEventListener('keydown', onKeyDown);
+
+    const focusableElements = node.querySelectorAll(
+      'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstFocusable = focusableElements[0] as HTMLElement;
+    const lastFocusable = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+    const trapFocus = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === firstFocusable) {
+          e.preventDefault();
+          lastFocusable.focus();
+        } else if (!e.shiftKey && document.activeElement === lastFocusable) {
+          e.preventDefault();
+          firstFocusable.focus();
+        }
       }
     };
-  
-    if (typeof window !== "undefined") {
-      window.addEventListener("keydown", handleKeydown);
-    }
-  
-    onDestroy(() => {
-      if (typeof window !== "undefined") {
-        window.removeEventListener("keydown", handleKeydown);
-      }
-    });
-  
-    const handlePointerDown = (e: PointerEvent) => {
-      if (e.target === e.currentTarget) {
-        startOnBackdrop = true;
-      } else {
-        startOnBackdrop = false;
+
+    node.addEventListener('keydown', trapFocus);
+    firstFocusable?.focus();
+
+    return {
+      destroy() {
+        backdrop.remove();
+        window.removeEventListener('keydown', onKeyDown);
+        node.removeEventListener('keydown', trapFocus);
       }
     };
-  
-    const handlePointerUp = (e: PointerEvent) => {
-      if (closeOnClickOutside && startOnBackdrop && e.target === e.currentTarget) {
-        onClose();
-      }
-      startOnBackdrop = false;
+  }
+
+  interface Props {
+    onClose: () => void;
+    title: string;
+    children: Snippet;
+  }
+
+  let { children, onClose, title }: Props = $props();
+  let visible = $state(true);
+
+  const close = () => {
+    visible = false;
+    onClose();
+  };
+
+  const onCloseHandler = (event: MouseEvent) => {
+    event.stopPropagation();
+    close();
+  };
+
+  const onEscapeHandler = (event: KeyboardEvent) => {
+    close();
+  };
+
+  onMount(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
     };
-  
-    onMount(() => {
-      if (modalElement && showModal) {
-        modalElement.focus();
-      }
-    });
-  </script>
-  
-  {#if showModal}
-    <div
-      class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
-      role="dialog"
-      aria-modal="true"
-      tabindex="-1"
-      onpointerdown={handlePointerDown}
-      onpointerup={handlePointerUp}
-    >
-      <div
-        bind:this={modalElement}
-        class="w-full max-w-lg mx-4 text-white rounded shadow outline-none bg-BrandBlack md:max-w-3xl focus:outline-none"
-        tabindex="-1"
+  });
+</script>
+
+{#if visible}
+  <div
+    class="modal-background"
+    use:modal={{
+      backdropClass: 'fixed inset-0 bg-black bg-opacity-50 cursor-pointer z-40',
+      onClickOutside: onCloseHandler,
+      onEscape: onEscapeHandler
+    }}
+    out:fade={{ duration: 200 }}
+    role="dialog"
+    aria-labelledby="modalTitle"
+    aria-describedby="modalContent"
+    tabindex="-1"
+  >
+  <div
+    transition:scale={{ delay: 25, duration: 150, easing: quintOut }}
+    class="relative w-full max-w-4xl mx-auto p-4 sm:p-6 z-50"
+  >
+  <div
+  class="bg-gray-800 border border-gray-600 rounded-lg h-[80vh] shadow-2xl flex flex-col"
+  data-modal-content
+>
+  <div class="flex-none px-6 py-4 sm:px-8 sm:py-6 border-b border-gray-600">
+    <div class="flex items-center justify-between">
+      <h3 id="modalTitle" class="text-2xl text-white md:text-3xl font-semibold">{title}</h3>
+      <button
+        onclick={close}
+        class="p-2 rounded-lg hover:bg-gray-700 transition-colors"
+        aria-label="Close modal"
       >
-        <header class="flex items-center justify-between p-4">
-          <h2 class="text-xl condensed">{title}</h2>
-          <button
-            type="button"
-            class="text-black"
-            aria-label="Close modal"
-            onclick={onClose}
-          >
-            <CrossIcon className="w-4" fill='white' />
-          </button>
-        </header>
-        <div class="bg-Brand p-6 rounded-b-lg overflow-auto max-h-[80vh]">
-          <div class=""></div>
-          {@render children()}
-        </div>
-      </div>
+        <CloseIcon className="w-6 h-6" fill="white" />
+      </button>
     </div>
-  {/if}
+  </div>
+  <div id="modalContent" class="flex-1 px-6 py-6 overflow-y-auto sm:px-8 sm:py-6">
+    {@render children()}
+  </div>
+</div>
+  </div>
+  </div>
+{/if}

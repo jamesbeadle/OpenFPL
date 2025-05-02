@@ -15,8 +15,6 @@ export class DataHashService {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const result = await actor.getDataHashes();
-      console.log("result");
-      console.log(result);
       if (isError(result))
         throw new Error("Failed to fetch data hashes from backend.");
       return result.ok;

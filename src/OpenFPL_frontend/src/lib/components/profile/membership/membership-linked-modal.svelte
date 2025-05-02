@@ -16,7 +16,7 @@
     }
 </script>
 
-<Modal showModal={visible} {onClose} title="Membership Linked">
+<Modal {onClose} title="Membership Linked">
   <p>Congratulations your membership is now linked, you can begin using OpenFPL.</p>
   <button class="brand-button" onclick={begin}>Begin</button>
 </Modal>

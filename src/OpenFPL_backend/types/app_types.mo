@@ -10,9 +10,6 @@ import AppEnums "../enums/app_enums";
 
 module AppTypes {
 
-
-  //Manager types
-
   public type Manager = {
     principalId : Ids.PrincipalId;
     canisterId : Ids.CanisterId;

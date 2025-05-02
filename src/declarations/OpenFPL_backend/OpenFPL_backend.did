@@ -518,16 +518,6 @@ type MonthlyLeaderboard =
    seasonId: SeasonId;
    totalEntries: nat;
  };
-type MembershipType__1 = 
- variant {
-   Expired;
-   Founding;
-   Lifetime;
-   Monthly;
-   NotClaimed;
-   NotEligible;
-   Seasonal;
- };
 type MembershipType = 
  variant {
    Expired;
@@ -622,7 +612,7 @@ type ICFCLink =
  record {
    dataHash: text;
    linkStatus: ICFCLinkStatus;
-   membershipType: MembershipType__1;
+   membershipType: MembershipType;
    principalId: PrincipalId;
  };
 type HighScoreRecord = 
@@ -836,8 +826,6 @@ type CompleteLeaderboardPayout =
    gameweek: GameweekNumber;
    leaderboard: vec LeaderboardEntry;
    seasonId: SeasonId;
-   totalEntries: nat;
-   totalPaid: nat;
  };
 type CompleteGameweekNotification = 
  record {
