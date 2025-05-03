@@ -8,6 +8,7 @@ export const idlFactory = ({ IDL }) => {
     ICFC: IDL.Null,
     ICGC: IDL.Null,
     ICPFA: IDL.Null,
+    GolfPad: IDL.Null,
     TransferKings: IDL.Null,
     JeffBets: IDL.Null,
     OpenBook: IDL.Null,
@@ -620,6 +621,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const WeeklyLeaderboard = IDL.Record({
     totalEntries: IDL.Nat,
+    page: IDL.Nat,
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry__1),
     gameweek: GameweekNumber,
@@ -633,10 +635,8 @@ export const idlFactory = ({ IDL }) => {
     payoutDate: IDL.Opt(IDL.Int),
   });
   const CompleteLeaderboardPayout = IDL.Record({
-    totalEntries: IDL.Nat,
     leaderboard: IDL.Vec(LeaderboardEntry),
     seasonId: SeasonId,
-    totalPaid: IDL.Nat,
     gameweek: GameweekNumber,
   });
   const GetMostValuableTeamLeaderboard = IDL.Record({

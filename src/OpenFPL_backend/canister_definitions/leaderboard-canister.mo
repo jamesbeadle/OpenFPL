@@ -430,13 +430,9 @@ actor class _LeaderboardCanister() {
           },
         );
 
-
-
         //Reward leaderboard code
 
-
         //Reward leaderboard code
-
 
         let droppedEntries = List.drop<AppTypes.LeaderboardEntry>(List.fromArray(sortedGameweekEntries), ((dto.page - 1) * LEADERBOARD_ROW_COUNT_LIMIT));
         let paginatedEntries = List.take<AppTypes.LeaderboardEntry>(droppedEntries, LEADERBOARD_ROW_COUNT_LIMIT);
@@ -444,9 +440,9 @@ actor class _LeaderboardCanister() {
         let leaderboardDTO : LeaderboardQueries.WeeklyLeaderboard = {
           seasonId = foundLeaderboard.seasonId;
           gameweek = foundLeaderboard.gameweek;
-          entries = 
-            Array.map<AppTypes.LeaderboardEntry, LeaderboardQueries.LeaderboardEntry>(List.toArray(paginatedEntries), 
-            func(entry: AppTypes.LeaderboardEntry){
+          entries = Array.map<AppTypes.LeaderboardEntry, LeaderboardQueries.LeaderboardEntry>(
+            List.toArray(paginatedEntries),
+            func(entry : AppTypes.LeaderboardEntry) {
               return {
                 bonusPlayed = null; // TODO
                 membershipLevel = #Founding; // TODO
@@ -458,9 +454,11 @@ actor class _LeaderboardCanister() {
                 profilePicture = null; // TODO
                 rewardAmount = null; // TODO
                 username = entry.username;
-              }
-          });
+              };
+            },
+          );
           totalEntries = List.size(foundLeaderboard.entries);
+          page = dto.page;
         };
 
         return ?leaderboardDTO;
@@ -496,7 +494,7 @@ actor class _LeaderboardCanister() {
       };
     };
   };
-  
+
   public shared ({ caller }) func getTotalLeaderboards() : async Nat {
     assert not Principal.isAnonymous(caller);
     let callerPrincipalId = Principal.toText(caller);
