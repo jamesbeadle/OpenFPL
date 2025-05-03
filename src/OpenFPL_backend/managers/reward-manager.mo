@@ -90,7 +90,7 @@ module {
         gameweek = dto.gameweek;
         rewards = List.fromArray(Buffer.toArray(rewardEntriesBuffer));
       };
-
+      weeklyRewardsBuffer.add(newWeeklyRewardsEntry);
       weeklyRewards := List.fromArray(Buffer.toArray(weeklyRewardsBuffer));
     };
 
