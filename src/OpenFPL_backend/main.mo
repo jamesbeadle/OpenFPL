@@ -530,7 +530,7 @@ actor Self {
         let gameweekFixtures = Array.filter<DataCanister.Fixture>(
           foundFixtures.fixtures,
           func(entry : DataCanister.Fixture) {
-            entry.gameweek == (leagueStatus.activeGameweek - 1);
+            entry.gameweek == priorGameweek;
           },
         );
 
