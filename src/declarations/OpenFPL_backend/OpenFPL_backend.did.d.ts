@@ -82,10 +82,8 @@ export interface CompleteGameweekNotification {
   leagueId: LeagueId;
 }
 export interface CompleteLeaderboardPayout {
-  totalEntries: bigint;
   leaderboard: Array<LeaderboardEntry>;
   seasonId: SeasonId;
-  totalPaid: bigint;
   gameweek: GameweekNumber;
 }
 export interface CompleteSeasonNotification {
@@ -698,6 +696,7 @@ export type WaterwayLabsApp =
   | { ICFC: null }
   | { ICGC: null }
   | { ICPFA: null }
+  | { GolfPad: null }
   | { TransferKings: null }
   | { JeffBets: null }
   | { OpenBook: null }
@@ -707,6 +706,7 @@ export type WaterwayLabsApp =
   | { WaterwayLabs: null };
 export interface WeeklyLeaderboard {
   totalEntries: bigint;
+  page: bigint;
   seasonId: SeasonId;
   entries: Array<LeaderboardEntry__1>;
   gameweek: GameweekNumber;

@@ -2,12 +2,14 @@ type WeeklyLeaderboard =
  record {
    entries: vec LeaderboardEntry__1;
    gameweek: GameweekNumber;
+   page: nat;
    seasonId: SeasonId;
    totalEntries: nat;
  };
 type WaterwayLabsApp = 
  variant {
    FootballGod;
+   GolfPad;
    ICF1;
    ICFC;
    ICGC;
@@ -808,8 +810,6 @@ type CompleteLeaderboardPayout =
    gameweek: GameweekNumber;
    leaderboard: vec LeaderboardEntry;
    seasonId: SeasonId;
-   totalEntries: nat;
-   totalPaid: nat;
  };
 type CompleteGameweekNotification = 
  record {
