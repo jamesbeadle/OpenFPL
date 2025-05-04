@@ -1,7 +1,7 @@
 <script lang="ts">
   import { playerStore } from "$lib/stores/player-store";
   import { countryStore } from "$lib/stores/country-store";
-  import { getBonusIcon, getFlagComponent, getPlayerName } from "$lib/utils/helpers";
+  import { getBonusIcon, getFlagComponent, getPlayerName } from "$lib/utils/Helpers";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import type { Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 

@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { getPlayerName } from "$lib/utils/helpers";
-    import { playerEventsStore } from "$lib/stores/player-events-store";
+    import { getPlayerName } from "$lib/utils/Helpers";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
     interface Props {

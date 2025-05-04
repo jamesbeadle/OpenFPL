@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getPlayerName } from "$lib/utils/helpers";
+    import { getPlayerName } from "$lib/utils/Helpers";
     import { clubStore } from "$lib/stores/club-store";
     
     import AddIcon from "$lib/icons/AddIcon.svelte";

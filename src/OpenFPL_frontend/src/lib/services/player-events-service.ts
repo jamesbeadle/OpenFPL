@@ -1,8 +1,7 @@
 import { authStore } from "$lib/stores/auth-store";
 import { ActorFactory } from "../utils/actor.factory";
-import { isError } from "../utils/helpers";
+import { isError } from "$lib/utils/Helpers";
 import { toasts } from "$lib/stores/toasts-store";
-import type { PlayersMap } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import type {
   GetPlayerDetailsForGameweek,
   GetPlayersMap,
@@ -12,8 +11,6 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class PlayerEventsService {
-  private actor: any;
-
   constructor() {}
 
   async getPlayerDetails(

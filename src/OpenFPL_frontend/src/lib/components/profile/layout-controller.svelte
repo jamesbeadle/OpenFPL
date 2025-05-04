@@ -6,12 +6,12 @@
     import { onMount, type Snippet } from 'svelte';
     import type { CombinedProfile, MembershipType__1 } from '../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
     
-    import Header from '$lib/shared/header.svelte';
-    import Footer from '$lib/shared/footer.svelte';
-    import InvalidMembershipPage from '$lib/components/profile/invalid-membership-page.svelte';
-    import MembershipProfile from '$lib/components/profile/membership-profile.svelte';
+    import Header from '$lib/shared/Header.svelte';
+    import Footer from '$lib/shared/Footer.svelte';
+    import InvalidMembershipPage from '$lib/components/profile/membership/invalid-membership-page.svelte';
+    import MembershipProfile from '$lib/components/profile/membership/membership-profile.svelte';
     import LandingPage from '$lib/components/landing/landing-page.svelte';
-    import FullScreenSpinner from '../shared/full-screen-spinner.svelte';
+    import FullScreenSpinner from '../shared/global/full-screen-spinner.svelte';
     import Sidebar from '$lib/shared/sidebar.svelte';
     
     interface Props {

@@ -1,27 +1,28 @@
 <script lang="ts">
-    import LoadingDots from "../loading-dots.svelte";
+    import LoadingDots from "../global/loading-dots.svelte";
 
-    interface Props {
-        header: string;
-        content: string;
-        footer: string;
-        loading: boolean;
-    }
-    let { header, content, footer, loading }: Props = $props();
+
+  interface Props {
+      header: string;
+      content: string;
+      footer: string;
+      loading: boolean;
+  }
+  let { header, content, footer, loading }: Props = $props();
 
 </script>
 
 <div class="flex-grow">
-    <p class="content-panel-header">{header}</p>
-    <p class="content-panel-stat">
+  <p class="content-panel-header">{header}</p>
+  <p class="content-panel-stat">
 
-        {#if loading}
-            <LoadingDots />
-        {:else}
-            {content}
-        {/if}
-    </p>
-    <p class="content-panel-header">
-      {footer}
-    </p>
+      {#if loading}
+          <LoadingDots />
+      {:else}
+          {content}
+      {/if}
+  </p>
+  <p class="content-panel-header">
+    {footer}
+  </p>
 </div>

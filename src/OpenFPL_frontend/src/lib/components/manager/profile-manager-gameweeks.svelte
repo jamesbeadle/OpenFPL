@@ -4,13 +4,13 @@
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import { getBonusIcon, getFlagComponent, getPlayerName } from "$lib/utils/helpers";
+  import { getBonusIcon, getFlagComponent, getPlayerName } from "$lib/utils/Helpers";
   import { countryStore } from "$lib/stores/country-store";
   import { authStore } from "$lib/stores/auth-store";
   import { storeManager } from "$lib/managers/store-manager";
   import { goto } from "$app/navigation";
   import SortIcon from "$lib/icons/SortIcon.svelte";
-  import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/global/local-spinner.svelte";
   import type { FantasyTeamSnapshot, Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {

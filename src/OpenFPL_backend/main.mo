@@ -24,7 +24,6 @@ import DataCanister "canister:data_canister";
 
 import Array "mo:base/Array";
 import Bool "mo:base/Bool";
-import Buffer "mo:base/Buffer";
 import Int "mo:base/Int";
 import Iter "mo:base/Iter";
 import Nat64 "mo:base/Nat64";
@@ -33,10 +32,7 @@ import Option "mo:base/Option";
 import Principal "mo:base/Principal";
 import Result "mo:base/Result";
 import Text "mo:base/Text";
-import Time "mo:base/Time";
 import Timer "mo:base/Timer";
-import List "mo:base/List";
-import Debug "mo:base/Debug";
 import Order "mo:base/Order";
 import Countries "mo:waterway-mops/def/Countries";
 
@@ -69,6 +65,7 @@ import CanisterCommands "mo:waterway-mops/canister-management/CanisterCommands";
 import CanisterQueries "mo:waterway-mops/canister-management/CanisterQueries";
 import CanisterManager "mo:waterway-mops/canister-management/CanisterManager";
 import FixtureQueries "mo:waterway-mops/queries/football-queries/FixtureQueries";
+import MvpQueries "queries/mvp_queries";
 
 /* ----- Only Stable Variables Should Use Types ----- */
 
@@ -380,20 +377,40 @@ actor Self {
 
   /* ----- Leaderboard Queries ----- */
 
-  public shared func getWeeklyLeaderboard(dto : LeaderboardQueries.GetWeeklyLeaderboard) : async Result.Result<LeaderboardQueries.WeeklyLeaderboard, Enums.Error> {
+  public shared ({ caller }) func getWeeklyLeaderboard(dto : LeaderboardQueries.GetWeeklyLeaderboard) : async Result.Result<LeaderboardQueries.WeeklyLeaderboard, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     return await leaderboardManager.getWeeklyLeaderboard(dto);
   };
 
-  public shared func getMonthlyLeaderboard(dto : LeaderboardQueries.GetMonthlyLeaderboard) : async Result.Result<LeaderboardQueries.MonthlyLeaderboard, Enums.Error> {
+  public shared ({ caller }) func getMonthlyLeaderboard(dto : LeaderboardQueries.GetMonthlyLeaderboard) : async Result.Result<LeaderboardQueries.MonthlyLeaderboard, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     return await leaderboardManager.getMonthlyLeaderboard(dto);
   };
 
-  public shared func getSeasonLeaderboard(dto : LeaderboardQueries.GetSeasonLeaderboard) : async Result.Result<LeaderboardQueries.SeasonLeaderboard, Enums.Error> {
+  public shared ({ caller }) func getSeasonLeaderboard(dto : LeaderboardQueries.GetSeasonLeaderboard) : async Result.Result<LeaderboardQueries.SeasonLeaderboard, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
     return await leaderboardManager.getSeasonLeaderboard(dto);
   };
 
-  public shared func mostValuableTeamLeaderboard(dto : LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
-    return await leaderboardManager.mostValuableTeamLeaderboard(dto);
+  public shared ({ caller }) func getMostValuableTeamLeaderboard(dto : LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    return await leaderboardManager.getMostValuableTeamLeaderboard(dto);
+  };
+
+  public shared ({ caller }) func getMostValuableGameweekPlayers(dto: MvpQueries.GetMostValuableGameweekPlayers) : async Result.Result<MvpQueries.MostValuableGameweekPlayers, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    return #err(#NotFound); // TODO
+  };
+
+  public shared ({ caller }) func getAllTimeHighScores(dto: AppQueries.GetAllTimeHighScores) : async Result.Result<AppQueries.AllTimeHighScores, Enums.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert await hasMembership(Principal.toText(caller));
+    return #err(#NotFound); // TODO
   };
 
   public shared ({ caller }) func getLeagueStatus() : async Result.Result<DataCanister.LeagueStatus, Enums.Error> {
@@ -463,11 +480,6 @@ actor Self {
     return await dataManager.getPlayerDetails(dto);
   };
 
-  public shared ({ caller }) func getPostponedFixtures(dto : DataCanister.GetPostponedFixtures) : async Result.Result<DataCanister.PostponedFixtures, Enums.Error> {
-    assert not Principal.isAnonymous(caller);
-    return await dataManager.getPostponedFixtures(dto);
-  };
-
   // Temp Test function
   public shared func getAllUserICFCLinks() : async [(Ids.PrincipalId, AppTypes.ICFCLink)] {
     return await userManager.getAllUserICFCLinks();
@@ -476,6 +488,7 @@ actor Self {
   /* ----- Football God Callback Canister Interface ----- */
 
   public shared ({ caller }) func addInitialFixtureNotification(dto : LeagueNotificationCommands.AddInitialFixtureNotification) : async Result.Result<(), Enums.Error> {
+    assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     await seasonManager.resetAllDataHashes();
     await userManager.resetFantasyTeams();
     return #ok();
@@ -765,7 +778,9 @@ actor Self {
     assert Principal.toText(caller) == CanisterIds.ICFC_DATA_CANISTER_ID;
     assert dto.leagueId == Environment.LEAGUE_ID;
 
-    //TODO
+    // TODO
+      //if a player has been removed from a team in the premier league because they were on loan here but the parent club is outside the parent league
+        //remove player from fantasy teams
 
     return #ok();
   };
@@ -853,115 +868,6 @@ actor Self {
     };
     return false;
   };
-
-  // private func checkCanisterCycles() : async () {
-  //   let root_canister = actor (CanisterIds.ICFC_SNS_ROOT_CANISTER_ID) : actor {
-  //     get_sns_canisters_summary : (request : Root.GetSnsCanistersSummaryRequest) -> async Root.GetSnsCanistersSummaryResponse;
-  //   };
-
-  //   let summaryResult = await root_canister.get_sns_canisters_summary({
-  //     update_canister_list = ?false;
-  //   });
-  //   let dappsMinusBackend = Array.filter<Root.CanisterSummary>(
-  //     summaryResult.dapps,
-  //     func(dapp : Root.CanisterSummary) {
-  //       dapp.canister_id != ?Principal.fromText(CanisterIds.OPENFPL_BACKEND_CANISTER_ID);
-  //     },
-  //   );
-
-  //   for (dappCanister in Iter.fromArray(dappsMinusBackend)) {
-  //     switch (dappCanister.canister_id) {
-  //       case (?foundCanisterId) {
-  //         let ignoreCanister = Principal.toText(foundCanisterId) == "bboqb-jiaaa-aaaal-qb6ea-cai" or Principal.toText(foundCanisterId) == "bgpwv-eqaaa-aaaal-qb6eq-cai" or Principal.toText(foundCanisterId) == "hqfmc-cqaaa-aaaal-qitcq-cai";
-  //         if (not ignoreCanister) {
-  //           await queryAndTopupCanister(Principal.toText(foundCanisterId), 50_000_000_000_000, 25_000_000_000_000);
-  //         };
-  //       };
-  //       case (null) {};
-  //     };
-  //   };
-
-  //   //TODO: Remove after assigned to SNS
-  //   await queryAndTopupCanister(Environment.FRONTEND_CANISTER_ID, 50_000_000_000_000, 25_000_000_000_000);
-  //   await queryAndTopupCanister(CanisterIds.ICFC_DATA_CANISTER_ID, 50_000_000_000_000, 25_000_000_000_000);
-
-  //   let managerCanisterIds = userManager.getUniqueManagerCanisterIds();
-  //   for (canisterId in Iter.fromArray(managerCanisterIds)) {
-  //     await queryAndTopupCanister(canisterId, 50_000_000_000_000, 25_000_000_000_000);
-  //   };
-
-  //   let leaderboardCanisterIds = leaderboardManager.getUniqueLeaderboardCanisterIds();
-  //   for (canisterId in Iter.fromArray(leaderboardCanisterIds)) {
-  //     await queryAndTopupCanister(canisterId, 50_000_000_000_000, 25_000_000_000_000);
-  //   };
-
-  //   await topupCanister(summaryResult.index, 50_000_000_000_000, 25_000_000_000_000);
-  //   await topupCanister(summaryResult.governance, 50_000_000_000_000, 25_000_000_000_000);
-  //   await topupCanister(summaryResult.ledger, 50_000_000_000_000, 25_000_000_000_000);
-  //   await topupCanister(summaryResult.root, 50_000_000_000_000, 25_000_000_000_000);
-  //   await topupCanister(summaryResult.swap, 5_000_000_000_000, 2_500_000_000_000);
-  //   for (canisterId in Iter.fromArray(summaryResult.archives)) {
-  //     await topupCanister(?canisterId, 5_000_000_000_000, 2_500_000_000_000);
-  //   };
-
-  //   //ignore Timer.setTimer<system>(#nanoseconds(Int.abs(86_400_000_000_000)), checkCanisterCycles);
-  //   return;
-  // };
-
-  // private func topupCanister(canisterSummary : ?Root.CanisterSummary, topupTriggerAmount : Nat, topupAmount : Nat) : async () {
-  //   switch (canisterSummary) {
-  //     case (?foundCanister) {
-  //       switch (foundCanister.status) {
-  //         case (?foundStatus) {
-  //           if (foundStatus.cycles < topupTriggerAmount) {
-  //             switch (foundCanister.canister_id) {
-  //               case (?foundCanisterId) {
-  //                 let IC : Management.Management = actor (CanisterIds.Default);
-  //                 let canisterActor = actor (Principal.toText(foundCanisterId)) : actor {};
-  //                 await CanisterUtilities.topup_canister_(canisterActor, IC, topupAmount);
-
-  //                 let topupsBuffer = Buffer.fromArray<Base.CanisterTopup>(topups);
-  //                 topupsBuffer.add({
-  //                   canisterId = Principal.toText(foundCanisterId);
-  //                   cyclesAmount = topupAmount;
-  //                   topupTime = Time.now();
-  //                 });
-  //                 topups := Buffer.toArray(topupsBuffer);
-  //               };
-  //               case (null) {};
-  //             };
-  //           };
-  //         };
-  //         case (null) {};
-  //       };
-  //     };
-  //     case (null) {};
-  //   };
-  // };
-
-  // private func queryAndTopupCanister(canisterId : Ids.CanisterId, cyclesTriggerAmount : Nat, topupAmount : Nat) : async () {
-  //   let IC : Management.Management = actor (CanisterIds.Default);
-  //   let canisterActor = actor (canisterId) : actor {};
-
-  //   let canisterStatusResult = await CanisterUtilities.getCanisterStatus_(canisterActor, ?Principal.fromActor(Self), IC);
-
-  //   switch (canisterStatusResult) {
-  //     case (?canisterStatus) {
-
-  //       if (canisterStatus.cycles < cyclesTriggerAmount) {
-  //         await CanisterUtilities.topup_canister_(canisterActor, IC, topupAmount);
-  //         let topupsBuffer = Buffer.fromArray<Base.CanisterTopup>(topups);
-  //         topupsBuffer.add({
-  //           canisterId = canisterId;
-  //           cyclesAmount = topupAmount;
-  //           topupTime = Time.now();
-  //         });
-  //         topups := Buffer.toArray(topupsBuffer);
-  //       };
-  //     };
-  //     case (null) {};
-  //   };
-  // };
 
   public shared func getManagerCanisterIds() : async Result.Result<[Ids.CanisterId], Enums.Error> {
     return #ok(userManager.getUniqueManagerCanisterIds());

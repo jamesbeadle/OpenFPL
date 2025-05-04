@@ -1,7 +1,7 @@
 <script lang="ts">
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { getFlagComponent } from "../../utils/helpers";
-  import Modal from "$lib/components/shared/modal.svelte";
+  import { getFlagComponent } from "$lib/utils/Helpers";
+  import Modal from "$lib/components/shared/global/modal.svelte";
   import type { Club, PlayerDetails, PlayerEventData, PlayerGameweek } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 
@@ -98,7 +98,7 @@
   });
 </script>
 
-<Modal showModal={visible} onClose={closeDetailModal} title="Player Detail">
+<Modal onClose={closeDetailModal} title="Player Detail">
   {#if playerDetail}
   <div class="mx-4 p-4">
     <div class="flex justify-start items-center w-full">

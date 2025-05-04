@@ -5,13 +5,13 @@
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { clubStore } from "$lib/stores/club-store";
   import { toasts } from "$lib/stores/toasts-store";
-  import { getActualIndex } from "$lib/utils/helpers";
+  import { getActualIndex } from "$lib/utils/Helpers";
   import { calculateBonusPoints, getBonusUsed, getGridSetup, getTeamFormationReadOnly, isBonusUsed, sortPlayersByPointsThenValue } from "$lib/utils/pick-team.helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import ManagerPitchPlayer from "./manager-pitch-player.svelte";
   import { playerStore } from "$lib/stores/player-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import LocalSpinner from "../shared/local-spinner.svelte";
+  import LocalSpinner from "../shared/global/local-spinner.svelte";
   import type { FantasyTeamSnapshot, GameweekNumber, Club } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   interface Props {

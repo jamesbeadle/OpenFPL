@@ -36,34 +36,4 @@ module Enums {
     #Settled;
     #Void;
   };
-
-  public type PaymentChoice = {
-    #ICP;
-    #FPL;
-  };
-
-  public type InviteStatus = {
-    #Sent;
-    #Accepted;
-    #Rejected;
-  };
-
-  public type TimerType = {
-    #LoanComplete;
-    #GameweekBegin;
-    #GameKickOff;
-    #GameComplete;
-    #InjuryExpired;
-    #TransferWindow;
-  };
-
-  public type MembershipType = {
-    #Monthly;
-    #Seasonal;
-    #Lifetime;
-    #Founding;
-    #Expired;
-    #NotClaimed;
-    #NotEligible;
-  };
 }

@@ -6,13 +6,13 @@
   import { BonusType } from "$lib/enums/BonusType";
   import type { BonusType as BonusName } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { countryStore } from "$lib/stores/country-store";
-  import { convertPositionToIndex } from "$lib/utils/helpers";
+  import { convertPositionToIndex } from "$lib/utils/Helpers";
   import { leagueStore } from "$lib/stores/league-store";
   import type { Bonus } from "$lib/types/bonus";
   import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { authStore } from "$lib/stores/auth-store";
-  import Modal from "$lib/components/shared/modal.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+  import Modal from "$lib/components/shared/global/modal.svelte";
+  import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
   
 
   interface Props {
@@ -330,7 +330,7 @@
 
 </script>
 
-<Modal showModal={visible} onClose={closeBonusModal} title="Use Bonus">
+<Modal onClose={closeBonusModal} title="Use Bonus">
   <div class="p-4 mx-4">
     <img src={bonus.image} class="block w-16 mx-auto" alt={bonus.name} />
     {#if !isSubmitting}

@@ -8,8 +8,8 @@
   import PlayerGameweekHistory from "$lib/components/player/player-gameweek-history.svelte";
 
   import PlayerHeader from "$lib/components/player/player-header.svelte";
-  import TabContainer from "$lib/components/shared/tab-container.svelte";
-  import LocalSpinner from "$lib/components/shared/local-spinner.svelte";
+  import TabContainer from "$lib/components/shared/global/tab-container.svelte";
+  import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
   import type { Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   let id = Number(page.url.searchParams.get("id"));

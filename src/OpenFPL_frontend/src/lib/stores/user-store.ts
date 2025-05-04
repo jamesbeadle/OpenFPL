@@ -1,5 +1,5 @@
 import { authStore } from "$lib/stores/auth-store";
-import { isError } from "$lib/utils/helpers";
+import { isError } from "$lib/utils/Helpers";
 import { getProfileFromDB, setProfileToDB } from "$lib/utils/db.utils";
 import { writable } from "svelte/store";
 import { Text } from "@dfinity/candid/lib/cjs/idl";

@@ -130,8 +130,8 @@ module {
     };
 
     public func getMonthlyLeaderboard(dto: LeaderboardQueries.GetMonthlyLeaderboard) : async Result.Result<LeaderboardQueries.MonthlyLeaderboard, Enums.Error> {
-// TODO
-return #err(#NotFound);
+      // TODO
+      return #err(#NotFound);
     };
 
     public func getMonthlyLeaderboardEntry(principalId : Text, seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, clubId : FootballIds.ClubId) : async ?LeaderboardQueries.LeaderboardEntry {
@@ -171,8 +171,8 @@ return #err(#NotFound);
     };
 
     public func getSeasonLeaderboard(dto: LeaderboardQueries.GetSeasonLeaderboard) : async Result.Result<LeaderboardQueries.SeasonLeaderboard, Enums.Error> {
-// TODO
-return #err(#NotFound);
+      // TODO
+      return #err(#NotFound);
     };
 
     public func getSeasonLeaderboardEntry(principalId : Text, seasonId : FootballIds.SeasonId) : async ?LeaderboardQueries.LeaderboardEntry {
@@ -200,13 +200,10 @@ return #err(#NotFound);
       return null;
     };
 
-    public func mostValuableTeamLeaderboard(dto: LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
+    public func getMostValuableTeamLeaderboard(dto: LeaderboardQueries.GetMostValuableTeamLeaderboard) : async Result.Result<LeaderboardQueries.MostValuableTeamLeaderboard, Enums.Error> {
       // TODO
-return #err(#NotFound);
+      return #err(#NotFound);
     };
-
-
-
 
 
     // TODO - ensure this is working correctly with our single canister structure
@@ -219,7 +216,9 @@ return #err(#NotFound);
       var leaderboard_canister = actor (activeCanisterId) : actor {
         getTotalLeaderboards : () -> async Nat;
         addLeaderboardChunk : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber, clubId : FootballIds.ClubId, entriesChunk : [AppTypes.LeaderboardEntry]) -> async ();
-        prepareForUpdate : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber, clubId : FootballIds.ClubId) -> async ();
+        prepareForWeeklyUpdate : (seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) -> async ();
+        prepareForMonthlyUpdate : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, clubId : FootballIds.ClubId) -> async ();
+        prepareForSeasonUpdate : (seasonId : FootballIds.SeasonId) -> async ();
         finaliseUpdate : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber) -> async ();
       };
 
@@ -232,7 +231,9 @@ return #err(#NotFound);
       leaderboard_canister := actor (activeCanisterId) : actor {
         getTotalLeaderboards : () -> async Nat;
         addLeaderboardChunk : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber, clubId : FootballIds.ClubId, entriesChunk : [AppTypes.LeaderboardEntry]) -> async ();
-        prepareForUpdate : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber, clubId : FootballIds.ClubId) -> async ();
+        prepareForWeeklyUpdate : (seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) -> async ();
+        prepareForMonthlyUpdate : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, clubId : FootballIds.ClubId) -> async ();
+        prepareForSeasonUpdate : (seasonId : FootballIds.SeasonId) -> async ();
         finaliseUpdate : (seasonId : FootballIds.SeasonId, month : BaseDefinitions.CalendarMonth, gameweek : FootballDefinitions.GameweekNumber) -> async ();
       };
 
@@ -240,14 +241,14 @@ return #err(#NotFound);
       /*
       if(month > 0){
         for(clubId in Iter.fromArray(clubIds)){
-          await leaderboard_canister.prepareForUpdate(seasonId, month, gameweek, clubId);
+          await leaderboard_canister.prepareForMonthlyUpdate(seasonId, month, clubId);
         };
       } else {
-        await leaderboard_canister.prepareForUpdate(seasonId, month, gameweek, 0);
+        await leaderboard_canister.prepareForSeasonUpdate(seasonId);
       };
       */
 
-      await leaderboard_canister.prepareForUpdate(seasonId, 0, gameweek, 0);
+      await leaderboard_canister.prepareForWeeklyUpdate(seasonId, gameweek);
       for (canisterId in Iter.fromArray(uniqueManagerCanisterIds)) {
         let manager_canister = actor (canisterId) : actor {
           getOrderedSnapshots : (seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber) -> async [AppTypes.FantasyTeamSnapshot];

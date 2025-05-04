@@ -1,7 +1,7 @@
 <script lang="ts">
     import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import { convertPositionToIndex, getFlagComponent, getPlayerName, getPositionAbbreviation } from "$lib/utils/helpers";
+    import { convertPositionToIndex, getFlagComponent, getPlayerName, getPositionAbbreviation } from "$lib/utils/Helpers";
     import type { GameweekData } from "$lib/interfaces/GameweekData";
     import type { FantasyTeamSnapshot, Club, Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     

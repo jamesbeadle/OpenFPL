@@ -1,14 +1,14 @@
-import Enums "../../OpenFPL_backend/enums/enums";
+import IcfcEnums "mo:waterway-mops/ICFCEnums";
 module MemberbershipTypes = {
   
   public type MembershipClaim = {
-    membershipType : Enums.MembershipType;
+    membershipType : IcfcEnums.MembershipType;
     purchasedOn : Int;
     expiresOn : ?Int;
   };
 
   public type EligibleMembership = {
-    membershipType : Enums.MembershipType;
+    membershipType : IcfcEnums.MembershipType;
     eligibleNeuronIds : [Blob];
   };
   };

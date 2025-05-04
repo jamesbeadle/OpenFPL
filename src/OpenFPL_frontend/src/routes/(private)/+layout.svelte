@@ -6,7 +6,7 @@
     import { storeManager } from '$lib/managers/store-manager';
     import { appStore } from '$lib/stores/app-store';
     import { userStore } from '$lib/stores/user-store';
-    import FullScreenSpinner from '$lib/components/shared/full-screen-spinner.svelte';
+    import FullScreenSpinner from '$lib/components/shared/global/full-screen-spinner.svelte';
   
     interface Props {
       children: Snippet;

@@ -1,14 +1,9 @@
 import { toasts } from "$lib/stores/toasts-store";
 import { authStore } from "$lib/stores/auth-store";
 import { ActorFactory } from "../utils/actor.factory";
-import { isError } from "../utils/helpers";
-import type {
-  LeagueId,
-  LeagueStatus,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import { isError } from "$lib/utils/Helpers";
+import type { LeagueStatus } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 export class LeagueService {
-  private actor: any;
-
   constructor() {}
 
   async getLeagueStatus(): Promise<LeagueStatus | undefined> {

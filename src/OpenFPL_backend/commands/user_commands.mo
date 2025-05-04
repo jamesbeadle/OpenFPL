@@ -1,5 +1,6 @@
 import Ids "mo:waterway-mops/Ids";
 import FootballIds "mo:waterway-mops/football/FootballIds";
+import IcfcEnums "mo:waterway-mops/ICFCEnums";
 import AppEnums "../enums/app_enums";
 
 module UserCommands = {
@@ -8,7 +9,7 @@ module UserCommands = {
         principalId : Ids.PrincipalId;
         icfcPrincipalId : Ids.PrincipalId;
         favouriteClubId : FootballIds.ClubId;
-        icfcMembershipType : AppEnums.MembershipType;
+        icfcMembershipType : IcfcEnums.MembershipType;
     };
 
     public type SetFavouriteClub = {
@@ -29,27 +30,6 @@ module UserCommands = {
         playerId : FootballIds.PlayerId;
         clubId : FootballIds.ClubId;
         countryId : Ids.CountryId;
-    };
-
-    public type MembershipClaim = {
-        membershipType : AppEnums.MembershipType;
-        purchasedOn : Int;
-        expiresOn : ?Int;
-    };
-
-    public type ICFCProfile = {
-        principalId : Ids.PrincipalId;
-        username : Text;
-        displayName : Text;
-        membershipType : AppEnums.MembershipType;
-        membershipClaims : [MembershipClaim];
-        createdOn : Int;
-        profilePicture : ?Blob;
-        termsAgreed : Bool;
-        membershipExpiryTime : Int;
-        favouriteLeagueId : ?FootballIds.LeagueId;
-        favouriteClubId : ?FootballIds.ClubId;
-        nationalityId : ?Ids.CountryId;
     };
 
 };

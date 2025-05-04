@@ -18,9 +18,7 @@ import { ClubService } from "$lib/services/club-service";
 import { PlayerService } from "$lib/services/player-service";
 import { PlayerEventsService } from "$lib/services/player-events-service";
 import { FixtureService } from "$lib/services/fixture-service";
-import { replacer } from "$lib/utils/helpers";
-
-export let globalDataLoaded = false;
+import { replacer } from "$lib/utils/Helpers";
 
 class StoreManager {
   private dataHashService: DataHashService;
@@ -68,13 +66,10 @@ class StoreManager {
     }
     console.log("syncing stores");
     this.isSyncing = true;
-    globalDataLoaded = false;
     try {
       await this.syncAppDataHashes();
-      globalDataLoaded = true;
     } catch (error) {
       console.error("Error syncing stores:", error);
-      globalDataLoaded = false;
       throw error;
     } finally {
       this.isSyncing = false;

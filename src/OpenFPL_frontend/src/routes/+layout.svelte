@@ -8,11 +8,11 @@
   import { initUserProfile } from "$lib/services/user-profile-service";
   import { displayAndCleanLogoutMsg } from "$lib/services/auth-services";
   
-  import "../app.css";
-  import Toasts from "$lib/components/toasts/toasts.svelte";
   import PortalHost from 'svelte-portal';
-  import FullScreenSpinner from "$lib/components/shared/full-screen-spinner.svelte";
   import LayoutController from "$lib/components/profile/layout-controller.svelte";
+  import FullScreenSpinner from "$lib/components/shared/global/full-screen-spinner.svelte";
+  import Toasts from "$lib/components/shared/toasts/toasts.svelte";
+  import "../app.css";
 
   interface Props { children: Snippet }
   let { children }: Props = $props();

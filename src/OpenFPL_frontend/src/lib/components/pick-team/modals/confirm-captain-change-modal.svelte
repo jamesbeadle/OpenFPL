@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Modal from "$lib/components/shared/modal.svelte";
+  import Modal from "$lib/components/shared/global/modal.svelte";
 
   interface Props {
     visible: boolean;
@@ -14,7 +14,7 @@
   }
 </script>
 
-<Modal showModal={visible} onClose={onClose} title="Captain Change">
+<Modal onClose={onClose} title="Captain Change">
   <div>
     <div class="my-5">
       <h1>Please confirm your captain change to {newCaptain}</h1>

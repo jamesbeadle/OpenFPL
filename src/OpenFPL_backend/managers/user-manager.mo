@@ -5,7 +5,6 @@ import Text "mo:base/Text";
 import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
-import Base "mo:waterway-mops/BaseTypes";
 import Ids "mo:waterway-mops/Ids";
 import Enums "mo:waterway-mops/Enums";
 import IcfcEnums "mo:waterway-mops/ICFCEnums";
@@ -24,7 +23,6 @@ import Array "mo:base/Array";
 import Option "mo:base/Option";
 import Nat16 "mo:base/Nat16";
 import Bool "mo:base/Bool";
-import Debug "mo:base/Debug";
 import UserQueries "../queries/user_queries";
 import AppTypes "../types/app_types";
 import LeaderboardQueries "../queries/leaderboard_queries";
@@ -774,7 +772,7 @@ module {
 
     //need to think when the new manager object is created
 
-    private func createNewManager(dto : AppTypes.ICFCLink, icfc_profile : UserCommands.ICFCProfile) : async Result.Result<(AppTypes.Manager), Enums.Error> {
+    private func createNewManager(dto : AppTypes.ICFCLink, icfc_profile : UserQueries.ICFCProfile) : async Result.Result<(AppTypes.Manager), Enums.Error> {
 
       if (activeManagerCanisterId == "") {
         activeManagerCanisterId := await createManagerCanister();

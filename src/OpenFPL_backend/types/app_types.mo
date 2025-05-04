@@ -10,10 +10,6 @@ import AppEnums "../enums/app_enums";
 
 module AppTypes {
 
-  public type TokenId = Nat16; // TODO Move
-
-  //Manager types
-
   public type Manager = {
     principalId : Ids.PrincipalId;
     canisterId : Ids.CanisterId;
@@ -167,12 +163,6 @@ module AppTypes {
     totalEntries : Nat;
   };
 
-  public type LoanTimer = {
-    timerInfo : BaseTypes.TimerInfo;
-    playerId : Nat16;
-    expires : Int;
-  };
-
   public type DataHashes = {
     dataHashes : [BaseTypes.DataHash];
   };
@@ -215,22 +205,14 @@ module AppTypes {
     allTimeSeasonHighScoreRewardRate : Nat64;
   };
 
-  public type TokenInfo = {
-    id : TokenId;
-    ticker : Text;
-    canisterId : Ids.CanisterId;
-    tokenImageURL : Text;
-    fee : Nat;
-  };
-
   public type MembershipClaim = {
-    membershipType : AppEnums.MembershipType;
+    membershipType : IcfcEnums.MembershipType;
     purchasedOn : Int;
     expiresOn : ?Int;
   };
 
   public type ICFCLink = {
-    membershipType : AppEnums.MembershipType;
+    membershipType : IcfcEnums.MembershipType;
     principalId : Ids.PrincipalId;
     linkStatus : ICFCEnums.ICFCLinkStatus;
     dataHash : Text;
