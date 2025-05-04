@@ -64,6 +64,9 @@ import CanisterCommands "mo:waterway-mops/canister-management/CanisterCommands";
 import CanisterQueries "mo:waterway-mops/canister-management/CanisterQueries";
 import CanisterManager "mo:waterway-mops/canister-management/CanisterManager";
 import FixtureQueries "mo:waterway-mops/queries/football-queries/FixtureQueries";
+import LeagueQueries "mo:waterway-mops/queries/football-queries/LeagueQueries";
+import SeasonQueries "mo:waterway-mops/queries/football-queries/SeasonQueries";
+import ClubQueries "mo:waterway-mops/queries/football-queries/ClubQueries";
 import MvpQueries "queries/mvp_queries";
 
 /* ----- Only Stable Variables Should Use Types ----- */
@@ -412,7 +415,7 @@ actor Self {
     return #err(#NotFound); // TODO
   };
 
-  public shared ({ caller }) func getLeagueStatus() : async Result.Result<DataCanister.LeagueStatus, Enums.Error> {
+  public shared ({ caller }) func getLeagueStatus() : async Result.Result<LeagueQueries.LeagueStatus, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     return await dataManager.getLeagueStatus({
@@ -428,34 +431,34 @@ actor Self {
     });
   };
 
-  public shared ({ caller }) func getSeasons(dto : DataCanister.GetSeasons) : async Result.Result<DataCanister.Seasons, Enums.Error> {
+  public shared ({ caller }) func getSeasons(dto : SeasonQueries.GetSeasons) : async Result.Result<SeasonQueries.Seasons, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     return await dataManager.getSeasons(dto);
   };
 
-  public shared ({ caller }) func getClubs(dto : DataCanister.GetClubs) : async Result.Result<DataCanister.Clubs, Enums.Error> {
+  public shared ({ caller }) func getClubs(dto : ClubQueries.GetClubs) : async Result.Result<ClubQueries.Clubs, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     return await dataManager.getClubs(dto);
   };
 
-  public shared ({ caller }) func getPlayers(dto : DataCanister.GetPlayers) : async Result.Result<DataCanister.Players, Enums.Error> {
+  public shared ({ caller }) func getPlayers(dto : PlayerQueries.GetPlayers) : async Result.Result<PlayerQueries.Players, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     return await dataManager.getPlayers(dto);
   };
 
-  public shared ({ caller }) func getPlayerEvents(dto : DataCanister.GetPlayerDetailsForGameweek) : async Result.Result<DataCanister.PlayerDetailsForGameweek, Enums.Error> {
+  public shared ({ caller }) func getPlayerEvents(dto : PlayerQueries.GetPlayerDetailsForGameweek) : async Result.Result<PlayerQueries.PlayerDetailsForGameweek, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     return await dataManager.getPlayerDetailsForGameweek(dto);
   };
 
-  public shared ({ caller }) func getFixtures(dto : DataCanister.GetFixtures) : async Result.Result<DataCanister.Fixtures, Enums.Error> {
+  public shared ({ caller }) func getFixtures(dto : FixtureQueries.GetFixtures) : async Result.Result<FixtureQueries.Fixtures, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
-    return await dataManager.getFixtures(dto : DataCanister.GetFixtures);
+    return await dataManager.getFixtures(dto : FixtureQueries.GetFixtures);
   };
 
   public shared ({ caller }) func getPlayersSnapshot(dto : AppQueries.GetPlayersSnapshot) : async Result.Result<AppQueries.PlayersSnapshot, Enums.Error> {
@@ -469,12 +472,12 @@ actor Self {
     return await seasonManager.getPlayersSnapshot(dto);
   };
 
-  public shared ({ caller }) func getPlayersMap(dto : DataCanister.GetPlayersMap) : async Result.Result<DataCanister.PlayersMap, Enums.Error> {
+  public shared ({ caller }) func getPlayersMap(dto : PlayerQueries.GetPlayersMap) : async Result.Result<PlayerQueries.PlayersMap, Enums.Error> {
     assert isManagerCanister(Principal.toText(caller));
     return await dataManager.getPlayersMap(dto);
   };
 
-  public shared ({ caller }) func getPlayerDetails(dto : DataCanister.GetPlayerDetails) : async Result.Result<PlayerQueries.PlayerDetails, Enums.Error> {
+  public shared ({ caller }) func getPlayerDetails(dto : PlayerQueries.GetPlayerDetails) : async Result.Result<PlayerQueries.PlayerDetails, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     return await dataManager.getPlayerDetails(dto);
   };
@@ -528,7 +531,7 @@ actor Self {
     };
   };
 
-  private func checkMonthRollover(dto : LeagueNotificationCommands.BeginGameweekNotification, leagueStatus : DataCanister.LeagueStatus) : async () {
+  private func checkMonthRollover(dto : LeagueNotificationCommands.BeginGameweekNotification, leagueStatus : LeagueQueries.LeagueStatus) : async () {
 
     let priorGameweek : FootballDefinitions.GameweekNumber = leagueStatus.activeGameweek - 1;
     let fixtures = await dataManager.getFixtures({
@@ -539,16 +542,16 @@ actor Self {
     switch (fixtures) {
       case (#ok foundFixtures) {
 
-        let gameweekFixtures = Array.filter<DataCanister.Fixture>(
+        let gameweekFixtures = Array.filter<FixtureQueries.Fixture>(
           foundFixtures.fixtures,
-          func(entry : DataCanister.Fixture) {
+          func(entry : FixtureQueries.Fixture) {
             entry.gameweek == priorGameweek;
           },
         );
 
-        let sortedFixtures = Array.sort<DataCanister.Fixture>(
+        let sortedFixtures = Array.sort<FixtureQueries.Fixture>(
           gameweekFixtures,
-          func(entry1 : DataCanister.Fixture, entry2 : DataCanister.Fixture) : Order.Order {
+          func(entry1 : FixtureQueries.Fixture, entry2 : FixtureQueries.Fixture) : Order.Order {
             if (entry1.kickOff > entry2.kickOff) { return #less };
             if (entry1.kickOff == entry2.kickOff) { return #equal };
             return #greater;
@@ -556,7 +559,7 @@ actor Self {
         );
 
         if (Array.size(sortedFixtures) > 0) {
-          let firstGameweekFixture : DataCanister.Fixture = sortedFixtures[0];
+          let firstGameweekFixture : FixtureQueries.Fixture = sortedFixtures[0];
           var priorGameweekMonth : BaseDefinitions.CalendarMonth = DateTimeUtilities.unixTimeToMonth(firstGameweekFixture.kickOff);
           if (leagueStatus.activeMonth > priorGameweekMonth) {
             await userManager.resetBonuses();

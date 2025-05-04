@@ -1,7 +1,7 @@
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import Ids "mo:waterway-mops/Ids";
-import DataCanister "canister:data_canister";
+import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
 
 module AppQueries {
 
@@ -25,7 +25,7 @@ module AppQueries {
     };
 
     public type PlayersSnapshot = {
-        players: [DataCanister.Player]
+        players: [PlayerQueries.Player]
     };
 
     public type GetAllTimeHighScores = {};

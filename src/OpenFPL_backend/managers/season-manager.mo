@@ -10,9 +10,9 @@ import Enums "mo:waterway-mops/Enums";
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseQueries "mo:waterway-mops/queries/BaseQueries";
+import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
 import AppCommands "../../OpenFPL_backend/commands/app_commands";
 import AppTypes "../types/app_types";
-import DataCanister "canister:data_canister";
 import AppQueries "../queries/app_queries";
 
 module {
@@ -39,7 +39,7 @@ module {
       { category = "league_status"; hash = "OPENFPL_2" },
     ];
 
-    private var playersSnapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])] = [];
+    private var playersSnapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])] = [];
 
     public func updateDataHash(category : Text) : async () {
       let hashBuffer = Buffer.fromArray<Base.DataHash>([]);
@@ -76,7 +76,7 @@ module {
       };
     };
     
-    public func getDataHashes() : Result.Result<[DataCanister.DataHash], Enums.Error> {
+    public func getDataHashes() : Result.Result<[BaseQueries.DataHash], Enums.Error> {
       return #ok(dataHashes);
     };
 
@@ -87,35 +87,35 @@ module {
       });
     };
 
-    public func storePlayersSnapshot(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, players : DataCanister.Players) {
+    public func storePlayersSnapshot(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, players : PlayerQueries.Players) {
 
-      let existingSeasonsSnapshot = Array.find<(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])>(
+      let existingSeasonsSnapshot = Array.find<(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])>(
         playersSnapshots,
-        func(seasonPlayersEntry : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])) : Bool {
+        func(seasonPlayersEntry : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])) : Bool {
           seasonPlayersEntry.0 == seasonId;
         },
       );
 
       switch (existingSeasonsSnapshot) {
         case (?foundSeasonSnapshot) {
-          let existingGameweekSnapshot = Array.find<(FootballDefinitions.GameweekNumber, [DataCanister.Player])>(
+          let existingGameweekSnapshot = Array.find<(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])>(
             foundSeasonSnapshot.1,
-            func(gameweekEntry : (FootballDefinitions.GameweekNumber, [DataCanister.Player])) : Bool {
+            func(gameweekEntry : (FootballDefinitions.GameweekNumber, [PlayerQueries.Player])) : Bool {
               gameweekEntry.0 == gameweek;
             },
           );
 
           switch (existingGameweekSnapshot) {
             case (?_) {
-              playersSnapshots := Array.map<(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])]), (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])>(
+              playersSnapshots := Array.map<(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])]), (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])>(
                 playersSnapshots,
-                func(seasonsSnapshotEntry : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])) {
+                func(seasonsSnapshotEntry : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])) {
                   if (seasonsSnapshotEntry.0 == seasonId) {
                     return (
                       seasonsSnapshotEntry.0,
-                      Array.map<(FootballDefinitions.GameweekNumber, [DataCanister.Player]), (FootballDefinitions.GameweekNumber, [DataCanister.Player])>(
+                      Array.map<(FootballDefinitions.GameweekNumber, [PlayerQueries.Player]), (FootballDefinitions.GameweekNumber, [PlayerQueries.Player])>(
                         seasonsSnapshotEntry.1,
-                        func(gameweekEntry : (FootballDefinitions.GameweekNumber, [DataCanister.Player])) {
+                        func(gameweekEntry : (FootballDefinitions.GameweekNumber, [PlayerQueries.Player])) {
                           if (gameweekEntry.0 == gameweek) {
                             return (gameweekEntry.0, players.players);
                           } else {
@@ -131,11 +131,11 @@ module {
               );
             };
             case (null) {
-              playersSnapshots := Array.map<(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])]), (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])>(
+              playersSnapshots := Array.map<(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])]), (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])>(
                 playersSnapshots,
-                func(seasonsSnapshotEntry : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])) {
+                func(seasonsSnapshotEntry : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])) {
                   if (seasonsSnapshotEntry.0 == seasonId) {
-                    let updatedGameweeksBuffer = Buffer.fromArray<(FootballDefinitions.GameweekNumber, [DataCanister.Player])>(seasonsSnapshotEntry.1);
+                    let updatedGameweeksBuffer = Buffer.fromArray<(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])>(seasonsSnapshotEntry.1);
                     updatedGameweeksBuffer.add(gameweek, players.players);
                     return (seasonsSnapshotEntry.0, Buffer.toArray(updatedGameweeksBuffer));
                   } else {
@@ -147,9 +147,9 @@ module {
           };
         };
         case (null) {
-          let newEntry : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])]) = (seasonId, [(gameweek, players.players)]);
+          let newEntry : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])]) = (seasonId, [(gameweek, players.players)]);
 
-          let playerSnapshotsBuffer = Buffer.fromArray<(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])>(playersSnapshots);
+          let playerSnapshotsBuffer = Buffer.fromArray<(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])>(playersSnapshots);
           playerSnapshotsBuffer.add(newEntry);
           playersSnapshots := Buffer.toArray(playerSnapshotsBuffer);
         };
@@ -157,18 +157,18 @@ module {
     };
 
     public func getPlayersSnapshot(dto : AppQueries.GetPlayersSnapshot) : async Result.Result<AppQueries.PlayersSnapshot, Enums.Error> {
-      let seasonPlayers = Array.find<(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])>(
+      let seasonPlayers = Array.find<(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])>(
         playersSnapshots,
-        func(seasonsPlayerSnapshots : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])) : Bool {
+        func(seasonsPlayerSnapshots : (FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])) : Bool {
           seasonsPlayerSnapshots.0 == dto.seasonId;
         },
       );
 
       switch (seasonPlayers) {
         case (?foundSeasonPlayers) {
-          let gameweekPlayers = Array.find<(FootballDefinitions.GameweekNumber, [DataCanister.Player])>(
+          let gameweekPlayers = Array.find<(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])>(
             foundSeasonPlayers.1,
-            func(gameweekPlayers : (FootballDefinitions.GameweekNumber, [DataCanister.Player])) : Bool {
+            func(gameweekPlayers : (FootballDefinitions.GameweekNumber, [PlayerQueries.Player])) : Bool {
               gameweekPlayers.0 == dto.gameweek;
             },
           );
@@ -241,10 +241,10 @@ module {
       dataHashes := stable_data_hashes;
     };
     
-    public func getStablePlayersSnapshots() : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])] {
+    public func getStablePlayersSnapshots() : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])] {
       return playersSnapshots;
     };
-    public func setStablePlayersSnapshots(stable_players_snapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])]) {
+    public func setStablePlayersSnapshots(stable_players_snapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])]) {
       playersSnapshots := stable_players_snapshots;
     };
   }

@@ -3,6 +3,7 @@ import Enums "mo:waterway-mops/Enums";
 import Ids "mo:waterway-mops/Ids";
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
+import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
 import Int "mo:base/Int";
 import Int64 "mo:base/Int64";
 import Iter "mo:base/Iter";
@@ -18,7 +19,6 @@ import TrieMap "mo:base/TrieMap";
 
 import UserCommands "../commands/user_commands";
 import AppTypes "../types/app_types";
-import DataCanister "canister:data_canister";
 
 module {
 
@@ -59,11 +59,11 @@ module {
     return false;
   };
   
-  public func overspent(currentBankBalance : Nat16, existingPlayerIds : [FootballIds.PlayerId], updatedPlayerIds : [FootballIds.PlayerId], allPlayers : [DataCanister.Player]) : Bool {
+  public func overspent(currentBankBalance : Nat16, existingPlayerIds : [FootballIds.PlayerId], updatedPlayerIds : [FootballIds.PlayerId], allPlayers : [PlayerQueries.Player]) : Bool {
 
-    let updatedPlayers = Array.filter<DataCanister.Player>(
+    let updatedPlayers = Array.filter<PlayerQueries.Player>(
       allPlayers,
-      func(player : DataCanister.Player) : Bool {
+      func(player : PlayerQueries.Player) : Bool {
         let playerId = player.id;
         let isPlayerIdInNewTeam = Array.find(
           updatedPlayerIds,
@@ -75,9 +75,9 @@ module {
       },
     );
 
-    let playersAdded = Array.filter<DataCanister.Player>(
+    let playersAdded = Array.filter<PlayerQueries.Player>(
       updatedPlayers,
-      func(player : DataCanister.Player) : Bool {
+      func(player : PlayerQueries.Player) : Bool {
         let playerId = player.id;
         let isPlayerIdInExistingTeam = Array.find(
           existingPlayerIds,
@@ -94,7 +94,7 @@ module {
       func(playerId : Nat16) : Bool {
         let isPlayerIdInPlayers = Array.find(
           updatedPlayers,
-          func(player : DataCanister.Player) : Bool {
+          func(player : PlayerQueries.Player) : Bool {
             return player.id == playerId;
           },
         );
@@ -102,13 +102,13 @@ module {
       },
     );
 
-    let spentNat16 = Array.foldLeft<DataCanister.Player, Nat16>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
+    let spentNat16 = Array.foldLeft<PlayerQueries.Player, Nat16>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions);
     var sold : Int = 0;
 
     for (i in Iter.range(0, Array.size(playersRemoved) -1)) {
-      let foundPlayer = List.find<DataCanister.Player>(
+      let foundPlayer = List.find<PlayerQueries.Player>(
         List.fromArray(allPlayers),
-        func(player : DataCanister.Player) : Bool {
+        func(player : PlayerQueries.Player) : Bool {
           return player.id == playersRemoved[i];
         },
       );
@@ -129,11 +129,11 @@ module {
     return false;
   };
 
-  public func teamValid(updatedFantasyTeam : UserCommands.SaveFantasyTeam, players : [DataCanister.Player]) : Result.Result<(), Enums.Error> {
+  public func teamValid(updatedFantasyTeam : UserCommands.SaveFantasyTeam, players : [PlayerQueries.Player]) : Result.Result<(), Enums.Error> {
 
-    let newTeamPlayers = Array.filter<DataCanister.Player>(
+    let newTeamPlayers = Array.filter<PlayerQueries.Player>(
       players,
-      func(player : DataCanister.Player) : Bool {
+      func(player : PlayerQueries.Player) : Bool {
         let isPlayerIdInNewTeam = Array.find(
           updatedFantasyTeam.playerIds,
           func(id : Nat16) : Bool {
@@ -224,10 +224,10 @@ module {
     return #ok();
   };
 
-  public func getTransfersAvailable(manager : AppTypes.Manager, updatedPlayerIds : [FootballIds.PlayerId], allPlayers : [DataCanister.Player]) : Nat {
-    let newPlayers = Array.filter<DataCanister.Player>(
+  public func getTransfersAvailable(manager : AppTypes.Manager, updatedPlayerIds : [FootballIds.PlayerId], allPlayers : [PlayerQueries.Player]) : Nat {
+    let newPlayers = Array.filter<PlayerQueries.Player>(
       allPlayers,
-      func(player : DataCanister.Player) : Bool {
+      func(player : PlayerQueries.Player) : Bool {
         return Option.isSome(
           Array.find(
             updatedPlayerIds,
@@ -239,9 +239,9 @@ module {
       },
     );
 
-    let oldPlayers = Array.filter<DataCanister.Player>(
+    let oldPlayers = Array.filter<PlayerQueries.Player>(
       allPlayers,
-      func(player : DataCanister.Player) : Bool {
+      func(player : PlayerQueries.Player) : Bool {
         return Option.isSome(
           Array.find(
             manager.playerIds,
@@ -253,13 +253,13 @@ module {
       },
     );
 
-    let additions = Array.filter<DataCanister.Player>(
+    let additions = Array.filter<PlayerQueries.Player>(
       newPlayers,
-      func(newPlayer : DataCanister.Player) : Bool {
+      func(newPlayer : PlayerQueries.Player) : Bool {
         return Option.isNull(
           Array.find(
             oldPlayers,
-            func(oldPlayer : DataCanister.Player) : Bool {
+            func(oldPlayer : PlayerQueries.Player) : Bool {
               return oldPlayer.id == newPlayer.id;
             },
           )
@@ -280,10 +280,10 @@ module {
     return (manager.goalGetterGameweek == gameweek) or (manager.passMasterGameweek == gameweek) or (manager.noEntryGameweek == gameweek) or (manager.teamBoostGameweek == gameweek) or (manager.safeHandsGameweek == gameweek) or (manager.captainFantasticGameweek == gameweek) or (manager.prospectsGameweek == gameweek) or (manager.oneNationGameweek == gameweek) or (manager.braceBonusGameweek == gameweek) or (manager.hatTrickHeroGameweek == gameweek);
   };
 
-  public func getNewBankBalance(manager : AppTypes.Manager, dto : UserCommands.SaveFantasyTeam, allPlayers : [DataCanister.Player]) : Result.Result<Nat16, Enums.Error> {
-    let updatedPlayers = Array.filter<DataCanister.Player>(
+  public func getNewBankBalance(manager : AppTypes.Manager, dto : UserCommands.SaveFantasyTeam, allPlayers : [PlayerQueries.Player]) : Result.Result<Nat16, Enums.Error> {
+    let updatedPlayers = Array.filter<PlayerQueries.Player>(
       allPlayers,
-      func(player : DataCanister.Player) : Bool {
+      func(player : PlayerQueries.Player) : Bool {
         let playerId = player.id;
         let isPlayerIdInNewTeam = Array.find(
           dto.playerIds,
@@ -295,9 +295,9 @@ module {
       },
     );
 
-    let playersAdded = Array.filter<DataCanister.Player>(
+    let playersAdded = Array.filter<PlayerQueries.Player>(
       updatedPlayers,
-      func(player : DataCanister.Player) : Bool {
+      func(player : PlayerQueries.Player) : Bool {
         let playerId = player.id;
         let isPlayerIdInExistingTeam = Array.find(
           manager.playerIds,
@@ -314,7 +314,7 @@ module {
       func(playerId : Nat16) : Bool {
         let isPlayerIdInPlayers = Array.find(
           updatedPlayers,
-          func(player : DataCanister.Player) : Bool {
+          func(player : PlayerQueries.Player) : Bool {
             return player.id == playerId;
           },
         );
@@ -322,7 +322,7 @@ module {
       },
     );
 
-    let spent = Array.foldLeft<DataCanister.Player, Nat16>(
+    let spent = Array.foldLeft<PlayerQueries.Player, Nat16>(
       playersAdded,
       0,
       func(sumSoFar, x) = sumSoFar + x.valueQuarterMillions,
@@ -330,9 +330,9 @@ module {
 
     var sold : Nat16 = 0;
     for (i in Iter.range(0, Array.size(playersRemoved) - 1)) {
-      let foundPlayer = List.find<DataCanister.Player>(
+      let foundPlayer = List.find<PlayerQueries.Player>(
         List.fromArray(allPlayers),
-        func(player : DataCanister.Player) : Bool {
+        func(player : PlayerQueries.Player) : Bool {
           return player.id == playersRemoved[i];
         },
       );

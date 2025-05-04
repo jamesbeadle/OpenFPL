@@ -29,9 +29,10 @@ import LeaderboardQueries "../queries/leaderboard_queries";
 import UserCommands "../commands/user_commands";
 import PickTeamUtilities "../utilities/pick_team_utilities";
 import ManagerCanister "../canister_definitions/manager-canister";
-import DataCanister "canister:data_canister";
 import SHA224 "mo:waterway-mops/SHA224";
 import IcfcTypes "mo:waterway-mops/ICFCTypes";
+import ClubQueries "mo:waterway-mops/queries/football-queries/ClubQueries";
+import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
 import ICFCCommands "../commands/icfc_commands";
 import Environment "../Environment";
 import ICFCQueries "../queries/icfc_queries";
@@ -635,13 +636,13 @@ module {
       };
     };
 
-    public func updateFavouriteClub(dto : UserCommands.SetFavouriteClub, activeClubs : [DataCanister.Club], seasonActive : Bool) : async Result.Result<(), Enums.Error> {
+    public func updateFavouriteClub(dto : UserCommands.SetFavouriteClub, activeClubs : [ClubQueries.Club], seasonActive : Bool) : async Result.Result<(), Enums.Error> {
 
       // TODO: John, This can set in a profile here and allow to be different in OpenFPL from profile value
 
       let isClubActive = Array.find(
         activeClubs,
-        func(club : DataCanister.Club) : Bool {
+        func(club : ClubQueries.Club) : Bool {
           return club.id == dto.favouriteClubId;
         },
       );
@@ -741,7 +742,7 @@ module {
       };
     };
 
-    public func saveTeamSelection(dto : UserCommands.SaveFantasyTeam, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, players : [DataCanister.Player]) : async Result.Result<(), Enums.Error> {
+    public func saveTeamSelection(dto : UserCommands.SaveFantasyTeam, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, players : [PlayerQueries.Player]) : async Result.Result<(), Enums.Error> {
 
       let teamValidResult = PickTeamUtilities.teamValid(dto, players);
       switch (teamValidResult) {
@@ -856,7 +857,7 @@ module {
       };
     };
 
-    private func updateFantasyTeam(managerCanisterId : Ids.CanisterId, dto : UserCommands.SaveFantasyTeam, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, allPlayers : [DataCanister.Player]) : async Result.Result<(), Enums.Error> {
+    private func updateFantasyTeam(managerCanisterId : Ids.CanisterId, dto : UserCommands.SaveFantasyTeam, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, allPlayers : [PlayerQueries.Player]) : async Result.Result<(), Enums.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
         updateTeamSelection : (dto : UserCommands.SaveFantasyTeam, transfersAvailable : Nat8, newBankBalance : Nat16, gameweek : FootballDefinitions.GameweekNumber) -> async Result.Result<(), Enums.Error>;
