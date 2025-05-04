@@ -4,7 +4,6 @@ import { authStore } from "$lib/stores/auth-store";
 import { leagueStore } from "$lib/stores/league-store";
 
 import { isError } from "$lib/utils/Helpers";
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { toasts } from "./toasts-store";
 import type {
   BonusType,

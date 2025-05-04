@@ -198,7 +198,7 @@ function createUserStore() {
 export const userStore = createUserStore();
 
 function saveLocalStorageProfile(profile: CombinedProfile) {
-  localStorage.setItem("use_profile", JSON.stringify(profile, replacer));
+  localStorage.setItem("user_profile", JSON.stringify(profile, replacer));
 }
 
 function getLocalStorageProfile(): CombinedProfile | undefined {
