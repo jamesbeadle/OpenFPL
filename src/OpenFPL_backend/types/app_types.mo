@@ -6,6 +6,7 @@ import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
 import Enums "mo:waterway-mops/Enums";
+import IcfcEnums "mo:waterway-mops/ICFCEnums";
 import AppEnums "../enums/app_enums";
 
 module AppTypes {

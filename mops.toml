@@ -1,4 +1,3 @@
 [dependencies]
 base = "0.14.9"
-waterway-mops = "2.7.6"
-
+waterway-mops = "2.9.1"

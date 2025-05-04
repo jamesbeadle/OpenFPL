@@ -1,6 +1,5 @@
 import { authStore } from "$lib/stores/auth-store";
-import { isError } from "$lib/utils/Helpers";
-import { getProfileFromDB, setProfileToDB } from "$lib/utils/db.utils";
+import { isError, replacer } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
 import { Text } from "@dfinity/candid/lib/cjs/idl";
 import { ActorFactory } from "../utils/actor.factory";
@@ -21,7 +20,7 @@ function createUserStore() {
 
   async function sync(): Promise<void> {
     try {
-      const localProfile = await getProfileFromDB();
+      const localProfile = await getLocalStorageProfile();
       if (localProfile) {
         set(localProfile);
         return;
@@ -66,12 +65,12 @@ function createUserStore() {
     let profile = await new UserService().getUser();
     set(profile);
     if (profile) {
-      await setProfileToDB(profile);
+      await saveLocalStorageProfile(profile);
       userIdCreatedStore.set({ data: profile.principalId, certified: true });
     }
   }
 
-  async function withdrawFPL(
+  async function withdrawICFC(
     withdrawalAddress: string,
     withdrawalAmount: bigint,
   ): Promise<any> {
@@ -120,12 +119,12 @@ function createUserStore() {
         }
       }
     } catch (error) {
-      console.error("Error withdrawing FPL.", error);
+      console.error("Error withdrawing ICFC.", error);
       throw error;
     }
   }
 
-  async function getFPLBalance(): Promise<bigint> {
+  async function getICFCBalance(): Promise<bigint> {
     let identity: OptionIdentity;
 
     authStore.subscribe(async (auth) => {
@@ -188,8 +187,8 @@ function createUserStore() {
     sync,
     cacheProfile,
     updateFavouriteTeam,
-    withdrawFPL,
-    getFPLBalance,
+    withdrawICFC,
+    getICFCBalance,
     getUser,
     getICFCLinkStatus,
     linkICFCProfile,
@@ -197,3 +196,26 @@ function createUserStore() {
 }
 
 export const userStore = createUserStore();
+
+function saveLocalStorageProfile(profile: CombinedProfile){
+
+  localStorage.setItem(
+    "use_profile",
+    JSON.stringify(profile, replacer),
+  );
+}
+
+function getLocalStorageProfile() : CombinedProfile | undefined {
+
+  const localProfile = localStorage.getItem("user_profile");
+
+  if (!localProfile) { return }
+
+  try {
+    let profile = JSON.parse(localProfile);
+    return profile;
+  } catch (e) {
+    return undefined;
+  }
+  
+}
