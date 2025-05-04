@@ -487,10 +487,10 @@ module {
         };
         case (?foundCanisterId) {
           let manager_canister = actor (foundCanisterId) : actor {
-            getFantasyTeamSnapshot : (managerPrincipalId : Ids.PrincipalId, dto : UserQueries.GetFantasyTeamSnapshot) -> async ?UserQueries.FantasyTeamSnapshot;
+            getFantasyTeamSnapshot : (dto : UserQueries.GetFantasyTeamSnapshot) -> async ?UserQueries.FantasyTeamSnapshot;
           };
 
-          let snapshot = await manager_canister.getFantasyTeamSnapshot(dto.principalId, dto);
+          let snapshot = await manager_canister.getFantasyTeamSnapshot(dto);
           switch (snapshot) {
             case (null) {
               return #err(#NotFound);
