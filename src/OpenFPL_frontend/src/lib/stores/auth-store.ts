@@ -98,6 +98,6 @@ export const authStore = initAuthStore();
 
 export const authRemainingTimeStore = writable<number | undefined>(undefined);
 
-function clearLocalStorageProfile(){
-  localStorage.removeItem('user_profile');
+function clearLocalStorageProfile() {
+  localStorage.removeItem("user_profile");
 }

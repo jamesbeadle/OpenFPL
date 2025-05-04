@@ -197,19 +197,16 @@ function createUserStore() {
 
 export const userStore = createUserStore();
 
-function saveLocalStorageProfile(profile: CombinedProfile){
-
-  localStorage.setItem(
-    "use_profile",
-    JSON.stringify(profile, replacer),
-  );
+function saveLocalStorageProfile(profile: CombinedProfile) {
+  localStorage.setItem("use_profile", JSON.stringify(profile, replacer));
 }
 
-function getLocalStorageProfile() : CombinedProfile | undefined {
-
+function getLocalStorageProfile(): CombinedProfile | undefined {
   const localProfile = localStorage.getItem("user_profile");
 
-  if (!localProfile) { return }
+  if (!localProfile) {
+    return;
+  }
 
   try {
     let profile = JSON.parse(localProfile);
@@ -217,5 +214,4 @@ function getLocalStorageProfile() : CombinedProfile | undefined {
   } catch (e) {
     return undefined;
   }
-  
 }
