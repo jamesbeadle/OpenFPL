@@ -899,7 +899,8 @@ actor Self {
 
     });
     await seasonManager.updateDataHash("app_status");
-
+    await updateManagerCanisterWasms();
+    await updateLeaderboardCanisterWasms();
   };
 
   /* ----- Canister Update Functions ----- */

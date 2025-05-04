@@ -42,12 +42,6 @@
             return Promise.reject(error);
         }
     };
-
-    $effect(() => {
-      if (browser && !$authSignedInStore) {
-        goto('/', { replaceState: true });
-      }
-    });
 </script>
 
 {#await init()}

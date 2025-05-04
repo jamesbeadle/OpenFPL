@@ -4,7 +4,7 @@
     import { userStore } from '$lib/stores/user-store';
     import { get } from 'svelte/store';
     import { onMount, type Snippet } from 'svelte';
-    import type { CombinedProfile, MembershipType__1 } from '../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
+    import type { CombinedProfile, MembershipType } from '../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
     
     import Header from '$lib/shared/Header.svelte';
     import Footer from '$lib/shared/Footer.svelte';
@@ -30,7 +30,7 @@
         isMenuOpen = !isMenuOpen;
     }
     
-    function checkValidMembership(membershipType: MembershipType__1): boolean {
+    function checkValidMembership(membershipType: MembershipType): boolean {
         console.log("checkValidMembership", membershipType);
         return 'Founding' in membershipType || 
                'Seasonal' in membershipType || 
@@ -69,14 +69,6 @@
     onMount(() => {
         console.log("onMount checkProfile");
         checkProfile();
-    });
-
-    $effect(() => {
-        console.log('userIdCreatedStore', $userIdCreatedStore);
-        if($userIdCreatedStore?.data) {
-            isLoading = true;
-            checkProfile();
-        }
     });
 </script>
 
