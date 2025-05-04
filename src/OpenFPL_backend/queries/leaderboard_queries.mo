@@ -17,6 +17,7 @@ module LeaderboardQueries = {
         seasonId : FootballIds.SeasonId;
         gameweek : FootballDefinitions.GameweekNumber;
         entries : [LeaderboardEntry];
+        page : Nat;
         totalEntries : Nat;
     };
 
@@ -26,13 +27,12 @@ module LeaderboardQueries = {
         username : Text;
         principalId : Ids.PrincipalId;
         points : Int16;
-        nationalityId: ?Ids.CountryId;
-        membershipLevel: IcfcEnums.MembershipType;
-        bonusPlayed: ?AppEnums.BonusType;
-        profilePicture: ?Blob;
-        rewardAmount: ?Nat64;
+        nationalityId : ?Ids.CountryId;
+        membershipLevel : IcfcEnums.MembershipType;
+        bonusPlayed : ?AppEnums.BonusType;
+        profilePicture : ?Blob;
+        rewardAmount : ?Nat64;
     };
-
 
     public type GetMonthlyLeaderboard = {
         seasonId : FootballIds.SeasonId;
@@ -77,12 +77,11 @@ module LeaderboardQueries = {
         username : Text;
         principalId : Ids.PrincipalId;
         teamValue : Nat16;
-        nationalityId: ?Ids.CountryId;
-        membershipLevel: IcfcEnums.MembershipType;
-        bonusPlayed: ?AppEnums.BonusType;
-        profilePicture: ?Blob;
-        rewardAmount: ?Nat64;
+        nationalityId : ?Ids.CountryId;
+        membershipLevel : IcfcEnums.MembershipType;
+        bonusPlayed : ?AppEnums.BonusType;
+        profilePicture : ?Blob;
+        rewardAmount : ?Nat64;
     };
-
 
 };

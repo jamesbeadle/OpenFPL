@@ -5,7 +5,7 @@ import ICFCEnums "mo:waterway-mops/ICFCEnums";
 import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
-import IcfcEnums "mo:waterway-mops/ICFCEnums";
+import Enums "mo:waterway-mops/Enums";
 import AppEnums "../enums/app_enums";
 
 module AppTypes {
@@ -216,6 +216,21 @@ module AppTypes {
     principalId : Ids.PrincipalId;
     linkStatus : ICFCEnums.ICFCLinkStatus;
     dataHash : Text;
+  };
+
+  public type LeaderboardPayout = {
+    seasonId : FootballIds.SeasonId;
+    gameweek : FootballDefinitions.GameweekNumber;
+    leaderboard : [LeaderboardPayoutEntry];
+    totalEntries : Nat;
+    totalEntriesPaid : Nat;
+  };
+
+  public type LeaderboardPayoutEntry = {
+    appPrincipalId : Ids.PrincipalId;
+    rewardAmount : ?Nat64;
+    payoutStatus : Enums.PayoutStatus;
+    payoutDate : ?Int;
   };
 
 };

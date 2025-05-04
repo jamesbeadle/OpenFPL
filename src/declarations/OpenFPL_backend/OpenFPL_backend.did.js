@@ -8,6 +8,7 @@ export const idlFactory = ({ IDL }) => {
     ICFC: IDL.Null,
     ICGC: IDL.Null,
     ICPFA: IDL.Null,
+    GolfPad: IDL.Null,
     TransferKings: IDL.Null,
     JeffBets: IDL.Null,
     OpenBook: IDL.Null,
@@ -665,6 +666,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const WeeklyLeaderboard = IDL.Record({
     totalEntries: IDL.Nat,
+    page: IDL.Nat,
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry__1),
     gameweek: GameweekNumber,
