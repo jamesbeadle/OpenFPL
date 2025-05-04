@@ -45,7 +45,7 @@ export interface Canister {
 export type CanisterId = string;
 export type CanisterType = { SNS: null } | { Dynamic: null } | { Static: null };
 export interface Club {
-  id: number;
+  id: ClubId;
   secondaryColourHex: string;
   name: string;
   friendlyName: string;
@@ -57,7 +57,7 @@ export interface Club {
 export type ClubId = number;
 export interface Clubs {
   clubs: Array<Club>;
-  leagueId: number;
+  leagueId: LeagueId;
 }
 export interface CombinedProfile {
   username: string;
@@ -110,7 +110,7 @@ export interface DataHash {
 }
 export interface DetailedPlayer {
   id: PlayerId;
-  status: PlayerStatus__2;
+  status: PlayerStatus;
   clubId: ClubId;
   parentClubId: ClubId;
   valueQuarterMillions: number;
@@ -123,7 +123,7 @@ export interface DetailedPlayer {
   valueHistory: Array<ValueHistory>;
   latestInjuryEndDate: bigint;
   shirtNumber: number;
-  position: PlayerPosition__2;
+  position: PlayerPosition;
   lastName: string;
   firstName: string;
 }
@@ -186,16 +186,15 @@ export interface FantasyTeamSnapshot {
   monthlyBonusesAvailable: number;
 }
 export interface Fixture {
-  id: number;
+  id: FixtureId;
   status: FixtureStatusType;
-  highestScoringPlayerId: number;
-  seasonId: number;
-  awayClubId: number;
-  events: Array<PlayerEventData__1>;
-  homeClubId: number;
+  highestScoringPlayerId: PlayerId;
+  seasonId: SeasonId;
+  awayClubId: ClubId;
+  homeClubId: ClubId;
   kickOff: bigint;
   homeGoals: number;
-  gameweek: number;
+  gameweek: GameweekNumber;
   awayGoals: number;
 }
 export type FixtureId = number;
@@ -205,14 +204,14 @@ export type FixtureStatusType =
   | { Active: null }
   | { Complete: null };
 export interface Fixtures {
-  seasonId: number;
+  seasonId: SeasonId;
   fixtures: Array<Fixture>;
-  leagueId: number;
+  leagueId: LeagueId;
 }
 export type GameweekNumber = number;
 export type GetAllTimeHighScores = {};
 export interface GetClubs {
-  leagueId: number;
+  leagueId: LeagueId;
 }
 export interface GetFantasyTeamSnapshot {
   seasonId: SeasonId;
@@ -220,8 +219,8 @@ export interface GetFantasyTeamSnapshot {
   principalId: PrincipalId;
 }
 export interface GetFixtures {
-  seasonId: number;
-  leagueId: number;
+  seasonId: SeasonId;
+  leagueId: LeagueId;
 }
 export type GetICFCLinks = {};
 export interface GetManager {
@@ -245,22 +244,22 @@ export interface GetMostValuableTeamLeaderboard {
   seasonId: SeasonId;
 }
 export interface GetPlayerDetails {
-  playerId: number;
-  seasonId: number;
-  leagueId: number;
+  playerId: PlayerId;
+  seasonId: SeasonId;
+  leagueId: LeagueId;
 }
 export interface GetPlayerDetailsForGameweek {
-  seasonId: number;
-  gameweek: number;
-  leagueId: number;
+  seasonId: SeasonId;
+  gameweek: GameweekNumber;
+  leagueId: LeagueId;
 }
 export interface GetPlayers {
-  leagueId: number;
+  leagueId: LeagueId;
 }
 export interface GetPlayersMap {
-  seasonId: number;
-  gameweek: number;
-  leagueId: number;
+  seasonId: SeasonId;
+  gameweek: GameweekNumber;
+  leagueId: LeagueId;
 }
 export interface GetPlayersSnapshot {
   seasonId: SeasonId;
@@ -271,7 +270,7 @@ export interface GetSeasonLeaderboard {
   seasonId: SeasonId;
 }
 export interface GetSeasons {
-  leagueId: number;
+  leagueId: LeagueId;
 }
 export interface GetWeeklyLeaderboard {
   page: bigint;
@@ -329,13 +328,13 @@ export interface LeagueStatus {
   transferWindowStartMonth: number;
   transferWindowActive: boolean;
   totalGameweeks: number;
-  completedGameweek: number;
+  completedGameweek: GameweekNumber;
   transferWindowStartDay: number;
-  unplayedGameweek: number;
-  activeMonth: number;
-  activeSeasonId: number;
-  activeGameweek: number;
-  leagueId: number;
+  unplayedGameweek: GameweekNumber;
+  activeMonth: CalendarMonth;
+  activeSeasonId: SeasonId;
+  activeGameweek: GameweekNumber;
+  leagueId: LeagueId;
   seasonActive: boolean;
 }
 export interface Manager {
@@ -416,17 +415,17 @@ export interface PlayBonus {
 export interface Player {
   id: number;
   status: PlayerStatus;
-  clubId: number;
-  parentClubId: number;
+  clubId: ClubId;
+  parentClubId: ClubId;
   valueQuarterMillions: number;
   dateOfBirth: bigint;
-  nationality: number;
+  nationality: CountryId;
   currentLoanEndDate: bigint;
   shirtNumber: number;
-  parentLeagueId: number;
+  parentLeagueId: LeagueId;
   position: PlayerPosition;
   lastName: string;
-  leagueId: number;
+  leagueId: LeagueId;
   firstName: string;
 }
 export interface PlayerChangeNotification {
@@ -445,38 +444,9 @@ export interface PlayerEventData {
   playerId: number;
   eventStartMinute: number;
   eventEndMinute: number;
-  eventType: PlayerEventType__1;
-}
-export interface PlayerEventData__1 {
-  fixtureId: number;
-  clubId: number;
-  playerId: number;
-  eventStartMinute: number;
-  eventEndMinute: number;
-  eventType: PlayerEventType;
-}
-export interface PlayerEventData__2 {
-  fixtureId: number;
-  clubId: number;
-  playerId: number;
-  eventStartMinute: number;
-  eventEndMinute: number;
   eventType: PlayerEventType;
 }
 export type PlayerEventType =
-  | { PenaltyMissed: null }
-  | { Goal: null }
-  | { GoalConceded: null }
-  | { Appearance: null }
-  | { PenaltySaved: null }
-  | { RedCard: null }
-  | { KeeperSave: null }
-  | { CleanSheet: null }
-  | { YellowCard: null }
-  | { GoalAssisted: null }
-  | { OwnGoal: null }
-  | { HighestScoringPlayer: null };
-export type PlayerEventType__1 =
   | { PenaltyMissed: null }
   | { Goal: null }
   | { GoalConceded: null }
@@ -498,10 +468,10 @@ export interface PlayerGameweek {
 export type PlayerId = number;
 export interface PlayerPoints {
   id: number;
-  clubId: number;
-  events: Array<PlayerEventData__2>;
-  position: PlayerPosition__1;
-  gameweek: number;
+  clubId: ClubId;
+  events: Array<PlayerEventData>;
+  position: PlayerPosition;
+  gameweek: GameweekNumber;
   points: number;
 }
 export type PlayerPosition =
@@ -509,27 +479,17 @@ export type PlayerPosition =
   | { Midfielder: null }
   | { Forward: null }
   | { Defender: null };
-export type PlayerPosition__1 =
-  | { Goalkeeper: null }
-  | { Midfielder: null }
-  | { Forward: null }
-  | { Defender: null };
-export type PlayerPosition__2 =
-  | { Goalkeeper: null }
-  | { Midfielder: null }
-  | { Forward: null }
-  | { Defender: null };
 export interface PlayerScore {
   id: number;
-  clubId: number;
+  clubId: ClubId;
   assists: number;
   dateOfBirth: bigint;
-  nationality: number;
+  nationality: CountryId;
   goalsScored: number;
   saves: number;
   goalsConceded: number;
-  events: Array<PlayerEventData__2>;
-  position: PlayerPosition__1;
+  events: Array<PlayerEventData>;
+  position: PlayerPosition;
   points: number;
 }
 export type PlayerStatus =
@@ -537,37 +497,11 @@ export type PlayerStatus =
   | { Active: null }
   | { FreeAgent: null }
   | { Retired: null };
-export type PlayerStatus__1 =
-  | { OnLoan: null }
-  | { Active: null }
-  | { FreeAgent: null }
-  | { Retired: null };
-export type PlayerStatus__2 =
-  | { OnLoan: null }
-  | { Active: null }
-  | { FreeAgent: null }
-  | { Retired: null };
-export interface Player__1 {
-  id: number;
-  status: PlayerStatus__1;
-  clubId: number;
-  parentClubId: number;
-  valueQuarterMillions: number;
-  dateOfBirth: bigint;
-  nationality: number;
-  currentLoanEndDate: bigint;
-  shirtNumber: number;
-  parentLeagueId: number;
-  position: PlayerPosition__1;
-  lastName: string;
-  leagueId: number;
-  firstName: string;
-}
 export interface Players {
-  players: Array<Player__1>;
+  players: Array<Player>;
 }
 export interface PlayersMap {
-  playersMap: Array<[number, PlayerScore]>;
+  playersMap: Array<[PlayerId, PlayerScore]>;
 }
 export interface PlayersSnapshot {
   players: Array<Player>;

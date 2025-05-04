@@ -290,41 +290,10 @@ type ProjectCanisters = record {entries: vec Canister;};
 type PrincipalId = text;
 type PlayersSnapshot = record {players: vec Player;};
 type PlayersMap = record {playersMap: vec record {
-                                            nat16;
+                                            PlayerId;
                                             PlayerScore;
                                           };};
-type Players = record {players: vec Player__1;};
-type Player__1 = 
- record {
-   clubId: nat16;
-   currentLoanEndDate: int;
-   dateOfBirth: int;
-   firstName: text;
-   id: nat16;
-   lastName: text;
-   leagueId: nat16;
-   nationality: nat16;
-   parentClubId: nat16;
-   parentLeagueId: nat16;
-   position: PlayerPosition__1;
-   shirtNumber: nat8;
-   status: PlayerStatus__1;
-   valueQuarterMillions: nat16;
- };
-type PlayerStatus__2 = 
- variant {
-   Active;
-   FreeAgent;
-   OnLoan;
-   Retired;
- };
-type PlayerStatus__1 = 
- variant {
-   Active;
-   FreeAgent;
-   OnLoan;
-   Retired;
- };
+type Players = record {players: vec Player;};
 type PlayerStatus = 
  variant {
    Active;
@@ -335,30 +304,16 @@ type PlayerStatus =
 type PlayerScore = 
  record {
    assists: int16;
-   clubId: nat16;
+   clubId: ClubId;
    dateOfBirth: int;
-   events: vec PlayerEventData__2;
+   events: vec PlayerEventData;
    goalsConceded: int16;
    goalsScored: int16;
    id: nat16;
-   nationality: nat16;
+   nationality: CountryId;
    points: int16;
-   position: PlayerPosition__1;
+   position: PlayerPosition;
    saves: int16;
- };
-type PlayerPosition__2 = 
- variant {
-   Defender;
-   Forward;
-   Goalkeeper;
-   Midfielder;
- };
-type PlayerPosition__1 = 
- variant {
-   Defender;
-   Forward;
-   Goalkeeper;
-   Midfielder;
  };
 type PlayerPosition = 
  variant {
@@ -369,12 +324,12 @@ type PlayerPosition =
  };
 type PlayerPoints = 
  record {
-   clubId: nat16;
-   events: vec PlayerEventData__2;
-   gameweek: nat8;
+   clubId: ClubId;
+   events: vec PlayerEventData;
+   gameweek: GameweekNumber;
    id: nat16;
    points: int16;
-   position: PlayerPosition__1;
+   position: PlayerPosition;
  };
 type PlayerId = nat16;
 type PlayerGameweek = 
@@ -383,21 +338,6 @@ type PlayerGameweek =
    fixtureId: FixtureId;
    number: nat8;
    points: int16;
- };
-type PlayerEventType__1 = 
- variant {
-   Appearance;
-   CleanSheet;
-   Goal;
-   GoalAssisted;
-   GoalConceded;
-   HighestScoringPlayer;
-   KeeperSave;
-   OwnGoal;
-   PenaltyMissed;
-   PenaltySaved;
-   RedCard;
-   YellowCard;
  };
 type PlayerEventType = 
  variant {
@@ -414,30 +354,12 @@ type PlayerEventType =
    RedCard;
    YellowCard;
  };
-type PlayerEventData__2 = 
- record {
-   clubId: nat16;
-   eventEndMinute: nat8;
-   eventStartMinute: nat8;
-   eventType: PlayerEventType;
-   fixtureId: nat32;
-   playerId: nat16;
- };
-type PlayerEventData__1 = 
- record {
-   clubId: nat16;
-   eventEndMinute: nat8;
-   eventStartMinute: nat8;
-   eventType: PlayerEventType;
-   fixtureId: nat32;
-   playerId: nat16;
- };
 type PlayerEventData = 
  record {
    clubId: ClubId;
    eventEndMinute: nat8;
    eventStartMinute: nat8;
-   eventType: PlayerEventType__1;
+   eventType: PlayerEventType;
    fixtureId: FixtureId;
    playerId: nat16;
  };
@@ -450,16 +372,16 @@ type PlayerChangeNotification =
  };
 type Player = 
  record {
-   clubId: nat16;
+   clubId: ClubId;
    currentLoanEndDate: int;
    dateOfBirth: int;
    firstName: text;
    id: nat16;
    lastName: text;
-   leagueId: nat16;
-   nationality: nat16;
-   parentClubId: nat16;
-   parentLeagueId: nat16;
+   leagueId: LeagueId;
+   nationality: CountryId;
+   parentClubId: ClubId;
+   parentLeagueId: LeagueId;
    position: PlayerPosition;
    shirtNumber: nat8;
    status: PlayerStatus;
@@ -557,11 +479,11 @@ type Manager =
  };
 type LeagueStatus = 
  record {
-   activeGameweek: nat8;
-   activeMonth: nat8;
-   activeSeasonId: nat16;
-   completedGameweek: nat8;
-   leagueId: nat16;
+   activeGameweek: GameweekNumber;
+   activeMonth: CalendarMonth;
+   activeSeasonId: SeasonId;
+   completedGameweek: GameweekNumber;
+   leagueId: LeagueId;
    seasonActive: bool;
    totalGameweeks: nat8;
    transferWindowActive: bool;
@@ -569,7 +491,7 @@ type LeagueStatus =
    transferWindowEndMonth: nat8;
    transferWindowStartDay: nat8;
    transferWindowStartMonth: nat8;
-   unplayedGameweek: nat8;
+   unplayedGameweek: GameweekNumber;
  };
 type LeagueId = nat16;
 type LeaderboardEntry__1 = 
@@ -632,7 +554,7 @@ type GetWeeklyLeaderboard =
    searchTerm: text;
    seasonId: SeasonId;
  };
-type GetSeasons = record {leagueId: nat16;};
+type GetSeasons = record {leagueId: LeagueId;};
 type GetSeasonLeaderboard = 
  record {
    page: nat;
@@ -645,22 +567,22 @@ type GetPlayersSnapshot =
  };
 type GetPlayersMap = 
  record {
-   gameweek: nat8;
-   leagueId: nat16;
-   seasonId: nat16;
+   gameweek: GameweekNumber;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
  };
-type GetPlayers = record {leagueId: nat16;};
+type GetPlayers = record {leagueId: LeagueId;};
 type GetPlayerDetailsForGameweek = 
  record {
-   gameweek: nat8;
-   leagueId: nat16;
-   seasonId: nat16;
+   gameweek: GameweekNumber;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
  };
 type GetPlayerDetails = 
  record {
-   leagueId: nat16;
-   playerId: nat16;
-   seasonId: nat16;
+   leagueId: LeagueId;
+   playerId: PlayerId;
+   seasonId: SeasonId;
  };
 type GetMostValuableTeamLeaderboard = 
  record {
@@ -684,8 +606,8 @@ type GetManager = record {principalId: text;};
 type GetICFCLinks = record {};
 type GetFixtures = 
  record {
-   leagueId: nat16;
-   seasonId: nat16;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
  };
 type GetFantasyTeamSnapshot = 
  record {
@@ -693,14 +615,14 @@ type GetFantasyTeamSnapshot =
    principalId: PrincipalId;
    seasonId: SeasonId;
  };
-type GetClubs = record {leagueId: nat16;};
+type GetClubs = record {leagueId: LeagueId;};
 type GetAllTimeHighScores = record {};
 type GameweekNumber = nat8;
 type Fixtures = 
  record {
    fixtures: vec Fixture;
-   leagueId: nat16;
-   seasonId: nat16;
+   leagueId: LeagueId;
+   seasonId: SeasonId;
  };
 type FixtureStatusType = 
  variant {
@@ -712,16 +634,15 @@ type FixtureStatusType =
 type FixtureId = nat32;
 type Fixture = 
  record {
-   awayClubId: nat16;
+   awayClubId: ClubId;
    awayGoals: nat8;
-   events: vec PlayerEventData__1;
-   gameweek: nat8;
-   highestScoringPlayerId: nat16;
-   homeClubId: nat16;
+   gameweek: GameweekNumber;
+   highestScoringPlayerId: PlayerId;
+   homeClubId: ClubId;
    homeGoals: nat8;
-   id: nat32;
+   id: FixtureId;
    kickOff: int;
-   seasonId: nat16;
+   seasonId: SeasonId;
    status: FixtureStatusType;
  };
 type FantasyTeamSnapshot = 
@@ -797,11 +718,11 @@ type DetailedPlayer =
    latestInjuryEndDate: int;
    nationality: CountryId;
    parentClubId: ClubId;
-   position: PlayerPosition__2;
+   position: PlayerPosition;
    retirementDate: int;
    seasonId: SeasonId;
    shirtNumber: nat8;
-   status: PlayerStatus__2;
+   status: PlayerStatus;
    valueHistory: vec ValueHistory;
    valueQuarterMillions: nat16;
  };
@@ -862,14 +783,14 @@ type CombinedProfile =
 type Clubs = 
  record {
    clubs: vec Club;
-   leagueId: nat16;
+   leagueId: LeagueId;
  };
 type ClubId = nat16;
 type Club = 
  record {
    abbreviatedName: text;
    friendlyName: text;
-   id: nat16;
+   id: ClubId;
    name: text;
    primaryColourHex: text;
    secondaryColourHex: text;
