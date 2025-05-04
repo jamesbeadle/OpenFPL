@@ -18,7 +18,6 @@ import PlayerNotificationCommands "mo:waterway-mops/football/PlayerNotificationC
 import BaseUtilities "mo:waterway-mops/BaseUtilities";
 import DateTimeUtilities "mo:waterway-mops/DateTimeUtilities";
 import LeaderboardPayoutCommands "mo:waterway-mops/football/LeaderboardPayoutCommands";
-import DataCanister "canister:data_canister";
 
 /* ----- Mops Packages ----- */
 
@@ -113,7 +112,7 @@ actor Self {
 
   private stable var stable_data_hashes : [Base.DataHash] = [];
 
-  private stable var stable_player_snapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [DataCanister.Player])])] = [];
+  private stable var stable_player_snapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])] = [];
 
   //User Manager stable variables
 
@@ -165,7 +164,7 @@ actor Self {
 
   /* ----- Data Hash Queries ----- */
 
-  public shared ({ caller }) func getDataHashes() : async Result.Result<[DataCanister.DataHash], Enums.Error> {
+  public shared ({ caller }) func getDataHashes() : async Result.Result<[BaseQueries.DataHash], Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert await hasMembership(principalId);
@@ -707,9 +706,9 @@ actor Self {
               },
             );
 
-            let sortedFixtures = Array.sort<DataCanister.Fixture>(
+            let sortedFixtures = Array.sort<FixtureQueries.Fixture>(
               fixtureGameweekFixtures,
-              func(entry1 : DataCanister.Fixture, entry2 : DataCanister.Fixture) : Order.Order {
+              func(entry1 : FixtureQueries.Fixture, entry2 : FixtureQueries.Fixture) : Order.Order {
                 if (entry1.kickOff > entry2.kickOff) { return #less };
                 if (entry1.kickOff == entry2.kickOff) { return #equal };
                 return #greater;
@@ -717,7 +716,7 @@ actor Self {
             );
 
             if (Array.size(sortedFixtures) > 0) {
-              let firstGameweekFixture : DataCanister.Fixture = sortedFixtures[0];
+              let firstGameweekFixture : FixtureQueries.Fixture = sortedFixtures[0];
               var fixtureMonth : BaseDefinitions.CalendarMonth = DateTimeUtilities.unixTimeToMonth(firstGameweekFixture.kickOff);
               let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, dto.seasonId, foundFixture.gameweek, fixtureMonth);
               await seasonManager.updateDataHash("league_status");
