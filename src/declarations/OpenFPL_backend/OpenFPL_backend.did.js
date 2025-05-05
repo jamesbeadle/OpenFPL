@@ -500,7 +500,15 @@ export const idlFactory = ({ IDL }) => {
     seasonId: SeasonId,
     gameweek: GameweekNumber,
   });
-  const PlayersSnapshot = IDL.Record({ players: IDL.Vec(Player) });
+  const SnapshotPlayer = IDL.Record({
+    id: PlayerId,
+    clubId: ClubId,
+    valueQuarterMillions: IDL.Nat16,
+    dateOfBirth: IDL.Int,
+    nationality: CountryId,
+    position: PlayerPosition,
+  });
+  const PlayersSnapshot = IDL.Record({ players: IDL.Vec(SnapshotPlayer) });
   const Result_8 = IDL.Variant({ ok: PlayersSnapshot, err: Error });
   const MembershipClaim = IDL.Record({
     expiresOn: IDL.Opt(IDL.Int),

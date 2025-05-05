@@ -20,7 +20,7 @@
     class="flex items-center space-x-2 transition-transform hover:scale-105"
   >
     <OpenFplIcon className="w-6 h-6" currentColor='white' />
-    <span class="logo-text hidden sm:block">Football God</span>
+    <span class="logo-text hidden sm:block">OpenFPL</span>
   </a>
 
   <div class="flex items-center gap-4">

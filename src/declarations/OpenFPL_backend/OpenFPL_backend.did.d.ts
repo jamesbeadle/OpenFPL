@@ -504,7 +504,7 @@ export interface PlayersMap {
   playersMap: Array<[PlayerId, PlayerScore]>;
 }
 export interface PlayersSnapshot {
-  players: Array<Player>;
+  players: Array<SnapshotPlayer>;
 }
 export type PrincipalId = string;
 export interface ProjectCanisters {
@@ -580,6 +580,14 @@ export interface SetFavouriteClub {
   principalId: PrincipalId;
 }
 export type ShirtType = { Filled: null } | { Striped: null };
+export interface SnapshotPlayer {
+  id: PlayerId;
+  clubId: ClubId;
+  valueQuarterMillions: number;
+  dateOfBirth: bigint;
+  nationality: CountryId;
+  position: PlayerPosition;
+}
 export type SubApp =
   | { OpenFPL: null }
   | { OpenWSL: null }

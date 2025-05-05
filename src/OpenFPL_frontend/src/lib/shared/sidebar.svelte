@@ -18,7 +18,7 @@
 
   const menuItems: MenuItem[] = [
     { path: '/', label: 'Home' },
-    { path: '/pick-team', label: 'Apps' },
+    { path: '/pick-team', label: 'Pick Team' },
     { path: '/profile', label: 'Profile' },
     { path: '/', label: 'Sign Out' }
   ]

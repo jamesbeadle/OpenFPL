@@ -88,6 +88,15 @@ type SubApp =
    OpenWSL;
    TransferKings;
  };
+type SnapshotPlayer = 
+ record {
+   clubId: ClubId;
+   dateOfBirth: int;
+   id: PlayerId;
+   nationality: CountryId;
+   position: PlayerPosition;
+   valueQuarterMillions: nat16;
+ };
 type ShirtType = 
  variant {
    Filled;
@@ -288,7 +297,7 @@ type RemoveController =
  };
 type ProjectCanisters = record {entries: vec Canister;};
 type PrincipalId = text;
-type PlayersSnapshot = record {players: vec Player;};
+type PlayersSnapshot = record {players: vec SnapshotPlayer;};
 type PlayersMap = record {playersMap: vec record {
                                             PlayerId;
                                             PlayerScore;
