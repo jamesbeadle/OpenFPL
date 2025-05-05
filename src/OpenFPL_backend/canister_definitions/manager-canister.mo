@@ -1871,7 +1871,7 @@ actor class _ManagerCanister() {
       gameweek;
     });
 
-    let allPlayers : PlayerQueries.Players = await backend_canister.getPlayersSnapshot({
+    let snapshotPlayers : PlayerQueries.Players = await backend_canister.getPlayersSnapshot({
       leagueId;
     });
 
@@ -1955,15 +1955,15 @@ actor class _ManagerCanister() {
                         case (null) {};
                         case (?player) {
 
-                          let playerDTO = Array.find(
-                            allPlayers.players,
+                          let snapshotPlayer = Array.find(
+                            snapshotPlayers.players,
                             func(foundPlayerDTO : PlayerQueries.Player) : Bool {
                               foundPlayerDTO.id == player.id;
                             },
                           );
-                          switch (playerDTO) {
-                            case (?foundPlayerDTO) {
-                              fantasyTeamPlayersBuffer.add(foundPlayerDTO);
+                          switch (snapshotPlayer) {
+                            case (?foundSnapshotPlayer) {
+                              fantasyTeamPlayersBuffer.add(foundSnapshotPlayer);
                             };
                             case (null) {};
                           };
