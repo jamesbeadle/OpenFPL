@@ -2,16 +2,12 @@
   import Modal from "$lib/components/shared/global/modal.svelte";
 
   interface Props {
-    visible: boolean;
+    onClose: () => void;
     onConfirm: () => void;
     newCaptain : string;
   }
-  let { visible, onConfirm, newCaptain }: Props = $props();
+  let { onClose, onConfirm, newCaptain }: Props = $props();
 
-
-  function onClose() {
-    visible = false;
-  }
 </script>
 
 <Modal onClose={onClose} title="Captain Change">

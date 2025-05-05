@@ -6,7 +6,6 @@
 
 
   interface Props {
-    visible: boolean;
     closeDetailModal: () => void;
     playerDetail: PlayerDetails;
     gameweekDetail: PlayerGameweek | null;
@@ -15,7 +14,7 @@
     gameweek: number;
     seasonName: string;
   }
-  let { visible, closeDetailModal, playerDetail, gameweekDetail, playerTeam, opponentTeam, gameweek, seasonName }: Props = $props();
+  let { closeDetailModal, playerDetail, gameweekDetail, playerTeam, opponentTeam, gameweek, seasonName }: Props = $props();
 
   let appearanceEvents: PlayerEventData[] = $state([]);
   let concededEvents: PlayerEventData[] = [];

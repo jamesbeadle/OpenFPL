@@ -70,6 +70,10 @@
     gameweekData = unsortedData.sort((a, b) => b.points - a.points);
     isLoading = false;
   }
+
+  function closeManagerPlayerScoreModal(){
+    showModal = false;
+  }
 </script>
   
 {#if isLoading}
@@ -92,7 +96,7 @@
 
 {#if showModal}
   <ManagerPlayerScoreModal 
-    visible={showModal}
+    onClose={closeManagerPlayerScoreModal}
     gameweekData={selectedGameweekData!}
   />
 {/if}

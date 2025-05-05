@@ -26,7 +26,9 @@
   let showWelcomeBanner = $state(false);
 
   onMount(async () => {
+    console.log("mounting pick team")
       await storeManager.syncStores();
+      console.log("stores synced")
       await loadData();
       isLoading = false;
   });

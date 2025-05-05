@@ -3,17 +3,14 @@
     import Modal from "../../shared/global/modal.svelte";
     
     interface Props {
-      visible: boolean; 
+      onClose: () => void;
     }
-    let { visible }: Props = $props();
+    let { onClose }: Props = $props();
 
     function begin() {
       goto('/');
     }
-
-    function onClose(){
-      visible = false;
-    }
+    
 </script>
 
 <Modal {onClose} title="Membership Linked">

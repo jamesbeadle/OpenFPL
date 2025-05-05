@@ -2,8 +2,6 @@
   import { onMount } from "svelte";
   import { clubStore } from "$lib/stores/club-store";
   import { playerStore } from "$lib/stores/player-store";
-  import { leagueStore } from "$lib/stores/league-store";
-  import { playerEventsStore } from "$lib/stores/player-events-store";
   import { countPlayersByTeam, reasonToDisablePlayer, sortPlayersByClubThenValue } from "$lib/utils/pick-team.helpers";
   import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/Helpers";
   
@@ -17,12 +15,13 @@
 
 
   interface Props {
-    visible: boolean;
     handlePlayerSelection: (player: Player) => void;
     fantasyTeam: TeamSetup | undefined;
     filterPosition: number;
+    onClose: () => void;
   }
-  let { visible, handlePlayerSelection, fantasyTeam, filterPosition }: Props = $props();
+  
+  let { handlePlayerSelection, fantasyTeam, filterPosition, onClose }: Props = $props();
 
   const pageSize = 10;
   let filterTeam = $state(-1);
@@ -101,13 +100,8 @@ $effect(() => {
 
   function selectPlayer(player: Player) {
     handlePlayerSelection(player);
-    closeModal();
+    onClose();
     filteredPlayers = [];
-  }
-
-  function closeModal(){
-    resetFilters();
-    visible = false;
   }
 
   function resetFilters(){
@@ -128,7 +122,7 @@ $effect(() => {
   }
 </script>
 
-<Modal onClose={closeModal} title="Select Player">
+<Modal onClose={onClose} title="Select Player">
   {#if isLoading}
     <LocalSpinner />
   {:else}

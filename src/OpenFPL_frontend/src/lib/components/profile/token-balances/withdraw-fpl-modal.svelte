@@ -7,13 +7,12 @@
   
   
   interface Props {
-    visible: boolean; 
     closeModal: () => void;
     cancelModal: () => void;
     fplBalance: bigint;
     fplBalanceFormatted: string;
   }
-  let { visible, closeModal, cancelModal, fplBalance, fplBalanceFormatted }: Props = $props();
+  let { closeModal, cancelModal, fplBalance, fplBalanceFormatted }: Props = $props();
 
 
   let isLoading = $state(false);
@@ -47,7 +46,7 @@
     isLoading = true;
     try {
       const amountInE8s = convertToE8s(withdrawalInputAmount);
-      await userStore.withdrawFPL(withdrawalAddress, amountInE8s);
+      await userStore.withdrawICFC(withdrawalAddress, amountInE8s);
       toasts.addToast( { 
         message: "ICFC successfully withdrawn.",
         type: "success",

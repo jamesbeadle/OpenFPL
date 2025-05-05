@@ -16,7 +16,6 @@
   
 
   interface Props {
-    visible: boolean;
     fantasyTeam: TeamSetup | undefined;
     bonusUsedInSession: boolean;
     closeBonusModal: () => void;
@@ -24,7 +23,7 @@
     updateBonuses: () => void;
     bonuses: Bonus[];
   }
-  let { visible, fantasyTeam, bonusUsedInSession, closeBonusModal, bonus, updateBonuses, bonuses }: Props = $props();
+  let { fantasyTeam, bonusUsedInSession, closeBonusModal, bonus, updateBonuses, bonuses }: Props = $props();
 
 
   let countries: { id: number; name: string }[] = $state([]);

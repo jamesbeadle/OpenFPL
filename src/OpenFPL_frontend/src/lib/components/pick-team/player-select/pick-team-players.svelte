@@ -230,21 +230,33 @@
       changeCaptain();
     }
   }
+
+  function closeAddPlayerModal(){
+    showAddPlayerModal = false;
+  }
+
+  function closeConfirmCaptainModal(){
+    showCaptainModal = false;
+  }
   
 </script>
 
-<ConfirmCaptainChange
-  newCaptain={newCaptain}
-  visible={showCaptainModal}
-  onConfirm={changeCaptain}
-/>
+{#if showCaptainModal}
+  <ConfirmCaptainChange
+    newCaptain={newCaptain}
+    onClose={closeConfirmCaptainModal}
+    onConfirm={changeCaptain}
+  />
+{/if}
 
-<AddPlayerModal
-  {handlePlayerSelection}
-  filterPosition={selectedPosition}
-  visible={showAddPlayerModal}
-  {fantasyTeam}
-/>
+{#if showAddPlayerModal}
+  <AddPlayerModal
+    {handlePlayerSelection}
+    filterPosition={selectedPosition}
+    {fantasyTeam}
+    onClose={closeAddPlayerModal}
+  />
+{/if}
 
 {#if isLoading}
   <LocalSpinner />

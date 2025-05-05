@@ -112,6 +112,10 @@
       isLoading = false;
     }
   } 
+
+  function closeMembershipLinkedModal(){
+    membershipLinked = true;
+  }
 </script>
 
 {#if isLoading}
@@ -168,6 +172,6 @@
 </div>
 {/if}
 
-{#if membershipLinked}
-  <MembershipLinkedModal visible={membershipLinked} />
+{#if !membershipLinked}
+  <MembershipLinkedModal onClose={closeMembershipLinkedModal} />
 {/if}

@@ -898,13 +898,10 @@ actor Self {
   };
 
   private func postUpgradeCallback() : async () {
-    /*
     seasonManager.setStableAppStatus({
-      onHold = true;
+      onHold = false;
       version = "V.1.0.0";
-
     });
-    */
     //await seasonManager.updateDataHash("app_status");
     //await updateManagerCanisterWasms();
     //await updateLeaderboardCanisterWasms();

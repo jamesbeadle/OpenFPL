@@ -14,10 +14,10 @@
     import HeaderContentPanel from "$lib/components/shared/panels/header-content-panel.svelte";
   
   interface Props {
-    visible: boolean;
     gameweekData: GameweekData;
+    onClose: () => void;
   }
-  let { visible, gameweekData }: Props = $props();
+  let { onClose, gameweekData }: Props = $props();
 
   let isLoading = $state(true);
   let selectedTeam: Club | undefined = $state(undefined);
@@ -49,7 +49,7 @@
     
 </script>
 
-<Modal onClose={() => {visible = false;}} title="Player Detail">
+<Modal onClose={onClose} title="Player Detail">
   <div class="flex flex-row items-center w-full mb-4 space-y-4">
     <div class="flex items-center justify-center w-full sm:w-1/3">
       {#if gameweekData.nationalityId > 0}
