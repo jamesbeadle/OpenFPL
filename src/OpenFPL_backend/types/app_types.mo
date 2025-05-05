@@ -7,6 +7,7 @@ import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
 import Enums "mo:waterway-mops/Enums";
 import IcfcEnums "mo:waterway-mops/ICFCEnums";
+import FootballEnums "mo:waterway-mops/football/FootballEnums";
 import AppEnums "../enums/app_enums";
 
 module AppTypes {
@@ -232,6 +233,15 @@ module AppTypes {
     rewardAmount : ?Nat64;
     payoutStatus : Enums.PayoutStatus;
     payoutDate : ?Int;
+  };
+
+  public type SnapshotPlayer = {
+    id : FootballIds.PlayerId;
+    position : FootballEnums.PlayerPosition;
+    nationality : Ids.CountryId;
+    dateOfBirth : Int;
+    clubId : FootballIds.ClubId;
+    valueQuarterMillions : Nat16;
   };
 
 };

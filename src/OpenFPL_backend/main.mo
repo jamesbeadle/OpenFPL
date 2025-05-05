@@ -115,7 +115,7 @@ actor Self {
 
   private stable var stable_data_hashes : [Base.DataHash] = [];
 
-  private stable var stable_player_snapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [PlayerQueries.Player])])] = [];
+  private stable var stable_player_snapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [AppTypes.SnapshotPlayer])])] = [];
 
   //User Manager stable variables
 
@@ -403,13 +403,13 @@ actor Self {
     return await leaderboardManager.getMostValuableTeamLeaderboard(dto);
   };
 
-  public shared ({ caller }) func getMostValuableGameweekPlayers(dto: MvpQueries.GetMostValuableGameweekPlayers) : async Result.Result<MvpQueries.MostValuableGameweekPlayers, Enums.Error> {
+  public shared ({ caller }) func getMostValuableGameweekPlayers(dto : MvpQueries.GetMostValuableGameweekPlayers) : async Result.Result<MvpQueries.MostValuableGameweekPlayers, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     return #err(#NotFound); // TODO
   };
 
-  public shared ({ caller }) func getAllTimeHighScores(dto: AppQueries.GetAllTimeHighScores) : async Result.Result<AppQueries.AllTimeHighScores, Enums.Error> {
+  public shared ({ caller }) func getAllTimeHighScores(dto : AppQueries.GetAllTimeHighScores) : async Result.Result<AppQueries.AllTimeHighScores, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     assert await hasMembership(Principal.toText(caller));
     return #err(#NotFound); // TODO
@@ -445,7 +445,10 @@ actor Self {
 
   public shared ({ caller }) func getPlayers(dto : PlayerQueries.GetPlayers) : async Result.Result<PlayerQueries.Players, Enums.Error> {
     assert not Principal.isAnonymous(caller);
-    assert await hasMembership(Principal.toText(caller));
+    let validMembership = await hasMembership(Principal.toText(caller));
+    let managerCanister = isManagerCanister(Principal.toText(caller));
+
+    assert validMembership or managerCanister;
     return await dataManager.getPlayers(dto);
   };
 
@@ -781,8 +784,8 @@ actor Self {
     assert dto.leagueId == Environment.LEAGUE_ID;
 
     // TODO
-      //if a player has been removed from a team in the premier league because they were on loan here but the parent club is outside the parent league
-        //remove player from fantasy teams
+    //if a player has been removed from a team in the premier league because they were on loan here but the parent club is outside the parent league
+    //remove player from fantasy teams
 
     return #ok();
   };
@@ -961,7 +964,7 @@ actor Self {
     stable_app_status := seasonManager.getStableAppStatus();
 
     stable_data_hashes := seasonManager.getStableDataHashes();
-    //stable_player_snapshots := seasonManager.getStablePlayersSnapshots();
+    stable_player_snapshots := seasonManager.getStablePlayersSnapshots();
 
     stable_manager_canister_ids := userManager.getStableManagerCanisterIds();
     stable_usernames := userManager.getStableUsernames();
@@ -997,7 +1000,7 @@ actor Self {
 
     seasonManager.setStableAppStatus(stable_app_status);
     seasonManager.setStableDataHashes(stable_data_hashes);
-    //seasonManager.setStablePlayersSnapshots(stable_player_snapshots);
+    seasonManager.setStablePlayersSnapshots(stable_player_snapshots);
 
     userManager.setStableManagerCanisterIds(stable_manager_canister_ids);
     userManager.setStableUsernames(stable_usernames);

@@ -2,6 +2,7 @@ import FootballIds "mo:waterway-mops/football/FootballIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
 import Ids "mo:waterway-mops/Ids";
 import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
+import FootballEnums "mo:waterway-mops/football/FootballEnums";
 
 module AppQueries {
 
@@ -20,27 +21,36 @@ module AppQueries {
         allTimeSeasonHighScoreRewardRate : Nat64;
     };
     public type GetPlayersSnapshot = {
-        seasonId: FootballIds.SeasonId;
-        gameweek: FootballDefinitions.GameweekNumber;
+        seasonId : FootballIds.SeasonId;
+        gameweek : FootballDefinitions.GameweekNumber;
     };
 
     public type PlayersSnapshot = {
-        players: [PlayerQueries.Player]
+        players : [SnapshotPlayer];
+    };
+
+    public type SnapshotPlayer = {
+        id : FootballIds.PlayerId;
+        position : FootballEnums.PlayerPosition;
+        nationality : Ids.CountryId;
+        dateOfBirth : Int;
+        clubId : FootballIds.ClubId;
+        valueQuarterMillions : Nat16;
     };
 
     public type GetAllTimeHighScores = {};
 
     public type AllTimeHighScores = {
-        weeklyHighScore: ?HighScoreRecord;
-        monthlyHighScore: ?HighScoreRecord;
-        seasonHighScore: ?HighScoreRecord;
+        weeklyHighScore : ?HighScoreRecord;
+        monthlyHighScore : ?HighScoreRecord;
+        seasonHighScore : ?HighScoreRecord;
     };
 
     public type HighScoreRecord = {
-        recordPoints: Nat16;
-        recordHolderPrincipalId: Ids.PrincipalId;
-        recordHolderUsername: Text;
-        recordHolderProfilePicture: ?Blob;
-        recordPrizePool: Nat64;
+        recordPoints : Nat16;
+        recordHolderPrincipalId : Ids.PrincipalId;
+        recordHolderUsername : Text;
+        recordHolderProfilePicture : ?Blob;
+        recordPrizePool : Nat64;
     };
-}
+};
