@@ -25,8 +25,8 @@
         {convertPositionToAbbreviation(playerData.player.position)}
       </p>
       {#if playerData.player.nationality > 0}
-          {@const flag = getFlagComponent(playerData.player.nationality)}
-          <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
+        {@const FlagComponent = getFlagComponent(playerData.player.nationality)}
+        <FlagComponent className="w-4 xs:w-6 mx-1" size="16" ariaLabel={`flag of ${playerData.player.nationality}`} role='img' />
       {/if}
       <p class="block truncate-50">
         {getPlayerName(playerData.player)} {playerData.player.lastName}

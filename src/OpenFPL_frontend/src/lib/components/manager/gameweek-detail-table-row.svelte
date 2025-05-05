@@ -28,8 +28,8 @@
     <div class="flex items-center w-2/12">
 
         {#if data.player.nationality > 0}
-            {@const flag = getFlagComponent(data.player.nationality)}
-            <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
+            {@const FlagComponent = getFlagComponent(data.player.nationality)}
+            <FlagComponent className="w-4 xs:w-6 mx-1" size="16" ariaLabel={`flag of ${data.player.nationality}`} role='img' />
         {/if}
         <span class="flex items-center">
             <BadgeIcon club={playerTeam} className="w-4 h-4 mr-1 md:hidden" />

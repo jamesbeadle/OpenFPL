@@ -19,8 +19,10 @@
       pitchView: Boolean;
       teamValue: number;
       sessionAddedPlayers: number[];
+      showPitchView : () => void;
+      showListView : () => void;
     }
-    let { fantasyTeam,selectedFormation, availableFormations,  pitchView, teamValue, sessionAddedPlayers }: Props = $props();
+    let { fantasyTeam,selectedFormation, availableFormations,  pitchView, teamValue, sessionAddedPlayers, showPitchView, showListView }: Props = $props();
   
   let startingFantasyTeam: TeamSetup | undefined = $state(undefined);
   let isSaveButtonActive = $state(false);
@@ -70,12 +72,6 @@
     }
     activeGameweek = $leagueStore!.unplayedGameweek;
 
-    const storedViewMode = localStorage.getItem("viewMode");
-    if (storedViewMode) {
-      pitchViewActive = storedViewMode === "pitch";
-      pitchView = pitchViewActive;
-    }
-
     let transferWindowGameweek = fantasyTeam?.transferWindowGameweek ?? 0;
     transferWindowPlayed = transferWindowGameweek > 0;
 
@@ -85,16 +81,6 @@
           playerIds: new Uint16Array(11).fill(0),
         };
       }
-  }
-
-  function showPitchView() {
-    pitchViewActive = true;
-    pitchView = pitchViewActive;
-  }
-
-  function showListView() {
-    pitchViewActive = false;
-    pitchView = pitchViewActive;
   }
 
   function disableInvalidFormations() {

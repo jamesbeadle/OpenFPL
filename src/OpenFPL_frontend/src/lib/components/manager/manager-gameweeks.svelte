@@ -41,8 +41,8 @@
             <div class="w-2/12">{gameweek.gameweek}</div>
             <div class="w-4/12 flex items-center">
               {#if captain?.nationality! > 0}
-                  {@const flag = getFlagComponent(captain?.nationality!)}
-                  <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
+                {@const FlagComponent = getFlagComponent(captain?.nationality!)}
+                <FlagComponent className="w-4 xs:w-6 mx-1" size="16" ariaLabel={`flag of ${captain?.nationality!}`} role='img' />
               {/if}
               <p class="truncate min-w-[40px] max-w-[40px] xxs:min-w-[80px] xxs:max-w-[80px] sm:min-w-[160px] sm:max-w-[160px] md:min-w-none md:max-w-none">
                 { getPlayerName(captain!) }

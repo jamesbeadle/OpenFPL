@@ -17,117 +17,33 @@
     fantasyTeam: TeamSetup | undefined;
     pitchView: boolean;
     selectedFormation: string;
-    teamValue: number;
     sessionAddedPlayers: number[];
   }
-  let { fantasyTeam, teamValue, pitchView, selectedFormation, sessionAddedPlayers }: Props = $props();
+  let { fantasyTeam, pitchView, selectedFormation, sessionAddedPlayers }: Props = $props();
 
   let isLoading = $state(true);
   let showAddPlayerModal = $state(false);
   let showCaptainModal = $state(false);
-  let newTeam = true;
+  let startingTeamPlayerIds: number[] = [];
+  let positionsChanged = new Set<number>();
   let selectedPosition = $state(-1);
-  let selectedColumn = -1;
   let canSellPlayer = $state(true);
   let newCaptainId = $state(0);
   let newCaptain = $state("");
-  let positionsChanged = new Set<number>();
-  let startingTeamPlayerIds: number[] = [];
 
   onMount(async () => {
-    const storedViewMode = localStorage.getItem("viewMode");
-      if (storedViewMode) {
-        pitchView = storedViewMode === "pitch";
-      }
       await loadData();
-      isLoading = false;
+      console.log("loading complete")
       if (fantasyTeam) {
+        console.log("setting player ids")
         startingTeamPlayerIds = Array.from(fantasyTeam.playerIds);
       }
+      isLoading = false;
   });
 
-  async function loadData() {
+  /*
 
-    if (!fantasyTeam) {
-      return;
-    }
-
-    let principalId = fantasyTeam?.principalId ?? "";
-    if (principalId.length > 0) {
-        newTeam = false;
-    }
-
-    canSellPlayer = fantasyTeam.firstGameweek || fantasyTeam.transferWindowGameweek != $leagueStore!.unplayedGameweek || fantasyTeam.transfersAvailable > 0;
-    if (fantasyTeam && (!fantasyTeam.playerIds || fantasyTeam.playerIds.length !== 11)) {
-      fantasyTeam = {
-        ...fantasyTeam,
-        playerIds: new Uint16Array(11).fill(0),
-      };
-    }
-  }
-  
-  function loadAddPlayer(row: number, col: number) {
-    selectedPosition = row;
-    selectedColumn = col;
-    showAddPlayerModal = true;
-  }
-
-  function setCaptain(playerId: number) {
-
-    if (playerId > 0) {
-      newCaptainId = playerId;
-      let player = $playerStore.find((x) => x.id === newCaptainId);
-      newCaptain = `${player?.firstName} ${player?.lastName}`;
-      showCaptainModal = true;
-      return;
-    }
-
-    newCaptainId = getHighestValuedPlayerId(fantasyTeam!, $playerStore);
-    let player = $playerStore.find((x) => x.id === newCaptainId);    
-    newCaptain = `${player?.firstName} ${player?.lastName}`;
-    showCaptainModal = true;
-  }
-
-  function removePlayer(playerId: number) {
-      selectedPosition = -1;
-      selectedColumn = -1;
-      if(!fantasyTeam){ return };
-      const playerIndex = fantasyTeam!.playerIds.indexOf(playerId);
-      if (playerIndex === -1) {
-        console.error("Player not found in the team.");
-        return;
-      }
-
-
-      const newPlayerIds = Uint16Array.from(fantasyTeam!.playerIds);
-      newPlayerIds[playerIndex] = 0;
-
-      let transfersAvailable = fantasyTeam!.transfersAvailable;
-      
-      if (sessionAddedPlayers.includes(playerId)) {
-        if (!fantasyTeam!.firstGameweek && fantasyTeam!.transferWindowGameweek !== $leagueStore!.unplayedGameweek) {
-          transfersAvailable += 1;
-        }
-        sessionAddedPlayers = sessionAddedPlayers.filter((id) => id !== playerId);
-        positionsChanged.delete(playerIndex); 
-      }
-
-      let newTeamValue = 0;
-      newPlayerIds.forEach((id) => {
-        const player = $playerStore.find((p) => p.id === id);
-        if (player) {
-          newTeamValue += player.valueQuarterMillions;
-        }
-      });
-      teamValue = newTeamValue / 4;
-      
-      let bankQuarterMillions = fantasyTeam.bankQuarterMillions + $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions;
-
-
-
-      fantasyTeam = { ...fantasyTeam!, playerIds: newPlayerIds, bankQuarterMillions, transfersAvailable };
-         
-  }
+  Better to set as i go i think
 
   $effect(() => {
     if (fantasyTeam) {
@@ -135,6 +51,26 @@
       setTeamFormation();
     }
   });
+
+  */
+
+  async function loadData() {
+    if (!fantasyTeam) {
+      return;
+    }
+
+    canSellPlayer = fantasyTeam.firstGameweek || fantasyTeam.transferWindowGameweek != $leagueStore!.unplayedGameweek || fantasyTeam.transfersAvailable > 0;
+    if (fantasyTeam && (!fantasyTeam.playerIds || fantasyTeam.playerIds.length !== 11)) {
+      console.log("setting fantasy team")
+      fantasyTeam = {
+        ...fantasyTeam,
+        playerIds: new Uint16Array(11).fill(0),
+      };
+    }
+
+    setTeamValue();
+    setTeamFormation();
+  }
 
   function setTeamValue() {
     let totalValue = 0;
@@ -159,9 +95,58 @@
     }
   }
 
+  function loadAddPlayer(row: number) {
+    selectedPosition = row;
+    showAddPlayerModal = true;
+  }
+
+  function setCaptain(playerId: number) {
+    if (playerId > 0) {
+      newCaptainId = playerId;
+      let player = $playerStore.find((x) => x.id === newCaptainId);
+      newCaptain = `${player?.firstName} ${player?.lastName}`;
+      showCaptainModal = true;
+      return;
+    }
+
+    newCaptainId = getHighestValuedPlayerId(fantasyTeam!, $playerStore);
+    let player = $playerStore.find((x) => x.id === newCaptainId);    
+    newCaptain = `${player?.firstName} ${player?.lastName}`;
+    showCaptainModal = true;
+  }
+
+  function removePlayer(playerId: number) {
+      selectedPosition = -1;
+      if(!fantasyTeam){ return };
+      const playerIndex = fantasyTeam!.playerIds.indexOf(playerId);
+      if (playerIndex === -1) {
+        console.error("Player not found in the team.");
+        return;
+      }
+
+      const newPlayerIds = Uint16Array.from(fantasyTeam!.playerIds);
+      newPlayerIds[playerIndex] = 0;
+
+      let transfersAvailable = fantasyTeam!.transfersAvailable;
+      
+      if (sessionAddedPlayers.includes(playerId)) {
+        if (!fantasyTeam!.firstGameweek && fantasyTeam!.transferWindowGameweek !== $leagueStore!.unplayedGameweek) {
+          transfersAvailable += 1;
+        }
+        sessionAddedPlayers = sessionAddedPlayers.filter((id) => id !== playerId);
+        positionsChanged.delete(playerIndex); 
+      }
+      
+      let bankQuarterMillions = fantasyTeam.bankQuarterMillions + $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions;
+
+      let updatedFantasyTeam = { ...fantasyTeam!, playerIds: newPlayerIds, bankQuarterMillions, transfersAvailable };
+      fantasyTeam = updatedFantasyTeam;
+
+      setTeamValue();
+  }
+
   function changeCaptain() {
     selectedPosition = -1;
-    selectedColumn = -1;
     fantasyTeam = { ...fantasyTeam!, captainId: newCaptainId };
     showCaptainModal = false;
   }
@@ -172,17 +157,20 @@
       addPlayerToTeam(player, selectedFormation);
     } else {
       const newFormation = findValidFormationWithPlayer($playerStore, fantasyTeam!, player, selectedFormation);
-      fantasyTeam = {
+      let updatedFantasyTeam = {
         ...fantasyTeam!,
         playerIds: repositionPlayersForNewFormation($playerStore, fantasyTeam!, newFormation),
         bankQuarterMillions: fantasyTeam!.bankQuarterMillions - player.valueQuarterMillions
       };
+      fantasyTeam = updatedFantasyTeam;
       selectedFormation = newFormation;
       addPlayerToTeam(player, newFormation);
     }
     if (!sessionAddedPlayers.includes(player.id)) {
       sessionAddedPlayers.push(player.id);
     }
+    setTeamValue();
+    setTeamFormation();
   }
 
   function addPlayerToTeam(player: Player, formation: string) {
@@ -205,18 +193,10 @@
         positionsChanged.add(indexToAdd);
       }
 
-      let newTeamValue = 0;
-      newPlayerIds.forEach((id) => {
-        const player = $playerStore.find((p) => p.id === id);
-        if (player) {
-          newTeamValue += player.valueQuarterMillions;
-        }
-      });
-      teamValue = newTeamValue / 4;
-
       let bankQuarterMillions = fantasyTeam!.bankQuarterMillions - player.valueQuarterMillions;
     
-      fantasyTeam = { ...fantasyTeam!, playerIds: newPlayerIds, bankQuarterMillions, transfersAvailable };
+      let updatedFantasyTeam = { ...fantasyTeam!, playerIds: newPlayerIds, bankQuarterMillions, transfersAvailable };
+      fantasyTeam = updatedFantasyTeam;
     } else {
       console.error(
         "Index out of bounds when attempting to add player to team."

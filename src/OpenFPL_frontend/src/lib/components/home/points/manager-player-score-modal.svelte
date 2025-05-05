@@ -53,8 +53,8 @@
   <div class="flex flex-row items-center w-full mb-4 space-y-4">
     <div class="flex items-center justify-center w-full sm:w-1/3">
       {#if gameweekData.nationalityId > 0}
-          {@const flag = getFlagComponent(gameweekData.nationalityId)}
-          <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
+          {@const FlagComponent = getFlagComponent(gameweekData.nationalityId)}
+          <FlagComponent className="w-4 xs:w-6 mx-1" size="16" ariaLabel={`flag of ${gameweekData.nationalityId}`} role='img' />
       {/if}
     </div>
     <div class="flex items-center justify-center w-full sm:w-1/3">

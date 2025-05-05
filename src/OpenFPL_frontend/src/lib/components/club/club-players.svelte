@@ -60,8 +60,8 @@
           </div>
           <div class="flex items-center w-6/12 sm:w-4/12 lg:w-3/12 xl:w-3/12">
             {#if player.nationality > 0}
-              {@const flag = getFlagComponent(player.nationality)}
-              <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
+              {@const FlagComponent = getFlagComponent(player.nationality)}
+              <FlagComponent className="w-4 xs:w-6 mx-1" size="16" ariaLabel={`flag of ${player.nationality}`} role='img' />
             {/if}
             {player.firstName}
             {player.lastName}

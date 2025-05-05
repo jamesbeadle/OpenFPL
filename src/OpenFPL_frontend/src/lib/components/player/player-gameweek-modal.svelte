@@ -102,8 +102,8 @@
   <div class="mx-4 p-4">
     <div class="flex justify-start items-center w-full">
       {#if playerDetail.player.nationality > 0}
-          {@const flag = getFlagComponent(playerDetail.player.nationality)}
-          <flag class="w-12 h-12 xs:w-16 xs:h-16"></flag>
+        {@const FlagComponent = getFlagComponent(playerDetail.player.nationality)}
+        <FlagComponent className="w-4 xs:w-6 mx-1" size="16" ariaLabel={`flag of ${playerDetail.player.nationality}`} role='img' />
       {/if}
       <div class="w-full flex-col space-y-4 mb-2">
         <h3 class="default-header mb-2">

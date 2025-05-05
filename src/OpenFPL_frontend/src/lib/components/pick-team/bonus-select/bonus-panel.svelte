@@ -118,23 +118,31 @@
 
   let weeklyBonusPlayed = $state<Boolean>(false);
   
+  /*
   $effect(() => {
+    console.log('effect called')
     if (fantasyTeam) {
       updateBonuses();
       setWeeklyBonusPlayed();
     }
   });
+  */
 
   async function setWeeklyBonusPlayed(){
+    console.log('set points')
     weeklyBonusPlayed = bonusPlayedThisWeek(fantasyTeam!, $leagueStore);
+    console.log
   }
 
   function updateBonuses() {
-    bonuses = bonuses.map(bonus => ({
+    console.log('updating bonuses')
+    let newBonuses = bonuses.map(bonus => ({
       ...bonus,
       isUsed: isBonusUsed(fantasyTeam!, bonus.id)
     }));
+    bonuses = newBonuses;
   }
+
 
   onMount(async () => {
     updateBonuses();
@@ -157,9 +165,8 @@
 </script>
 
 <div class="bg-panel">
-  {#if selectedBonusId > 0}
+  {#if showModal && selectedBonusId > 0}
     <UseBonusModal
-      visible={showModal}
       bonus={bonuses[selectedBonusId - 1]}
       {closeBonusModal}
       {fantasyTeam}
