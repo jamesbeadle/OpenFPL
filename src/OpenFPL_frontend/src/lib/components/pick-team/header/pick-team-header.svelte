@@ -26,8 +26,6 @@
   let countdownTime: { days: number; hours: number; minutes: number; } = $state({days: 0, hours: 0, minutes: 0});
 
   onMount(async () => {
-    console.log('team:')
-    console.log(fantasyTeam)
     let foundSeason = $seasonStore.find(x => x.id == $leagueStore!.activeSeasonId);
     if(foundSeason){
       activeSeason = foundSeason.name;

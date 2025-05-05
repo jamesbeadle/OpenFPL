@@ -31,7 +31,6 @@
     }
     
     function checkValidMembership(membershipType: MembershipType): boolean {
-        console.log("checkValidMembership", membershipType);
         return 'Founding' in membershipType || 
                'Seasonal' in membershipType || 
                'Lifetime' in membershipType || 
@@ -40,14 +39,12 @@
 
     async function checkProfile() {
         let i = 1;
-        console.log("checkProfile", i);
         isLoading = true;
         try {
             if (!get(authSignedInStore)) return;
             
             loadingMessage = "Searching for Profile";
             profile = await userStore.getUser();
-            console.log('profile', profile);
             if (profile) {
                 loadingMessage = "Found Profile, checking membership";
                 hasValidMembership = checkValidMembership(profile.membershipType);
@@ -67,7 +64,6 @@
     }
 
     onMount(() => {
-        console.log("onMount checkProfile");
         checkProfile();
     });
 </script>

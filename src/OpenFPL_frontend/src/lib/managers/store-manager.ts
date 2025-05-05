@@ -64,7 +64,6 @@ class StoreManager {
     if (this.isSyncing) {
       return;
     }
-    console.log("syncing stores");
     this.isSyncing = true;
     try {
       await this.syncAppDataHashes();
@@ -81,7 +80,6 @@ class StoreManager {
     if (appDataHashes == undefined) {
       return;
     }
-    console.log(appDataHashes);
     for (const category of this.backendCategories) {
       const categoryHash = appDataHashes.find(
         (hash) => hash.category === category,

@@ -37,7 +37,7 @@
     header="Gameweek" 
     content={(($leagueStore?.activeGameweek === 0 ? $leagueStore?.unplayedGameweek: $leagueStore?.activeGameweek) || 0).toString()}
     footer={seasonName} 
-    loading={loadingRewardRates} 
+    loading={false} 
 />
 <div class="vertical-divider"></div>
 <div class="flex-grow">

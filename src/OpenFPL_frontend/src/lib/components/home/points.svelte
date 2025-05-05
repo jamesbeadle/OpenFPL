@@ -37,24 +37,24 @@
   });
 
   $effect(() => {
-    if(isLoading || !selectedSeasonId || !selectedGameweek){
+    if(!selectedSeasonId || !selectedGameweek){
       return;
     }
-
-    let principal = $authStore?.identity?.getPrincipal().toText() ?? "";
-    if(principal != ""){
-      loadGameweekPoints(principal);
-    }
+    loadGameweekPoints();
   });
 
   function onSelectSeason(seasonId: SeasonId) {
 
   };
 
-  async function loadGameweekPoints(principal: string) {
+  async function loadGameweekPoints() {
+
+    let principal = $authStore?.identity?.getPrincipal().toText() ?? "";
+    if(principal != ""){
+      return;
+    }
     
     isLoading = true;
-    
     fantasyTeam = await managerStore.getFantasyTeamForGameweek(
       principal,
       selectedGameweek,
@@ -76,11 +76,18 @@
   <LocalSpinner />
   <p class="pb-4 mb-4 text-center">Getting Gameweek {selectedGameweek} Data</p>
 {:else}
-  <div class="flex flex-col">
-    <SeasonFilter {selectedSeasonId} />
-    <GameweekFilter {selectedGameweek} />
-    <PointsTable {gameweekData} showDetailModal={() => showModal = true} />
+  <div class="flex flex-col md:flex-row p-4">
+
+    <div class="w-full md:w-1/2">
+      <SeasonFilter {selectedSeasonId} />
+    </div>
+
+    <div class="w-full md:w-1/2">
+      <GameweekFilter {selectedGameweek} />
+    </div>
+    
   </div>
+  <PointsTable {gameweekData} showDetailModal={() => showModal = true} />
 {/if}
 
 {#if showModal}

@@ -31,7 +31,6 @@
       if (!principalId) return;
       
       const icfcLinkStatus = await userStore.getICFCLinkStatus();
-      console.log('icfcLinkStatus', icfcLinkStatus);
       if (icfcLinkStatus) {
         if ('PendingVerification' in icfcLinkStatus) {
           notLinked = false;
@@ -76,7 +75,6 @@
       isLoading = true;
       loadingMessage = "Linking ICFC Membership";
       const result = await userStore.linkICFCProfile();
-      console.log('Link result:', result);
       
       if (result.success) {
         const principalId = get(authStore).identity?.getPrincipal().toString();

@@ -66,13 +66,9 @@
   });
   
   async function filterPlayers() {
-    console.log("filtering players");
     
-    console.log($leagueStore)
     let gameweek = $leagueStore?.activeGameweek === 0 ? $leagueStore?.unplayedGameweek: $leagueStore?.activeGameweek || 0;
-    console.log(gameweek)
     let players = await playerStore.getSnapshotPlayers({ seasonId: $leagueStore?.activeSeasonId ?? 1, gameweek});
-    console.log(players);
     if(!players){return}
     filteredPlayers = players.players.filter((player) => {
       return (

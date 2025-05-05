@@ -28,7 +28,6 @@
   };
 
   onMount(async () => {
-    console.log("mounting")
     if (browser) {
       document.querySelector('#app-spinner')?.remove();
     }
@@ -38,7 +37,6 @@
       try {
         loadingMessage = "Initalizing User Layout";
         await initUserProfile({ identity });
-        console.log("Finished initUserProfile")
       } catch (err) {
         console.error('initUserProfile error:', err);
       }

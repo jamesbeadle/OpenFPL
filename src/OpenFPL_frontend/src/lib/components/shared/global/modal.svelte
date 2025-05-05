@@ -30,19 +30,14 @@
     modalParent.append(backdrop);
 
     const onClick = (e: MouseEvent) => {
-      console.log('Backdrop clicked', e.target, e.currentTarget);
       const eventPath = e.composedPath();
       const modalContent = node.querySelector('[data-modal-content]');
-      console.log('Modal content found:', modalContent);
-      console.log('Event path:', eventPath);
 
       const isClickInsideModal = modalContent && eventPath.includes(modalContent);
       if (isClickInsideModal) {
-        console.log('Click was inside modal content, ignoring');
         return;
       }
 
-      console.log('Click was outside modal content, calling onClickOutside');
       onClickOutside?.(e);
     };
 

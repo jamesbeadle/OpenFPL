@@ -56,7 +56,7 @@ input {
 }
 
 .input-header {
-  @apply text-sm text-BrandLightGray;
+  @apply text-sm text-white my-2;
 }
 
 .bg-light-gray {

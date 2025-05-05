@@ -15,7 +15,6 @@ export class UserService {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const result: any = await identityActor.getProfile();
-      console.log("profile result in service", result);
       if (isError(result)) {
         console.error("isError fetching user profile: ", result);
         return undefined;
@@ -34,7 +33,6 @@ export class UserService {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const result: any = await identityActor.getICFCLinkStatus();
-      console.log("ICFC Link Status", result);
       if (isError(result)) return undefined;
       return result.ok;
     } catch (error) {
@@ -53,7 +51,6 @@ export class UserService {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? "",
       );
       const result: Result = await identityActor.linkICFCProfile();
-      console.log("Link ICFC result:", result);
 
       if ("err" in result) {
         if ("AlreadyExists" in result.err) {
