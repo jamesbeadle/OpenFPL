@@ -1905,7 +1905,7 @@ actor class _ManagerCanister() {
         gameweek;
       });
 
-      var allPlayers : AppQueries.PlayersSnapshot = {
+      var snapshotPlayers : AppQueries.PlayersSnapshot = {
         players = [];
       };
       let res = await backend_canister.getPlayersSnapshot({
@@ -1914,7 +1914,7 @@ actor class _ManagerCanister() {
       });
       switch (res) {
         case (#ok allPlayersList) {
-          allPlayers := allPlayersList;
+          snapshotPlayers := allPlayersList;
         };
         case (#err err) {
           let _ = await logsManager.addApplicationLog({
@@ -2007,15 +2007,15 @@ actor class _ManagerCanister() {
                           case (null) {};
                           case (?player) {
 
-                            let playerDTO = Array.find(
-                              allPlayers.players,
-                              func(foundPlayerDTO : AppTypes.SnapshotPlayer) : Bool {
-                                foundPlayerDTO.id == player.id;
+                            let snapshotPlayer = Array.find(
+                              snapshotPlayers.players,
+                              func(foundSnapshotPlayer : AppTypes.SnapshotPlayer) : Bool {
+                                foundSnapshotPlayer.id == player.id;
                               },
                             );
-                            switch (playerDTO) {
-                              case (?foundPlayerDTO) {
-                                fantasyTeamPlayersBuffer.add(foundPlayerDTO);
+                            switch (snapshotPlayer) {
+                              case (?foundSnapshotPlayer) {
+                                fantasyTeamPlayersBuffer.add(foundSnapshotPlayer);
                               };
                               case (null) {};
                             };

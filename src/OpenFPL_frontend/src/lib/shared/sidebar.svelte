@@ -24,13 +24,13 @@
   ]
 </script>
 <div 
-  class="{isMenuOpen ? 'translate-x-0' : 'translate-x-full'} fixed inset-y-0 right-0 z-40 w-full sm:w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out"
+  class="{isMenuOpen ? 'translate-x-0' : 'translate-x-full'} fixed inset-y-0 right-0 z-40 w-full sm:w-80 bg-BrandSlateGray shadow-xl transform transition-transform duration-300 ease-in-out"
   bind:this={menuRef}
 >
 
   <button
     onclick={toggleMenu}
-    class="absolute p-2 transition-all duration-200 text-BrandGrayShade4 top-4 right-4 hover:text-BrandBlue hover:scale-110"
+    class="absolute p-2 transition-all duration-200 text-white top-4 right-4 hover:text-BrandBlack hover:scale-110"
     aria-label="Close sidebar"
   >
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
