@@ -724,7 +724,7 @@ actor Self {
             if (Array.size(sortedFixtures) > 0) {
               let firstGameweekFixture : FixtureQueries.Fixture = sortedFixtures[0];
               var fixtureMonth : BaseDefinitions.CalendarMonth = DateTimeUtilities.unixTimeToMonth(firstGameweekFixture.kickOff);
-              let _ = await userManager.calculateFantasyTeamScores(Environment.LEAGUE_ID, dto.seasonId, foundFixture.gameweek, fixtureMonth);
+              let _ = await userManager.calculateFantasyTeamScores(dto.seasonId, foundFixture.gameweek, fixtureMonth);
               await seasonManager.updateDataHash("league_status");
               return #ok();
             };

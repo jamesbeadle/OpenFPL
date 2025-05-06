@@ -42,7 +42,7 @@ main {
 .fpl-dropdown {
   background-color: transparent !important;
   border: none;
-  @apply rounded-sm p-2 text-center min-w-[125px];
+  @apply rounded-sm p-2 min-w-[125px];
 }
 
 .fpl-dropdown option {

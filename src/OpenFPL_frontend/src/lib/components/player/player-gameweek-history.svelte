@@ -57,8 +57,7 @@
 {#if isLoading}
   <LocalSpinner />
 {:else}
-  {#if playerDetails}
-  {#if showModal}
+  {#if playerDetails && showModal}
     <PlayerGameweekModal
       gameweekDetail={playerDetails.player.gameweeks.find(
         (x) => x.number === selectedGameweek
@@ -66,12 +65,10 @@
       opponentTeam={selectedOpponent}
       playerTeam={$clubStore.find((team) => team.id === playerDetails!.player.clubId)}
       {closeDetailModal}
-      visible={showModal}
       playerDetail={playerDetails}
       gameweek={selectedGameweek}
       {seasonName}
     />
-    {/if}
   {/if}
   <div class="flex flex-col">
     <div class="flex-1 overflow-x-auto">

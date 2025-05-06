@@ -99,7 +99,7 @@
                   class="flex items-center"
                 >
                   <AddPlayerIcon
-                    primaryColour='white'
+                    primaryColour='#2CE3A6'
                     secondaryColour='white'
                     thirdColour='white'
                     className="h-12 sm:h-16 md:h-20 lg:h-24 xl:h-16 2xl:h-20"

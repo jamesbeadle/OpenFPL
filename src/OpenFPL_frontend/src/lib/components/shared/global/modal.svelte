@@ -128,10 +128,10 @@
     class="relative w-full max-w-4xl mx-auto p-4 sm:p-6 z-50"
   >
   <div
-  class="bg-gray-800 border border-gray-600 rounded-lg h-[80vh] shadow-2xl flex flex-col"
+  class="bg-BrandBlack border border-BrandGray rounded h-[80vh] shadow-2xl flex flex-col"
   data-modal-content
 >
-  <div class="flex-none px-6 py-4 sm:px-8 sm:py-6 border-b border-gray-600">
+  <div class="flex-none px-6 py-4 sm:px-8 sm:py-6 border-b border-BrandGray">
     <div class="flex items-center justify-between">
       <h3 id="modalTitle" class="text-2xl text-white md:text-3xl font-semibold">{title}</h3>
       <button

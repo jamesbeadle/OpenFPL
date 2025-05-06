@@ -4,15 +4,13 @@
   import { playerStore } from "$lib/stores/player-store";
   import { countPlayersByTeam, reasonToDisablePlayer, sortPlayersByClubThenValue } from "$lib/utils/pick-team.helpers";
   import { addTeamDataToPlayers, convertPositionToIndex, normaliseString } from "$lib/utils/Helpers";
+  import type { Player, TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   import Modal from "$lib/components/shared/global/modal.svelte";
   import AddPlayerModalPagination from "./add-player-modal-pagination.svelte";
   import AddPlayerTableRow from "./add-player-table-row.svelte";
-  import AddPlayerFilterRow from "./add-player-filter-row.svelte";
-  import AddPlayerTableHaeder from "./add-player-table-haeder.svelte";
+  import AddPlayerModalFilters from "./add-player-modal-filters.svelte";
   import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
-  import type { Player, TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
 
   interface Props {
     handlePlayerSelection: (player: Player) => void;
@@ -24,67 +22,32 @@
   let { handlePlayerSelection, fantasyTeam, filterPosition, onClose }: Props = $props();
 
   const pageSize = 10;
-  let filterTeam = $state(-1);
-  let filterSurname = $state("");
-  let minValue = $state(0);
-  let maxValue = $state(0);
-  let currentPage = $state(1);
-  let paginatedPlayers: Player[] = $state([]);
-  let teamPlayerCounts: Record<number, number> = $state({});
-  let filteredPlayers: Player[] = $state([]);
-  let isLoading = $state(true);
-  let sortField: 'value' | 'points' = $state('value');
-  let sortDirection: 'asc' | 'desc' = $state('desc');
-
-  let playerPoints = new Map<number, number>();
-
-  let disableReasons: (string | null)[] = $state([]);
   
-  $effect(() => {
-    paginatedPlayers = addTeamDataToPlayers(
-    $clubStore, 
-    [...filteredPlayers]
-      .sort((a, b) => {
-        const multiplier = sortDirection === 'asc' ? 1 : -1;
-        if (sortField === 'value') {
-          return (a.valueQuarterMillions - b.valueQuarterMillions) * multiplier;
-        } else if (sortField === 'points') {
-          const aPoints = playerPoints.get(a.id) ?? 0;
-          const bPoints = playerPoints.get(b.id) ?? 0;
-          return (aPoints - bPoints) * multiplier;
-        }
-        return 0;
-      })
-      .slice((currentPage - 1) * pageSize, currentPage * pageSize)
-  );
-  });
-
-
-  $effect(() => {
-    teamPlayerCounts = countPlayersByTeam($playerStore, fantasyTeam?.playerIds ?? []);
-  });
-
-$effect(() => {
-  disableReasons = paginatedPlayers.map((player) => reasonToDisablePlayer(fantasyTeam!, $playerStore, player, teamPlayerCounts));
-});
-
-$effect(() => {
-  if ( filterTeam !== -1 || filterPosition !== -1 || minValue !== 0 || maxValue !== 0 || filterSurname !== "" ) {
-      filterPlayers();
-      teamPlayerCounts = countPlayersByTeam($playerStore, fantasyTeam?.playerIds ?? []);
-      currentPage = 1;
-    }
-});
-
+  let isLoading = $state(true);
+  
+  let teamPlayerCounts: Record<number, number> = $state({});
+  let disableReasons: (string | null)[] = $state([]);
+  let filteredPlayers: Player[] = $state([]); 
+  let paginatedPlayers: Player[] = $state([]); 
+  let currentPage = $state(1);
 
   onMount(async () => {
-    resetFilters();
-    await filterPlayers();
     teamPlayerCounts = countPlayersByTeam($playerStore, fantasyTeam!.playerIds ?? []);
+    disableReasons = filteredPlayers.map((player) => reasonToDisablePlayer(fantasyTeam!, $playerStore, player, teamPlayerCounts));
+    filteredPlayers = $playerStore;
+    changePage(1);
     isLoading = false;
   });
-  
-  async function filterPlayers() {
+
+  $effect(() => {
+    const sortedPlayers = [...filteredPlayers].sort((a, b) => b.valueQuarterMillions - a.valueQuarterMillions);
+    const start = (currentPage - 1) * pageSize;
+    const end = start + pageSize;
+    paginatedPlayers = addTeamDataToPlayers($clubStore, sortedPlayers.slice(start, end));
+  });
+
+
+  function filterPlayers(filterTeam: number, filterPosition: number, minValue: number, maxValue: number, filterSurname: string){
     filteredPlayers = $playerStore.filter((player) => {
       return (
         (filterTeam === -1 || player.clubId === filterTeam) &&
@@ -94,9 +57,12 @@ $effect(() => {
         (filterSurname === "" || normaliseString(player.lastName.toLowerCase()).includes(normaliseString(filterSurname.toLowerCase())))
       );
     });
-    sortPlayersByClubThenValue(filteredPlayers, filterTeam);
+    currentPage = 1; 
   }
 
+  function changePage(page: number) {
+    currentPage = page;
+  }
 
   function selectPlayer(player: Player) {
     handlePlayerSelection(player);
@@ -104,22 +70,6 @@ $effect(() => {
     filteredPlayers = [];
   }
 
-  function resetFilters(){
-    filterTeam = -1;
-    filterSurname = "";
-    minValue = 0;
-    maxValue = 0;
-    currentPage = 1;
-  }
-
-  function toggleSort(field: 'value' | 'points') {
-    if (sortField === field) {
-      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      sortField = field;
-      sortDirection = 'desc';
-    }
-  }
 </script>
 
 <Modal onClose={onClose} title="Select Player">
@@ -127,17 +77,21 @@ $effect(() => {
     <LocalSpinner />
   {:else}
     <div class="p-2">
-      <AddPlayerFilterRow {filterTeam} {filterPosition} {filterSurname} {maxValue} {minValue} />
+      <AddPlayerModalFilters {filterPlayers} {filterPosition} />
       <div class="flex-1 overflow-x-auto">
-        <AddPlayerTableHaeder {sortField} {sortDirection} {toggleSort} />
+        <div class="flex items-center justify-between py-2 border-b border-gray-700">
+          <div class="w-1/12 text-center">Pos</div>
+          <div class="w-2/12">Player</div>
+          <div class="w-2/12">Team</div>
+          <div class="w-2/12">Value</div>
+          <div class="w-2/12"></div>
+      </div>
         {#each paginatedPlayers as player, index}
-          <AddPlayerTableRow {player} {index} {disableReasons} {selectPlayer} />
+          {@const club = $clubStore.find(x => x.id == player.clubId)}
+          <AddPlayerTableRow {player} {index} {disableReasons} {selectPlayer} {club} />
         {/each}
       </div>
-      <AddPlayerModalPagination 
-        {currentPage} 
-        {filteredPlayers} 
-      />
+      <AddPlayerModalPagination {changePage} pageCount={filteredPlayers.length / pageSize} />
     </div>
   {/if}
 </Modal>

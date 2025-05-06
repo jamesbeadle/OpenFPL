@@ -1888,7 +1888,7 @@ actor class _ManagerCanister() {
     return List.fromArray(Buffer.toArray(teamHistoryBuffer));
   };
 
-  public shared ({ caller }) func calculateFantasyTeamScores(leagueId : FootballIds.LeagueId, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, month : BaseDefinitions.CalendarMonth) : async () {
+  public shared ({ caller }) func calculateFantasyTeamScores(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, month : BaseDefinitions.CalendarMonth) : async () {
     try {
       assert not Principal.isAnonymous(caller);
       let backendPrincipalId = Principal.toText(caller);

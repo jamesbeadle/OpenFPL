@@ -964,14 +964,14 @@ module {
       };
     };
 
-    public func calculateFantasyTeamScores(leagueId : FootballIds.LeagueId, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, month : BaseDefinitions.CalendarMonth) : async () {
+    public func calculateFantasyTeamScores(seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, month : BaseDefinitions.CalendarMonth) : async () {
       for (canisterId in Iter.fromList(uniqueManagerCanisterIds)) {
 
         let manager_canister = actor (canisterId) : actor {
-          calculateFantasyTeamScores : (leagueId : FootballIds.LeagueId, seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, month : BaseDefinitions.CalendarMonth) -> async ();
+          calculateFantasyTeamScores : (seasonId : FootballIds.SeasonId, gameweek : FootballDefinitions.GameweekNumber, month : BaseDefinitions.CalendarMonth) -> async ();
         };
 
-        await manager_canister.calculateFantasyTeamScores(leagueId, seasonId, gameweek, month);
+        await manager_canister.calculateFantasyTeamScores(seasonId, gameweek, month);
       };
     };
 

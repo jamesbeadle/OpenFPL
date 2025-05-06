@@ -14,17 +14,15 @@
   let filteredFixtures: FixtureWithClubs[] = $state([]);
   let groupedFixtures: {[key: string]: FixtureWithClubs[];} = $state({['']: []});
   
-  $effect(() => {
-    filteredFixtures = fixturesWithTeams.filter(
-      ({ fixture }) => fixture.gameweek === selectedGameweek
-    );
-    groupedFixtures = reduceFilteredFixtures(filteredFixtures);
-  });
 
   onMount(async () => {
     await storeManager.syncStores();
     selectedGameweek = $leagueStore!.unplayedGameweek;
     fixturesWithTeams = getFixturesWithTeams($clubStore, $fixtureStore);
+    filteredFixtures = fixturesWithTeams.filter(
+      ({ fixture }) => fixture.gameweek === selectedGameweek
+    );
+    groupedFixtures = reduceFilteredFixtures(filteredFixtures);
   });
 </script>
 

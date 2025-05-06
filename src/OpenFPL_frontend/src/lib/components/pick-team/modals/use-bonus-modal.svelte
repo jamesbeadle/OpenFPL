@@ -13,7 +13,6 @@
   import { authStore } from "$lib/stores/auth-store";
   import Modal from "$lib/components/shared/global/modal.svelte";
   import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
-  
 
   interface Props {
     fantasyTeam: TeamSetup | undefined;
@@ -24,7 +23,6 @@
     bonuses: Bonus[];
   }
   let { fantasyTeam, bonusUsedInSession, closeBonusModal, bonus, updateBonuses, bonuses }: Props = $props();
-
 
   let countries: { id: number; name: string }[] = $state([]);
   let playerOptions: { id: number; name: string }[] = $state([]);

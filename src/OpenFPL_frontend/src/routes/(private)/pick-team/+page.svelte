@@ -101,17 +101,13 @@
               {selectedFormation} 
               {sessionAddedPlayers} 
             />
-            <!--
             <div class="w-full mt-2">
               <BonusPanel {fantasyTeam} />
             </div>
-            -->
           </div> 
         </div>
         <div class="hidden xl:block xl:flex-1">
-          <!--
           <LeagueFixtures />
-          -->
         </div>
       </div>
     </div>

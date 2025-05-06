@@ -45,24 +45,21 @@
       </div>
     </div>
     <div class="flex flex-col items-center justify-center text-xxs sm:text-xs">
-      <div class="flex items-center justify-center bg-gray-700 rounded-t-md md:px-2 sm:py-1 top-player-detail">
-        <p class="hidden sm:flex sm:min-w-[15px]">
+      <div class="flex items-center justify-between bg-gray-700 rounded-t-md md:px-2 sm:py-1 top-player-detail w-full gap-1">
+        <p class="min-w-[15px] sm:min-w-[20px] text-center">
           {getPositionAbbreviation(convertPositionToIndex(player.position))}
         </p>
-
+    
         {#if player.nationality > 0}
-            {@const FlagComponent = getFlagComponent(player.nationality)}
-            <FlagComponent className="w-4 xs:w-6 mx-1" size="16" ariaLabel={`flag of ${player.nationality}`} role='img' />
-            {/if}
-        <p class="hidden xs:block truncate-50">
+          {@const FlagComponent = getFlagComponent(player.nationality)}
+          <FlagComponent className="w-4 xs:w-6 mx-1" size="16" ariaLabel={`flag of ${player.nationality}`} role='img' />
+        {/if}
+    
+        <p class="truncate flex-1 text-center">
           {getPlayerName(player)}
         </p>
-        <p class="xs:hidden truncate-50">
-          {player.lastName}
-        </p>
       </div>
-      <div
-        class="flex items-center justify-center text-black bg-white md:px-2 sm:py-1 rounded-b-md top-player-detail">
+      <div class="flex items-center justify-center text-black bg-white md:px-2 sm:py-1 rounded-b-md top-player-detail">
         <p class="hidden sm:visible sm:min-w-[20px]">
           {club.abbreviatedName}
         </p>
