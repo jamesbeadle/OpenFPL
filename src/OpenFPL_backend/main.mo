@@ -899,9 +899,6 @@ actor Self {
 
   private func postUpgradeCallback() : async () {
     
-    await userManager.resetWeeklyTransfers();
-    await userManager.resetBonuses();
-    
     seasonManager.setStableAppStatus({
       onHold = false;
       version = "V.1.0.0";
@@ -910,7 +907,8 @@ actor Self {
     //await updateManagerCanisterWasms();
     //await updateLeaderboardCanisterWasms();
     //await seasonManager.resetAllDataHashes();
-
+    //await userManager.resetWeeklyTransfers();
+    //await userManager.resetBonuses();  
   };
 
   /* ----- Canister Update Functions ----- */
