@@ -33,9 +33,7 @@
 
   onMount(async () => {
       await loadData();
-      console.log("loading complete")
       if ($teamSetupStore) {
-        console.log("setting player ids")
         startingTeamPlayerIds = Array.from($teamSetupStore.playerIds);
       }
       isLoading = false;
@@ -48,7 +46,6 @@
 
     canSellPlayer = $teamSetupStore.firstGameweek || $teamSetupStore.transferWindowGameweek != $leagueStore!.unplayedGameweek || $teamSetupStore.transfersAvailable > 0;
     if ($teamSetupStore && (!$teamSetupStore.playerIds || $teamSetupStore.playerIds.length !== 11)) {
-      console.log("setting fantasy team")
       $teamSetupStore = {
         ...$teamSetupStore,
         playerIds: new Uint16Array(11).fill(0),
@@ -81,7 +78,6 @@
   }
 
   function removePlayer(playerId: number) {
-    console.log(playerId)
       selectedPosition = -1;
       if(!$teamSetupStore){ return };
       const playerIndex = $teamSetupStore!.playerIds.indexOf(playerId);

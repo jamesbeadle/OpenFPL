@@ -32,7 +32,6 @@
   });
 
   $effect(() => {
-    console.log("effect 1")
     if($teamSetupStore != undefined){
       recalculateTeamValue();
       setFormation();
@@ -60,10 +59,7 @@
   }
 
   function recalculateTeamValue(){
-    console.log("recalculating team value")
     if (!$teamSetupStore) return;
-    console.log($teamSetupStore!);
-
 
     let playerStoreValue: Player[] = [];
     playerStore.subscribe((value) => (playerStoreValue = value))();
@@ -72,8 +68,6 @@
       const player = playerStoreValue.find((p) => p.id === id);
       return sum + (player?.valueQuarterMillions || 0);
     }, 0);
-
-    console.log(totalValue)
 
     teamValue = totalValue / 4;
   }

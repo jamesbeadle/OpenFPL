@@ -11,7 +11,7 @@
   import AddPlayerTableRow from "./add-player-table-row.svelte";
   import AddPlayerModalFilters from "./add-player-modal-filters.svelte";
   import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
-    import { teamSetupStore } from "$lib/stores/team-setup-store";
+  import { teamSetupStore } from "$lib/stores/team-setup-store";
 
   interface Props {
     handlePlayerSelection: (player: Player) => void;
@@ -25,15 +25,12 @@
   
   let isLoading = $state(true);
   
-  let teamPlayerCounts: Record<number, number> = $state({});
   let disableReasons: (string | null)[] = $state([]);
   let filteredPlayers: Player[] = $state([]); 
   let paginatedPlayers: Player[] = $state([]); 
   let currentPage = $state(1);
 
   onMount(async () => {
-    teamPlayerCounts = countPlayersByTeam($playerStore, $teamSetupStore!.playerIds ?? []);
-    disableReasons = filteredPlayers.map((player) => reasonToDisablePlayer($teamSetupStore!, $playerStore, player, teamPlayerCounts));
     filteredPlayers = $playerStore;
     changePage(1);
     isLoading = false;
@@ -44,8 +41,10 @@
     const start = (currentPage - 1) * pageSize;
     const end = start + pageSize;
     paginatedPlayers = addTeamDataToPlayers($clubStore, sortedPlayers.slice(start, end));
+    disableReasons = sortedPlayers.map((player) => 
+      reasonToDisablePlayer($teamSetupStore!, sortedPlayers, player, 
+        countPlayersByTeam(sortedPlayers, $teamSetupStore!.playerIds ?? [])));
   });
-
 
   function filterPlayers(filterTeam: number, filterPosition: number, minValue: number, maxValue: number, filterSurname: string){
     filteredPlayers = $playerStore.filter((player) => {

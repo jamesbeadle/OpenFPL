@@ -125,9 +125,7 @@
   */
 
   async function setWeeklyBonusPlayed(){
-    console.log('set points')
     weeklyBonusPlayed = bonusPlayedThisWeek($teamSetupStore!, $leagueStore);
-    console.log
   }
 
   function updateBonuses() {
