@@ -23,7 +23,7 @@
       <LocalSpinner />
 {:else}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-h-64">
-        <div class="bg-BrandGray text-left rounded shadow-md p-4 hover:shadow-lg transition-shadow flex items-center flex-col">
+        <div class="bg-BrandDarkGray text-left rounded shadow-md p-4 hover:shadow-lg transition-shadow flex items-center flex-col">
         
             <h3 class="w-full text-2xl font-semibold">All Time Weekly High Score</h3>
             <p class="w-full text-sm font-bold text-BrandLightGray">{allTimeHighScores?.weeklyHighScore[0]?.recordPoints}</p>

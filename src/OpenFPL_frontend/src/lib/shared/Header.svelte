@@ -14,7 +14,7 @@
   }
 </script>
 
-<header class="z-30 flex items-center justify-between h-16 px-4 text-white shadow-md bg-BrandGray/90">
+<header class="z-30 flex items-center justify-between h-16 px-4 text-white shadow-md bg-BrandDarkGray/90">
   <a 
     href="/" 
     class="flex items-center space-x-2 transition-transform hover:scale-105"
