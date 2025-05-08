@@ -1,7 +1,7 @@
 <script lang="ts">
     import CopyIcon from "$lib/icons/CopyIcon.svelte";
     import { authStore } from "$lib/stores/auth-store";
-    import { toasts } from "$lib/stores/toasts-store";
+    import {toastsStore } from "$lib/stores/toasts-store";
 
     interface Props {
         bgColor: string;
@@ -12,7 +12,7 @@
     async function copyTextAndShowToast(text: string) {
         try {
             await navigator.clipboard.writeText(text);
-            toasts.addToast({
+            toastsStore.addToast({
                 type: "success",
                 message: "Copied to clipboard.",
                 duration: 2000,

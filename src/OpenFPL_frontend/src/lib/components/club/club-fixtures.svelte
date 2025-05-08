@@ -1,47 +1,44 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  
+  import { storeManager } from "$lib/managers/store-manager";
   import { clubStore } from "$lib/stores/club-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import {
-    convertFixtureStatus,
-    formatUnixDateToReadable,
-    formatUnixDateToSmallReadable,
-    formatUnixTimeToTime,
-    getFixturesWithTeams,
-  } from "$lib/utils/Helpers";
+  import { toastsStore } from "$lib/stores/toasts-store";
+
   import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
-  import { storeManager } from "$lib/managers/store-manager";
-  import FixtureTypeFilter from "../shared/filters/fixture-type-filter.svelte";
-  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+  import { getFixturesWithTeams } from "$lib/utils/Helpers";
+
   import LocalSpinner from "../shared/global/local-spinner.svelte";
+  import FixtureTypeFilter from "../shared/filters/fixture-type-filter.svelte";
+  import ClubFixturesTable from "./club-fixtures-table.svelte";
   
   interface Props {
     clubId: number;
   }
   let { clubId }: Props = $props();
 
-  let filteredFixtures: FixtureWithClubs[] = $state([]);
-  let fixturesWithTeams: FixtureWithClubs[] = [];
-  let selectedFixtureType = $state(-1);
-
   let isLoading = $state(true);
-
-  $effect(() => {
-    filteredFixtures = fixturesWithTeams
-    .filter(
-      ({ fixture }) => {
-        if(selectedFixtureType == -1 ) { return true; }
-        if(selectedFixtureType == 0 && fixture.homeClubId === clubId) { return true; }
-        if(selectedFixtureType == 1 && fixture.awayClubId === clubId) { return true; }
-      } 
-    ).sort((a, b) => a.fixture.gameweek - b.fixture.gameweek)
-  });
+  let selectedFixtureType = $state(-1);
+  let filteredFixtures: FixtureWithClubs[] = $state([]);
 
   onMount(async () => {
+    try {
       await storeManager.syncStores();
-      fixturesWithTeams = getFixturesWithTeams($clubStore, $fixtureStore);
+      let fixturesWithTeams = getFixturesWithTeams($clubStore, $fixtureStore);
+      filteredFixtures = fixturesWithTeams.filter(({ fixture }) => {
+          if(selectedFixtureType == -1 ) { return true; }
+          if(selectedFixtureType == 0 && fixture.homeClubId === clubId) { return true; }
+          if(selectedFixtureType == 1 && fixture.awayClubId === clubId) { return true; }
+        } 
+      ).sort((a, b) => a.fixture.gameweek - b.fixture.gameweek)
+    } catch (error) {
+      toastsStore.addToast({ type: 'error', message: `There was an error setting the club fixtures: ${error}`})
+    } finally {
       isLoading = false;
+    }
   });
+
 </script>
 
 {#if isLoading}
@@ -49,55 +46,6 @@
 {:else}
   <div class="flex flex-col">
     <FixtureTypeFilter {selectedFixtureType} />
-
-    <div class="flex justify-between p-2 border-b border-gray-700 py-4 bg-light-gray px-4">
-      <div class="hidden md:flex flex-grow w-1/6 md:ml-4">Gameweek</div>
-      <div class="md:hidden flex-grow w-1/6 md:ml-4">GW</div>
-      <div class="flex-grow w-1/3">Game</div>
-      <div class="flex-grow w-1/3">Date</div>
-      <div class="hidden md:flex flex-grow w-1/4 text-center">Time</div>
-      <div class="flex-grow w-1/3">Teams</div>
-      <div class="flex-grow w-1/6 md:w-1/4 md:mr-4">Result</div>
-    </div>
-
-    {#each filteredFixtures as { fixture, homeClub, awayClub }}
-      <div
-        class={`flex items-center justify-between border-b border-gray-700 p-2 px-4  
-        ${ convertFixtureStatus(fixture.status) === 0 ? "text-gray-400" : "text-white" }`}
-      >
-        <div class="w-1/6 md:ml-4">{fixture.gameweek}</div>
-        <div class="w-1/3 flex">
-            <a class="flex-row items-center" href={`/club?id=${fixture.homeClubId}`}>
-              <BadgeIcon club={homeClub!} className="h-6 mr-2" />
-              {homeClub ? homeClub.friendlyName : ""}
-            </a>
-            <a class="flex-row items-center" href={`/club?id=${fixture.awayClubId}`}>
-              <BadgeIcon club={awayClub!} className="h-6 mr-2" />
-              {awayClub ? awayClub.friendlyName : ""}
-            </a>
-        </div>
-        <div class="hidden md:flex w-1/3">
-          {formatUnixDateToReadable(fixture.kickOff)}
-        </div>
-        <div class="md:hidden w-1/3">
-          {formatUnixDateToSmallReadable(fixture.kickOff)}
-        </div>
-        <div class="hidden md:flex w-1/4 text-center">
-          {formatUnixTimeToTime(fixture.kickOff)}
-        </div>
-        <div class="w-1/3">
-          <div class="flex flex-col">
-            <a href={`/club?id=${fixture.homeClubId}`}>{homeClub ? homeClub.friendlyName : ""}</a>
-            <a href={`/club?id=${fixture.awayClubId}`}>{awayClub ? awayClub.friendlyName : ""}</a>
-          </div>
-        </div>
-        <div class="w-1/6 md:w-1/4 md:mr-4">
-          <div class="flex flex-col">
-            <span>{convertFixtureStatus(fixture.status) === 0 ? "-" : fixture.homeGoals}</span>
-            <span>{convertFixtureStatus(fixture.status) === 0 ? "-" : fixture.awayGoals}</span>
-          </div>
-        </div>
-      </div>
-    {/each}
+    <ClubFixturesTable {filteredFixtures} />
   </div>
 {/if}

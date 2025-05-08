@@ -4,7 +4,7 @@
   import { leagueStore } from "$lib/stores/league-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { clubStore } from "$lib/stores/club-store";
-  import { toasts } from "$lib/stores/toasts-store";
+  import { toastsStore } from "$lib/stores/toasts-store";
   import { getActualIndex } from "$lib/utils/Helpers";
   import { calculateBonusPoints, getBonusUsed, getGridSetup, getTeamFormationReadOnly, isBonusUsed, sortPlayersByPointsThenValue } from "$lib/utils/pick-team.helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
@@ -77,7 +77,7 @@ async function updateGameweekPlayers() {
     sortPlayersByPointsThenValue(fetchedPlayers);
     gameweekPlayers = fetchedPlayers;
   } catch (error) {
-    toasts.addToast({ type: "error", message: "Error updating gameweek players." });
+    toastsStore.addToast({ type: "error", message: "Error updating gameweek players." });
     console.error("Error updating gameweek players:", error);
   } finally {
     isLoading = false;

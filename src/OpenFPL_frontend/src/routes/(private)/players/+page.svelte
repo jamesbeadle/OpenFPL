@@ -4,7 +4,7 @@
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
   import { playerStore } from "$lib/stores/player-store";
-  import { toasts } from "$lib/stores/toasts-store";
+  import {toastsStore } from "$lib/stores/toasts-store";
   import SeasonFilter from "$lib/components/shared/filters/season-filter.svelte";
   import GameweekFilter from "$lib/components/shared/filters/gameweek-filter.svelte";
   
@@ -20,7 +20,7 @@
         selectedSeasonId = $leagueStore?.activeSeasonId ?? 0;
         loadPlayers();
       } catch {
-        toasts.addToast({type: 'error', message: 'Error loading active season information'});
+        toastsStore.addToast({type: 'error', message: 'Error loading active season information'});
       } finally {
         isLoading = false;
       }
@@ -44,7 +44,7 @@
     
       gameweekPlayers = snapshotResult.players;
     } catch {
-      toasts.addToast({ type: 'error', message: 'Error loading gameweek players'});
+      toastsStore.addToast({ type: 'error', message: 'Error loading gameweek players'});
     } finally {
       isLoading = false;
     }

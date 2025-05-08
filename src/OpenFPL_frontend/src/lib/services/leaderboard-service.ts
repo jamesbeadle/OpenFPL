@@ -1,7 +1,7 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "$lib/utils/Helpers";
-import { toasts } from "$lib/stores/toasts-store";
+import { toastsStore } from "$lib/stores/toasts-store";
 import type {
   GetMonthlyLeaderboard,
   GetMostValuableTeamLeaderboard,
@@ -30,7 +30,7 @@ export class LeaderboardService {
       return result.ok;
     } catch (error) {
       console.error("Failed to get weekly leaderboard: ", error);
-      toasts.addToast({
+      toastsStore.addToast({
         type: "error",
         message: "Error fetching weekly leaderboard.",
       });
@@ -52,7 +52,7 @@ export class LeaderboardService {
       return result.ok;
     } catch (error) {
       console.error("Failed to get monthly leaderboard: ", error);
-      toasts.addToast({
+      toastsStore.addToast({
         type: "error",
         message: "Error fetching monthly leaderboard.",
       });
@@ -74,7 +74,7 @@ export class LeaderboardService {
       return result.ok;
     } catch (error) {
       console.error("Failed to get season leaderboard: ", error);
-      toasts.addToast({
+      toastsStore.addToast({
         type: "error",
         message: "Error fetching season leaderboard.",
       });
@@ -96,7 +96,7 @@ export class LeaderboardService {
       return result.ok;
     } catch (error) {
       console.error("Failed to get most valuable team leaderboard: ", error);
-      toasts.addToast({
+      toastsStore.addToast({
         type: "error",
         message: "Error fetching most valuable team leaderboard.",
       });

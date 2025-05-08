@@ -1,6 +1,6 @@
 import type { AppStatus } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { AppService } from "$lib/services/app-service";
-import { toasts } from "./toasts-store";
+import { toastsStore } from "./toasts-store";
 import { isError } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
 
@@ -14,7 +14,7 @@ function createAppStore() {
   async function copyTextAndShowToast(text: string) {
     try {
       await navigator.clipboard.writeText(text);
-      toasts.addToast({
+      toastsStore.addToast({
         type: "success",
         message: "Copied to clipboard.",
         duration: 2000,
@@ -39,7 +39,7 @@ function createAppStore() {
     }
 
     if (status.version !== localStorage.getItem("version")) {
-      toasts.addToast({
+      toastsStore.addToast({
         message: `ICFC V${status.version} is now available. Click here to reload:`,
         type: "frontend-update",
       });

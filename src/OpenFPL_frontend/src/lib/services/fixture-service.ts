@@ -1,5 +1,5 @@
 import { ActorFactory } from "../utils/actor.factory";
-import { toasts } from "$lib/stores/toasts-store";
+import { toastsStore } from "$lib/stores/toasts-store";
 import { authStore } from "$lib/stores/auth-store";
 import type {
   Fixtures,
@@ -26,7 +26,10 @@ export class FixtureService {
       return result.ok;
     } catch (error) {
       console.error("Error fetching fixtures: ", error);
-      toasts.addToast({ type: "error", message: "Error fetching fixtures." });
+      toastsStore.addToast({
+        type: "error",
+        message: "Error fetching fixtures.",
+      });
     }
   }
 }

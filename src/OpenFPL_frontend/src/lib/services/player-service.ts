@@ -1,7 +1,7 @@
 import { authStore } from "$lib/stores/auth-store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "$lib/utils/Helpers";
-import { toasts } from "$lib/stores/toasts-store";
+import { toastsStore } from "$lib/stores/toasts-store";
 import type {
   LeagueId,
   Players,
@@ -26,7 +26,7 @@ export class PlayerService {
       return result.ok;
     } catch (error) {
       console.error("Error fetching league players: ", error);
-      toasts.addToast({
+      toastsStore.addToast({
         type: "error",
         message: "Error fetching league players.",
       });
@@ -46,7 +46,7 @@ export class PlayerService {
       return result.ok;
     } catch (error) {
       console.error("Error fetching gameweek players: ", error);
-      toasts.addToast({
+      toastsStore.addToast({
         type: "error",
         message: "Error fetching gameweek players.",
       });

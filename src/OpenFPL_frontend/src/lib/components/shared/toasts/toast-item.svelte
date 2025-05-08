@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { toasts } from '$lib/stores/toasts-store';
+	import {toastsStore } from '$lib/stores/toasts-store';
 	import type { Toast } from '$lib/stores/toasts-store';
     import { appStore } from '$lib/stores/app-store';
 

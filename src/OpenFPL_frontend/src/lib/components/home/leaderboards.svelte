@@ -16,7 +16,7 @@
     import SeasonFilter from "../shared/filters/season-filter.svelte";
     import LeaderboardTable from "./leaderboards/leaderboard-table.svelte";
     import UserLeaderboardEntry from "./leaderboards/user-leaderboard-entry.svelte";
-    import { toasts } from "$lib/stores/toasts-store";
+    import { toastsStore } from "$lib/stores/toasts-store";
     import Pagination from "../shared/global/pagination.svelte";
     import LeaderboardSearch from "./leaderboards/leaderboard-search.svelte";
     
@@ -85,7 +85,7 @@
             totalPages = Math.ceil(Number(leaderboard.totalEntries) / 25);
         }
       } catch {
-        toasts.addToast({type: 'error', message: 'There was an error loading leaderboards.'})
+        toastsStore.addToast({type: 'error', message: 'There was an error loading leaderboards.'})
       } finally {
         isLoading = false;
       }

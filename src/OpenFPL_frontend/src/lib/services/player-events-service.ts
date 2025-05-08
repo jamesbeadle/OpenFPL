@@ -1,7 +1,7 @@
 import { authStore } from "$lib/stores/auth-store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "$lib/utils/Helpers";
-import { toasts } from "$lib/stores/toasts-store";
+import { toastsStore } from "$lib/stores/toasts-store";
 import type {
   GetPlayerDetailsForGameweek,
   GetPlayersMap,
@@ -64,7 +64,7 @@ export class PlayerEventsService {
       return result.ok;
     } catch (error) {
       console.error("Error fetching player events: ", error);
-      toasts.addToast({
+      toastsStore.addToast({
         type: "error",
         message: "Error fetching player events.",
       });

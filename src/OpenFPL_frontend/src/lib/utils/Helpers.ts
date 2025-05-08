@@ -17,6 +17,7 @@ import type {
   PlayerPosition,
   FantasyTeamSnapshot,
   LeaderboardEntry,
+  MembershipType,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export function uint8ArrayToBase64(bytes: Uint8Array): string {
@@ -1187,4 +1188,13 @@ export function addTeamDataToPlayers(clubs: Club[], players: Player[]): any[] {
     const team = clubs.find((t) => t.id === player.clubId);
     return { ...player, team };
   });
+}
+
+export function checkValidMembership(membershipType: MembershipType): boolean {
+  return (
+    "Founding" in membershipType ||
+    "Seasonal" in membershipType ||
+    "Lifetime" in membershipType ||
+    "Monthly" in membershipType
+  );
 }

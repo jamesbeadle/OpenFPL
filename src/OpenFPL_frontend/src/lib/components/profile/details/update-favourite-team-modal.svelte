@@ -4,7 +4,7 @@
   import { clubStore } from "$lib/stores/club-store";
   import { storeManager } from "$lib/managers/store-manager";
     import Modal from "$lib/components/shared/global/modal.svelte";
-    import { toasts } from "$lib/stores/toasts-store";
+    import {toastsStore } from "$lib/stores/toasts-store";
     import LocalSpinner from "../../shared/global/local-spinner.svelte";
     import { authStore } from "$lib/stores/auth-store";
 
@@ -36,13 +36,13 @@
       await userStore.updateFavouriteTeam(newFavouriteTeam, $authStore.identity?.getPrincipal().toString() ?? "");
       await userStore.sync();
       await closeModal();
-      toasts.addToast({
+      toastsStore.addToast({
         message: "Favourite team updated.",
         type: "success",
         duration: 2000,
       });
     } catch (error) {
-      toasts.addToast({
+      toastsStore.addToast({
         message: "Error updating favourite team.",
         type: "error",
       });

@@ -1,7 +1,7 @@
 import { authStore } from "$lib/stores/auth-store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "$lib/utils/Helpers";
-import { toasts } from "$lib/stores/toasts-store";
+import { toastsStore } from "$lib/stores/toasts-store";
 import type {
   LeagueId,
   Seasons,
@@ -24,7 +24,10 @@ export class SeasonService {
       return result.ok;
     } catch (error) {
       console.error("Error fetching seasons: ", error);
-      toasts.addToast({ type: "error", message: "Error fetching seasons." });
+      toastsStore.addToast({
+        type: "error",
+        message: "Error fetching seasons.",
+      });
     }
   }
 }

@@ -3,7 +3,7 @@
     import WarningIcon from "$lib/icons/WarningIcon.svelte";
     import FullScreenSpinner from "../../shared/global/full-screen-spinner.svelte";
     import { userStore } from "$lib/stores/user-store";
-    import { toasts } from "$lib/stores/toasts-store";
+    import {toastsStore } from "$lib/stores/toasts-store";
 
     let loadingMessage = $state("Checking membership status");
 
@@ -14,7 +14,7 @@
     try {
         await userStore.sync();
     } catch (error) {
-        toasts.addToast({
+        toastsStore.addToast({
             type: "error",
             message: "Membership Status Refresh Failed",
             duration: 5000,

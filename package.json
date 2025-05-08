@@ -55,7 +55,6 @@
     "esbuild": "^0.24.0",
     "postcss": "^8.4.47",
     "svelte-flag-icons": "^1.0.3",
-    "svelte-portal": "^2.2.1",
     "tailwindcss": "^3.4.14"
   }
 }

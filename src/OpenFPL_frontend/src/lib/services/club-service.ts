@@ -1,4 +1,4 @@
-import { toasts } from "$lib/stores/toasts-store";
+import { toastsStore } from "$lib/stores/toasts-store";
 import { authStore } from "$lib/stores/auth-store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "$lib/utils/Helpers";
@@ -24,7 +24,7 @@ export class ClubService {
       return result.ok;
     } catch (error) {
       console.error("Error fetching clubs: ", error);
-      toasts.addToast({ type: "error", message: "Error fetching clubs." });
+      toastsStore.addToast({ type: "error", message: "Error fetching clubs." });
     }
   }
 }

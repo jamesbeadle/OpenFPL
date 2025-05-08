@@ -26,5 +26,5 @@ function createToastsStore() {
   };
 }
 
-export const toasts = createToastsStore();
-export const { addToast } = toasts;
+export const toastsStore = createToastsStore();
+export const { addToast } = toastsStore;

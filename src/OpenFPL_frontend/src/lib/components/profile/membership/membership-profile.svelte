@@ -2,7 +2,7 @@
   import FullScreenSpinner from "../../shared/global/full-screen-spinner.svelte";
   import CopyPrincipal from "../details/copy-principal.svelte";
   import MembershipLinkedModal from "./membership-linked-modal.svelte";
-  import { toasts } from "$lib/stores/toasts-store";
+  import {toastsStore } from "$lib/stores/toasts-store";
   import { userStore } from "$lib/stores/user-store";
   import { authStore } from "$lib/stores/auth-store";
   import { get } from "svelte/store";
@@ -34,7 +34,7 @@
       if (icfcLinkStatus) {
         if ('PendingVerification' in icfcLinkStatus) {
           notLinked = false;
-          toasts.addToast({
+          toastsStore.addToast({
             type: "info",
             message: "ICFC Membership Pending Verification",
             duration: 4000,
@@ -42,7 +42,7 @@
         } else if ('Verified' in icfcLinkStatus) {
           membershipLinked = true;
           notLinked = false;
-          toasts.addToast({
+          toastsStore.addToast({
             type: "success",
             message: "ICFC Membership Linked",
             duration: 4000,
@@ -52,7 +52,7 @@
         } 
       } else {
             notLinked = true;
-            toasts.addToast({
+            toastsStore.addToast({
               type: "error",
               message: "Please Start ICFC Membership Link Process",
               duration: 4000,
@@ -60,7 +60,7 @@
       }
     } catch (error) {
       console.error("Error checking ICFC link status:", error);
-      toasts.addToast({
+      toastsStore.addToast({
         type: "error",
         message: "Error Checking ICFC Link Status",
         duration: 4000,
@@ -80,14 +80,14 @@
         const principalId = get(authStore).identity?.getPrincipal().toString();
         if (!principalId) return;
         userIdCreatedStore.set({ data: principalId, certified: true });
-        toasts.addToast({
+        toastsStore.addToast({
           type: "success",
           message: "ICFC Membership Linked",
           duration: 5000,
         });
         window.location.href = "/";
       } else if (result.alreadyExists) {
-        toasts.addToast({
+        toastsStore.addToast({
           type: "info",
           message: "This Principal ID is already linked to an ICFC Membership",
           duration: 4000,
@@ -95,7 +95,7 @@
         loadingMessage = "Re-checking ICFC Link Status";
         await checkMembership();
       } else {
-        toasts.addToast({
+        toastsStore.addToast({
           type: "error",
           message: "Failed to link ICFC Membership",
           duration: 5000,
@@ -103,7 +103,7 @@
       }
     } catch (error) {
       console.error("Error linking ICFC Membership:", error);
-      toasts.addToast({
+      toastsStore.addToast({
         type: "error",
         message: "Failed to link ICFC Membership",
         duration: 5000,

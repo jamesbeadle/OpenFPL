@@ -1,6 +1,6 @@
 <script lang="ts">
   import { userStore } from "$lib/stores/user-store";
-  import { toasts } from "$lib/stores/toasts-store";
+  import {toastsStore } from "$lib/stores/toasts-store";
   import { convertToE8s, isAmountValid, isPrincipalValid } from "$lib/utils/Helpers";
   import Modal from "$lib/components/shared/global/modal.svelte";
   import LocalSpinner from "../../shared/global/local-spinner.svelte";
@@ -47,13 +47,13 @@
     try {
       const amountInE8s = convertToE8s(withdrawalInputAmount);
       await userStore.withdrawICFC(withdrawalAddress, amountInE8s);
-      toasts.addToast( { 
+      toastsStore.addToast( { 
         message: "ICFC successfully withdrawn.",
         type: "success",
         duration: 2000,
       });
     } catch (error) {
-      toasts.addToast({ 
+      toastsStore.addToast({ 
         message: "Error withdrawing ICFC.",
         type: "error",
         duration: 4000,

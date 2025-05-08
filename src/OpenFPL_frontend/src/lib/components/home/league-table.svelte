@@ -4,7 +4,7 @@
     import { leagueStore } from "$lib/stores/league-store";
     import { clubStore } from "$lib/stores/club-store";
     import { fixtureStore } from "$lib/stores/fixture-store";
-    import { toasts } from "$lib/stores/toasts-store";
+    import { toastsStore } from "$lib/stores/toasts-store";
     import { getFixturesWithTeams, updateTableData } from "$lib/utils/Helpers";
     import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
     import LocalSpinner from "../shared/global/local-spinner.svelte";
@@ -27,7 +27,7 @@
                 tableData = updateTableData(fixturesWithTeams, $clubStore, selectedGameweek);
             }
         } catch {
-            toasts.addToast({type: 'error', message: 'Error loading active season information'});
+            toastsStore.addToast({type: 'error', message: 'Error loading active season information'});
         } finally {
             isLoading = false;
         }

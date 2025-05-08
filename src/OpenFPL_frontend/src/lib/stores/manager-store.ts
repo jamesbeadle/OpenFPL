@@ -4,7 +4,7 @@ import { authStore } from "$lib/stores/auth-store";
 import { leagueStore } from "$lib/stores/league-store";
 
 import { isError } from "$lib/utils/Helpers";
-import { toasts } from "./toasts-store";
+import { toastsStore } from "./toasts-store";
 import type {
   BonusType,
   ClubId,
@@ -131,7 +131,7 @@ function createManagerStore() {
       let result = await identityActor.getFantasyTeamSnapshot(dto);
       if (isError(result)) {
         console.error("Error fetching fantasy team for gameweek:");
-        toasts.addToast({
+        toastsStore.addToast({
           message: `Error Fetching Fantasy Team for Gameweek ${gameweek}`,
           type: "error",
         });
@@ -139,7 +139,7 @@ function createManagerStore() {
       return result.ok;
     } catch (error) {
       console.error("Error fetching fantasy team for gameweek:", error);
-      toasts.addToast({
+      toastsStore.addToast({
         message: `Error Fetching Fantasy Team for Gameweek ${gameweek}`,
         type: "error",
       });
@@ -193,7 +193,7 @@ function createManagerStore() {
       }
 
       const fantasyTeam = result.ok;
-      toasts.addToast({
+      toastsStore.addToast({
         message: "Team saved successully!",
         type: "success",
         duration: 2000,
@@ -201,7 +201,7 @@ function createManagerStore() {
       return fantasyTeam;
     } catch (error) {
       console.error("Error saving fantasy team:", error);
-      toasts.addToast({
+      toastsStore.addToast({
         message: "Error saving team.",
         type: "error",
       });
@@ -236,7 +236,7 @@ function createManagerStore() {
         return false;
       }
 
-      toasts.addToast({
+      toastsStore.addToast({
         message: "Bonus saved successully!",
         type: "success",
         duration: 2000,
@@ -244,7 +244,7 @@ function createManagerStore() {
       return true;
     } catch (error) {
       console.error("Error saving bonus:", error);
-      toasts.addToast({
+      toastsStore.addToast({
         message: "Error saving bonus.",
         type: "error",
       });

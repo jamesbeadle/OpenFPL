@@ -1,7 +1,7 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "$lib/utils/Helpers";
-import { toasts } from "$lib/stores/toasts-store";
+import { toastsStore } from "$lib/stores/toasts-store";
 import { authStore } from "$lib/stores/auth-store";
 import type { DataHash } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
@@ -20,7 +20,7 @@ export class DataHashService {
       return result.ok;
     } catch (error) {
       console.error("Failed to fetch data hashes from backend: ", error);
-      toasts.addToast({
+      toastsStore.addToast({
         type: "error",
         message: "Failed to fetch data hashes from backend.",
       });

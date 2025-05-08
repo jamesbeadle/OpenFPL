@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { storeManager } from "$lib/managers/store-manager";
     import { leagueStore } from "$lib/stores/league-store";
-    import { toasts } from "$lib/stores/toasts-store";
+    import { toastsStore } from "$lib/stores/toasts-store";
     import { formatUnixTimeToTime, reduceFilteredFixtures } from "$lib/utils/Helpers";
     import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
     import LocalSpinner from "../shared/global/local-spinner.svelte";
@@ -23,7 +23,7 @@
         selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.completedGameweek : $leagueStore!.activeGameweek ?? 1;
         selectedSeasonId = $leagueStore?.activeSeasonId ?? 0;
       } catch {
-        toasts.addToast({type: 'error', message: 'Error loading active season information'});
+        toastsStore.addToast({type: 'error', message: 'Error loading active season information'});
       } finally {
         isLoading = false;
       }

@@ -1,5 +1,5 @@
 import { ActorFactory } from "../utils/actor.factory";
-import { toasts } from "$lib/stores/toasts-store";
+import { toastsStore } from "$lib/stores/toasts-store";
 import { authStore } from "$lib/stores/auth-store";
 import type {
   GetAllTimeHighScores,
@@ -24,7 +24,7 @@ export class AllTimeHighScoreService {
       return result.ok;
     } catch (error) {
       console.error("Error fetching fixtures: ", error);
-      toasts.addToast({
+      toastsStore.addToast({
         type: "error",
         message: "Error fetching all time high scores.",
       });

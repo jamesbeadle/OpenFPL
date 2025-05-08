@@ -14,7 +14,7 @@
   
   import PointsTable from "./points/points-table.svelte";
   import ManagerPlayerScoreModal from "./points/manager-player-score-modal.svelte";
-  import { toasts } from "$lib/stores/toasts-store";
+  import { toastsStore } from "$lib/stores/toasts-store";
   
   let isLoading = $state(true);
   let selectedSeasonId = $state(0);
@@ -30,7 +30,7 @@
       selectedGameweek = $leagueStore!.activeGameweek == 0 ? $leagueStore!.completedGameweek : $leagueStore!.activeGameweek ?? 1;
       selectedSeasonId = $leagueStore?.activeSeasonId ?? 0;
     } catch {
-      toasts.addToast({type: 'error', message: 'Error loading active season information'});
+      toastsStore.addToast({type: 'error', message: 'Error loading active season information'});
     } finally {
       isLoading = false;
     }

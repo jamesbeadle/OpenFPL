@@ -3,7 +3,7 @@
     import LocalSpinner from "../shared/global/local-spinner.svelte";
     import type { AllTimeHighScores } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { allTimeHighScoresStore } from "$lib/stores/all-time-high-score-store";
-    import { toasts } from "$lib/stores/toasts-store";
+    import { toastsStore } from "$lib/stores/toasts-store";
     
     let isLoading = $state(true);
     let allTimeHighScores: AllTimeHighScores | undefined = $state(undefined);
@@ -12,7 +12,7 @@
         try {
             allTimeHighScores = await allTimeHighScoresStore.getAllTimeHighScores({});
         } catch (error) {
-            toasts.addToast({type: 'error', message: 'Error fetching high scores'})
+            toastsStore.addToast({type: 'error', message: 'Error fetching high scores'})
         } finally {
             isLoading = false;
         }

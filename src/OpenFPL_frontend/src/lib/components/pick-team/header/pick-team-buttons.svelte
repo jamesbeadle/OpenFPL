@@ -8,7 +8,7 @@
   import { leagueStore } from "$lib/stores/league-store";
   import DesktopButtons from "./desktop-buttons.svelte";
   import MobileButtons from "./mobile-buttons.svelte";
-  import { toasts } from "$lib/stores/toasts-store";
+  import {toastsStore } from "$lib/stores/toasts-store";
   import LocalSpinner from "../../shared/global/local-spinner.svelte";
   import type { AppStatus, TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { teamSetupStore } from "$lib/stores/team-setup-store";
@@ -99,7 +99,7 @@
     if (!$teamSetupStore.firstGameweek && $teamSetupStore.transferWindowGameweek !== $leagueStore!.unplayedGameweek) {
       const emptySlots = 11 - $teamSetupStore.playerIds.filter(id => id > 0).length;
       if (emptySlots > $teamSetupStore.transfersAvailable) {
-        toasts.addToast({
+        toastsStore.addToast({
           message: `Cannot auto-fill team - insufficient transfers available (${emptySlots} needed, ${$teamSetupStore.transfersAvailable} remaining)`,
           type: "error",
           duration: 2000
@@ -151,7 +151,7 @@
       playerIds: Uint16Array.from(startingFantasyTeam.playerIds)
     };
     
-    toasts.addToast({
+    toastsStore.addToast({
       message: "Team reset successfully",
       type: "info",
       duration: 2000

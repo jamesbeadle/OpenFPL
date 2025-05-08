@@ -1,6 +1,6 @@
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "$lib/utils/Helpers";
-import { toasts } from "$lib/stores/toasts-store";
+import { toastsStore } from "$lib/stores/toasts-store";
 import type { RewardRates } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { authStore } from "$lib/stores/auth-store";
 
@@ -17,7 +17,7 @@ export class RewardRatesService {
       return result.ok;
     } catch (error) {
       console.error("Error fetching reward rates: ", error);
-      toasts.addToast({
+      toastsStore.addToast({
         type: "error",
         message: "Error fetching reward rates.",
       });

@@ -33,16 +33,16 @@
   }
 </script>
 
-  {#if isLoading}
-    <LocalSpinner />
-  {:else}
-    <ClubHeader clubId={id} />
-    <div class="bg-panel">
-      <TabContainer {activeTab} {setActiveTab} {tabs} />
-      {#if activeTab === "players"}
-        <ClubPlayers clubId={id} />
-      {:else if activeTab === "fixtures"}
-        <ClubFixtures clubId={id} />
-      {/if}
-    </div>
-  {/if}
+{#if isLoading}
+  <LocalSpinner />
+{:else}
+  <ClubHeader clubId={id} />
+  <div class="bg-panel">
+    <TabContainer {activeTab} {setActiveTab} {tabs} />
+    {#if activeTab === "players"}
+      <ClubPlayers clubId={id} />
+    {:else if activeTab === "fixtures"}
+      <ClubFixtures clubId={id} />
+    {/if}
+  </div>
+{/if}

@@ -1,7 +1,7 @@
 import { authStore } from "$lib/stores/auth-store";
 import { ActorFactory } from "../utils/actor.factory";
 import { isError } from "$lib/utils/Helpers";
-import { toasts } from "$lib/stores/toasts-store";
+import { toastsStore } from "$lib/stores/toasts-store";
 import type { Countries } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class CountryService {
@@ -18,7 +18,10 @@ export class CountryService {
       return result.ok;
     } catch (error) {
       console.error("Error fetching countries: ", error);
-      toasts.addToast({ type: "error", message: "Error fetching countries." });
+      toastsStore.addToast({
+        type: "error",
+        message: "Error fetching countries.",
+      });
     }
   }
 }
