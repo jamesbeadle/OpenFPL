@@ -8,11 +8,7 @@
   import UseBonusModal from "$lib/components/pick-team/modals/use-bonus-modal.svelte";
   import Tooltip from "$lib/components/shared/global/tooltip.svelte";
   import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
-  interface Props {
-    fantasyTeam: TeamSetup | undefined;
-  }
-  let { fantasyTeam }: Props = $props();
+    import { teamSetupStore } from "$lib/stores/team-setup-store";
 
   let bonuses = $state<Bonus[]>([
     {
@@ -22,8 +18,8 @@
       description:
         "Select a player you think will score in a game to receive a X3 mulitplier for each goal scored.",
       selectionType: BonusType.PLAYER,
-      isUsed: isBonusUsed(fantasyTeam!, 1),
-      usedGameweek: fantasyTeam?.goalGetterGameweek ?? 0
+      isUsed: isBonusUsed($teamSetupStore!, 1),
+      usedGameweek: $teamSetupStore?.goalGetterGameweek ?? 0
     },
     {
       id: 2,
@@ -32,8 +28,8 @@
       description:
         "Select a player you think will assist in a game to receive a X3 mulitplier for each assist.",
       selectionType: BonusType.PLAYER,
-      isUsed: isBonusUsed(fantasyTeam!, 2),
-      usedGameweek: fantasyTeam?.passMasterGameweek ?? 0
+      isUsed: isBonusUsed($teamSetupStore!, 2),
+      usedGameweek: $teamSetupStore?.passMasterGameweek ?? 0
     },
     {
       id: 3,
@@ -42,8 +38,8 @@
       description:
         "Select a goalkeeper or defender you think will keep a clean sheet to receive a X3 multipler on their total score.",
       selectionType: BonusType.PLAYER,
-      isUsed: isBonusUsed(fantasyTeam!, 3),
-      usedGameweek: fantasyTeam?.noEntryGameweek ?? 0
+      isUsed: isBonusUsed($teamSetupStore!, 3),
+      usedGameweek: $teamSetupStore?.noEntryGameweek ?? 0
     },
     {
       id: 4,
@@ -52,8 +48,8 @@
       description:
         "Receive a X2 multiplier from all players from a single club that are in your team.",
       selectionType: BonusType.TEAM,
-      isUsed: isBonusUsed(fantasyTeam!, 4),
-      usedGameweek: fantasyTeam?.teamBoostGameweek ?? 0
+      isUsed: isBonusUsed($teamSetupStore!, 4),
+      usedGameweek: $teamSetupStore?.teamBoostGameweek ?? 0
     },
     {
       id: 5,
@@ -62,8 +58,8 @@
       description:
         "Receive a X3 multiplier on your goalkeeper if they make 5 saves in a match.",
       selectionType: BonusType.AUTOMATIC,
-      isUsed: isBonusUsed(fantasyTeam!, 5),
-      usedGameweek: fantasyTeam?.safeHandsGameweek ?? 0
+      isUsed: isBonusUsed($teamSetupStore!, 5),
+      usedGameweek: $teamSetupStore?.safeHandsGameweek ?? 0
     },
     {
       id: 6,
@@ -72,8 +68,8 @@
       description:
         "Receive a X2 multiplier on your team captain's score if they score a goal in a match.",
       selectionType: BonusType.AUTOMATIC,
-      isUsed: isBonusUsed(fantasyTeam!, 6),
-      usedGameweek: fantasyTeam?.captainFantasticGameweek ?? 0
+      isUsed: isBonusUsed($teamSetupStore!, 6),
+      usedGameweek: $teamSetupStore?.captainFantasticGameweek ?? 0
     },
     {
       id: 7,
@@ -81,8 +77,8 @@
       image: "/prospects.png",
       description: "Receive a X2 multiplier for players under the age of 21.",
       selectionType: BonusType.AUTOMATIC,
-      isUsed: isBonusUsed(fantasyTeam!, 7),
-      usedGameweek: fantasyTeam?.prospectsGameweek ?? 0
+      isUsed: isBonusUsed($teamSetupStore!, 7),
+      usedGameweek: $teamSetupStore?.prospectsGameweek ?? 0
     },
     {
       id: 8,
@@ -91,8 +87,8 @@
       description:
         "Receive a X2 multiplier for players of a selected nationality.",
       selectionType: BonusType.COUNTRY,
-      isUsed: isBonusUsed(fantasyTeam!, 8),
-      usedGameweek: fantasyTeam?.oneNationGameweek ?? 0
+      isUsed: isBonusUsed($teamSetupStore!, 8),
+      usedGameweek: $teamSetupStore?.oneNationGameweek ?? 0
     },
     {
       id: 9,
@@ -101,8 +97,8 @@
       description:
         "Receive a X2 multiplier on a player's score if they score 2 or more goals in a game. Applies to every player who scores a brace.",
       selectionType: BonusType.AUTOMATIC,
-      isUsed: isBonusUsed(fantasyTeam!, 9),
-      usedGameweek: fantasyTeam?.braceBonusGameweek ?? 0
+      isUsed: isBonusUsed($teamSetupStore!, 9),
+      usedGameweek: $teamSetupStore?.braceBonusGameweek ?? 0
     },
     {
       id: 10,
@@ -111,8 +107,8 @@
       description:
         "Receive a X3 multiplier on a player's score if they score 3 or more goals in a game. Applies to every player who scores a hat-trick.",
       selectionType: BonusType.AUTOMATIC,
-      isUsed: isBonusUsed(fantasyTeam!, 10),
-      usedGameweek: fantasyTeam?.hatTrickHeroGameweek ?? 0
+      isUsed: isBonusUsed($teamSetupStore!, 10),
+      usedGameweek: $teamSetupStore?.hatTrickHeroGameweek ?? 0
     },
   ]);
 
@@ -121,7 +117,7 @@
   /*
   $effect(() => {
     console.log('effect called')
-    if (fantasyTeam) {
+    if ($teamSetupStore) {
       updateBonuses();
       setWeeklyBonusPlayed();
     }
@@ -130,7 +126,7 @@
 
   async function setWeeklyBonusPlayed(){
     console.log('set points')
-    weeklyBonusPlayed = bonusPlayedThisWeek(fantasyTeam!, $leagueStore);
+    weeklyBonusPlayed = bonusPlayedThisWeek($teamSetupStore!, $leagueStore);
     console.log
   }
 
@@ -138,7 +134,7 @@
     console.log('updating bonuses')
     let newBonuses = bonuses.map(bonus => ({
       ...bonus,
-      isUsed: isBonusUsed(fantasyTeam!, bonus.id)
+      isUsed: isBonusUsed($teamSetupStore!, bonus.id)
     }));
     bonuses = newBonuses;
   }
@@ -169,7 +165,6 @@
     <UseBonusModal
       bonus={bonuses[selectedBonusId - 1]}
       {closeBonusModal}
-      {fantasyTeam}
       {bonusUsedInSession}
       {updateBonuses}
       {bonuses}

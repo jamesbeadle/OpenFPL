@@ -1,5 +1,6 @@
 <script lang="ts">
     import { leagueStore } from "$lib/stores/league-store";
+    import { teamSetupStore } from "$lib/stores/team-setup-store";
     import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     interface Props {
@@ -8,7 +9,6 @@
       availableFormations: string[];
       transferWindowPlayed: boolean;
       isSaveButtonActive: boolean;
-      fantasyTeam: TeamSetup | undefined;
       showPitchView : () => void;
       showListView : () => void;
       playTransferWindow : () => void;
@@ -17,13 +17,13 @@
       handleResetTeam: () => void;
       startingFantasyTeam: TeamSetup;
     }
-    let { pitchViewActive, selectedFormation, availableFormations, transferWindowPlayed, isSaveButtonActive, fantasyTeam, showPitchView, showListView, playTransferWindow, autoFillFantasyTeam, saveFantasyTeam, handleResetTeam, startingFantasyTeam }: Props = $props();
+    let { pitchViewActive, selectedFormation, availableFormations, transferWindowPlayed, isSaveButtonActive , showPitchView, showListView, playTransferWindow, autoFillFantasyTeam, saveFantasyTeam, handleResetTeam, startingFantasyTeam }: Props = $props();
     let showResetButton : boolean | undefined = $state(undefined);
     $effect(() => {
-      showResetButton = fantasyTeam?.playerIds && startingFantasyTeam?.playerIds && (
+      showResetButton = $teamSetupStore?.playerIds && startingFantasyTeam?.playerIds && (
         (startingFantasyTeam.playerIds.filter(id => id > 0).length === 11 && 
-        fantasyTeam.playerIds.filter(id => id > 0).length < startingFantasyTeam.playerIds.filter(id => id > 0).length) ||
-        !fantasyTeam.playerIds.every((id, index) => id === startingFantasyTeam.playerIds[index])
+        $teamSetupStore.playerIds.filter(id => id > 0).length < startingFantasyTeam.playerIds.filter(id => id > 0).length) ||
+        !$teamSetupStore.playerIds.every((id, index) => id === startingFantasyTeam.playerIds[index])
       );   
     });
 </script>
@@ -53,7 +53,7 @@
         <p class="mr-2">Formation:</p>
         <select
           class="w-full px-4 text-center xs:mb-1 border-sm fpl-dropdown"
-          value={selectedFormation}
+          bind:value={selectedFormation}
         >
           {#each availableFormations as formation}
             <option value={formation}>{formation}</option>
@@ -62,14 +62,14 @@
       </div>
       <div class="flex flex-row mx-4 space-x-1">
         <button
-          disabled={fantasyTeam?.playerIds
-            ? fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
+          disabled={$teamSetupStore?.playerIds
+            ? $teamSetupStore?.playerIds.filter((x) => x === 0).length === 0
             : true}
           onclick={autoFillFantasyTeam}
           class={`side-button-base  
             ${
-              fantasyTeam?.playerIds &&
-              fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
+              $teamSetupStore?.playerIds &&
+              $teamSetupStore?.playerIds.filter((x) => x === 0).length > 0
                 ? "bg-BrandPurple"
                 : "bg-gray-500"
             } text-white`}

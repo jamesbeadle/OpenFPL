@@ -6,9 +6,9 @@
     import { convertPositionToIndex, getFlagComponent, getPlayerName, getPositionAbbreviation } from "$lib/utils/Helpers";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import type { TeamSetup, Club, Player } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { teamSetupStore } from "$lib/stores/team-setup-store";
     
     interface Props {
-      fantasyTeam: TeamSetup | undefined;
       player: Player;
       club: Club;
       canSellPlayer: boolean;
@@ -16,7 +16,7 @@
       removePlayer: (playerId: number) => void;
       setCaptain: (playerId: number) => void;
     }
-    let { fantasyTeam, player, club, canSellPlayer, sessionAddedPlayers, removePlayer, setCaptain }: Props = $props();
+    let { player, club, canSellPlayer, sessionAddedPlayers, removePlayer, setCaptain }: Props = $props();
     
 </script>
 
@@ -33,7 +33,7 @@
         <div class="flex items-center justify-center flex-grow">
           <ShirtIcon className="h-6 xs:h-12 sm:h-12 md:h-16 lg:h-20 xl:h-12 2xl:h-16" {club} />
         </div>
-        {#if fantasyTeam?.captainId === player.id}
+        {#if $teamSetupStore?.captainId === player.id}
           <span class="mb-1">
             <ActiveCaptainIcon className="captain-icon"/>
           </span>

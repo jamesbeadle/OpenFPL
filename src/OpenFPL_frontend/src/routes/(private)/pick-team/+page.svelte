@@ -1,11 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { TeamSetup } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   import { storeManager } from "$lib/managers/store-manager";
   import { managerStore } from "$lib/stores/manager-store";
+  import { teamSetupStore } from "$lib/stores/team-setup-store";
+  import { playerStore } from "$lib/stores/player-store";
   import { appStore } from "$lib/stores/app-store";
-  import { allFormations } from "$lib/utils/pick-team.helpers";
+  import { allFormations, getTeamFormation } from "$lib/utils/pick-team.helpers";
   
   import PickTeamButtons from "$lib/components/pick-team/header/pick-team-buttons.svelte";
   import PickTeamHeader from "$lib/components/pick-team/header/pick-team-header.svelte";
@@ -13,20 +15,28 @@
   import BonusPanel from "$lib/components/pick-team/bonus-select/bonus-panel.svelte";
   import LeagueFixtures from "$lib/components/shared/league-fixtures.svelte";
   import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
-    
+  
   let isLoading = $state(true);
   let pitchView = $state(true); 
-  let fantasyTeam = $state<TeamSetup | undefined>(undefined);
   let availableFormations = $state(Object.keys(allFormations));  
   let selectedFormation = $state('4-4-2');
   let sessionAddedPlayers = $state<number[]>([]);
   let teamValue = $state(0);
+  let teamFormation = $state("");
   
   onMount(async () => {
       setDisplayMode();
       await storeManager.syncStores();
       await loadData();
       isLoading = false;
+  });
+
+  $effect(() => {
+    console.log("effect 1")
+    if($teamSetupStore != undefined){
+      recalculateTeamValue();
+      setFormation();
+    };
   });
 
   function setDisplayMode(){
@@ -38,13 +48,7 @@
 
   async function loadData() {    
     let userFantasyTeam = await managerStore.getTeamSelection();
-    fantasyTeam = userFantasyTeam;
-    if (fantasyTeam && (!fantasyTeam.playerIds || fantasyTeam.playerIds.length !== 11)) {
-      return {
-        ...fantasyTeam,
-        playerIds: new Uint16Array(11).fill(0),
-      };
-    }
+    $teamSetupStore = userFantasyTeam;
   }
   
   function showPitchView(){
@@ -53,6 +57,32 @@
 
   function showListView(){
     pitchView = false;
+  }
+
+  function recalculateTeamValue(){
+    console.log("recalculating team value")
+    if (!$teamSetupStore) return;
+    console.log($teamSetupStore!);
+
+
+    let playerStoreValue: Player[] = [];
+    playerStore.subscribe((value) => (playerStoreValue = value))();
+
+    const totalValue = Array.from($teamSetupStore!.playerIds).reduce((sum, id) => {
+      const player = playerStoreValue.find((p) => p.id === id);
+      return sum + (player?.valueQuarterMillions || 0);
+    }, 0);
+
+    console.log(totalValue)
+
+    teamValue = totalValue / 4;
+  }
+
+  function setFormation(){
+    if ($teamSetupStore!.playerIds.filter((x) => x > 0).length == 11) {
+      const newFormation = getTeamFormation($teamSetupStore!, $playerStore);
+      selectedFormation = newFormation;
+    }
   }
 
 </script>
@@ -81,13 +111,13 @@
     </div>
   {:else}
     <div>
-      <PickTeamHeader {fantasyTeam} {teamValue} />
+      <PickTeamHeader {teamValue} />
       <PickTeamButtons 
-        {fantasyTeam} 
         {pitchView} 
         {selectedFormation} 
         {availableFormations}
         {teamValue}
+        {teamFormation}
         {sessionAddedPlayers}
         {showPitchView}
         {showListView}
@@ -96,13 +126,12 @@
         <div class="xl:w-[800px]">
           <div class="flex flex-col w-full">
             <PickTeamPlayers 
-              {fantasyTeam} 
               {pitchView} 
               {selectedFormation} 
               {sessionAddedPlayers} 
             />
             <div class="w-full mt-2">
-              <BonusPanel {fantasyTeam} />
+              <BonusPanel />
             </div>
           </div> 
         </div>

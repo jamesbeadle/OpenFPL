@@ -37,6 +37,10 @@ w<script lang="ts">
     showModal = true;
   }
 
+  function closeFantasyPlayerModal(){
+    showModal = false;
+  }
+
 </script>
 
 <div class="flex flex-col">
@@ -86,10 +90,7 @@ w<script lang="ts">
 
   {#if showModal}
     <FantasyPlayerDetailModal
-      playerTeam={selectedTeam!}
-      opponentTeam={selectedOpponentTeam!}
-      seasonName={activeSeasonName}
-      visible={showModal}
       gameweekData={selectedGameweekData!}
+      onClose={closeFantasyPlayerModal}
     />
   {/if}

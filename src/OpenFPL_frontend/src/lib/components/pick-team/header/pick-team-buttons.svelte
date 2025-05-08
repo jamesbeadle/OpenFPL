@@ -3,7 +3,7 @@
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { seasonStore } from "$lib/stores/season-store";
-  import { allFormations, autofillTeam, checkBonusUsedInSession, checkSaveButtonConditions, getAvailableFormations, getHighestValuedPlayerId, getTeamFormation, isBonusConditionMet, isValidFormation, updateTeamValue } from "$lib/utils/pick-team.helpers";
+  import { allFormations, autofillTeam, checkBonusUsedInSession, checkSaveButtonConditions, getAvailableFormations, getHighestValuedPlayerId, getTeamFormation } from "$lib/utils/pick-team.helpers";
   import { appStore } from "$lib/stores/app-store";
   import { leagueStore } from "$lib/stores/league-store";
   import DesktopButtons from "./desktop-buttons.svelte";
@@ -11,25 +11,25 @@
   import { toasts } from "$lib/stores/toasts-store";
   import LocalSpinner from "../../shared/global/local-spinner.svelte";
   import type { AppStatus, TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { teamSetupStore } from "$lib/stores/team-setup-store";
 
-    interface Props {
-      fantasyTeam: TeamSetup | undefined;
-      selectedFormation: string;
-      availableFormations: string[];
-      pitchView: Boolean;
-      teamValue: number;
-      sessionAddedPlayers: number[];
-      showPitchView : () => void;
-      showListView : () => void;
-    }
-    let { fantasyTeam,selectedFormation, availableFormations,  pitchView, teamValue, sessionAddedPlayers, showPitchView, showListView }: Props = $props();
+  interface Props {
+    selectedFormation: string;
+    availableFormations: string[];
+    pitchView: Boolean;
+    teamValue: number;
+    teamFormation: string;
+    sessionAddedPlayers: number[];
+    showPitchView : () => void;
+    showListView : () => void; 
+  }
+  
+  let { selectedFormation, availableFormations, teamValue, teamFormation, sessionAddedPlayers, showPitchView, showListView }: Props = $props();
   
   let startingFantasyTeam: TeamSetup | undefined = $state(undefined);
   let isSaveButtonActive = $state(false);
   let activeSeason: string;
   let activeGameweek: number;
-  let newUsername = $state("");
-  let showUsernameModal = false;
   let bonusUsedInSession = false;
   let transferWindowPlayed = $state(false);
   let transferWindowPlayedInSession = false;
@@ -38,19 +38,19 @@
   let pitchViewActive = $state(true);
 
   $effect(() => {
-    if (fantasyTeam && $playerStore.length > 0) {
+    if ($teamSetupStore && $playerStore.length > 0) {
       disableInvalidFormations();
-      isSaveButtonActive = checkSaveButtonConditions(isLoading, fantasyTeam, $playerStore, appStatus, selectedFormation);
+      isSaveButtonActive = checkSaveButtonConditions(isLoading, $teamSetupStore, $playerStore, appStatus, selectedFormation);
     }
-    if (fantasyTeam) {
+    if ($teamSetupStore) {
         
-        if (fantasyTeam.playerIds.filter((x) => x > 0).length == 11) {
-          const newFormation = getTeamFormation(fantasyTeam, $playerStore);
+        if ($teamSetupStore.playerIds.filter((x) => x > 0).length == 11) {
+          const newFormation = getTeamFormation($teamSetupStore, $playerStore);
           selectedFormation = newFormation;
         }
 
         if(startingFantasyTeam){
-          bonusUsedInSession = checkBonusUsedInSession(fantasyTeam, startingFantasyTeam);
+          bonusUsedInSession = checkBonusUsedInSession($teamSetupStore, startingFantasyTeam);
         }
       }
   });
@@ -58,7 +58,7 @@
   onMount(async () => {
     let appStatusResult = await appStore.getAppStatus();
     appStatus = appStatusResult ? appStatusResult : appStatus;
-    startingFantasyTeam = fantasyTeam!;
+    startingFantasyTeam = $teamSetupStore!;
     loadData();
     disableInvalidFormations()
     isLoading = false;
@@ -72,35 +72,35 @@
     }
     activeGameweek = $leagueStore!.unplayedGameweek;
 
-    let transferWindowGameweek = fantasyTeam?.transferWindowGameweek ?? 0;
+    let transferWindowGameweek = $teamSetupStore?.transferWindowGameweek ?? 0;
     transferWindowPlayed = transferWindowGameweek > 0;
 
-    if (fantasyTeam && (!fantasyTeam.playerIds || fantasyTeam.playerIds.length !== 11)) {
-        fantasyTeam = {
-          ...fantasyTeam,
+    if ($teamSetupStore && (!$teamSetupStore.playerIds || $teamSetupStore.playerIds.length !== 11)) {
+      $teamSetupStore = {
+          ...$teamSetupStore,
           playerIds: new Uint16Array(11).fill(0),
         };
       }
   }
 
   function disableInvalidFormations() {
-    if (!fantasyTeam || !fantasyTeam.playerIds || fantasyTeam.principalId == '') {
+    if (!$teamSetupStore || !$teamSetupStore.playerIds || $teamSetupStore.principalId == '') {
       availableFormations = Object.keys(allFormations);
       return;
     }
 
-    const formations = getAvailableFormations($playerStore, fantasyTeam);
+    const formations = getAvailableFormations($playerStore, $teamSetupStore);
     availableFormations = formations;
   }
 
   function autoFillFantasyTeam() {
-    if (!fantasyTeam || !$playerStore) return;
+    if (!$teamSetupStore || !$playerStore) return;
     
-    if (!fantasyTeam.firstGameweek && fantasyTeam.transferWindowGameweek !== $leagueStore!.unplayedGameweek) {
-      const emptySlots = 11 - fantasyTeam.playerIds.filter(id => id > 0).length;
-      if (emptySlots > fantasyTeam.transfersAvailable) {
+    if (!$teamSetupStore.firstGameweek && $teamSetupStore.transferWindowGameweek !== $leagueStore!.unplayedGameweek) {
+      const emptySlots = 11 - $teamSetupStore.playerIds.filter(id => id > 0).length;
+      if (emptySlots > $teamSetupStore.transfersAvailable) {
         toasts.addToast({
-          message: `Cannot auto-fill team - insufficient transfers available (${emptySlots} needed, ${fantasyTeam.transfersAvailable} remaining)`,
+          message: `Cannot auto-fill team - insufficient transfers available (${emptySlots} needed, ${$teamSetupStore.transfersAvailable} remaining)`,
           type: "error",
           duration: 2000
         });
@@ -108,39 +108,25 @@
       }
     }
     
-    const oldPlayerIds = new Set(fantasyTeam.playerIds);
-    fantasyTeam = autofillTeam(fantasyTeam, $playerStore, selectedFormation);
+    const oldPlayerIds = new Set($teamSetupStore.playerIds);
+    $teamSetupStore = autofillTeam($teamSetupStore, $playerStore, selectedFormation);
 
-    const newPlayers = fantasyTeam!.playerIds.filter(id => id > 0 && !oldPlayerIds.has(id));
+    const newPlayers = $teamSetupStore!.playerIds.filter(id => id > 0 && !oldPlayerIds.has(id));
     sessionAddedPlayers = [...sessionAddedPlayers, ...newPlayers];
-    
-    teamValue = updateTeamValue(fantasyTeam);
   }
 
   function playTransferWindow() {
     transferWindowPlayedInSession = true;
     transferWindowPlayed = true;
-    fantasyTeam = { ...fantasyTeam!, transferWindowGameweek: $leagueStore!.unplayedGameweek };
-  }
-
-  async function updateUsername() {
-    if (newUsername == "") { return; }
-    fantasyTeam = { ...fantasyTeam!, username: newUsername };
-    showUsernameModal = false;
-    saveFantasyTeam();
+    $teamSetupStore = { ...$teamSetupStore!, transferWindowGameweek: $leagueStore!.unplayedGameweek };
   }
 
   async function saveFantasyTeam() {
-    if (!fantasyTeam) { return; }
-
-    if (fantasyTeam.username == "") {
-      showUsernameModal = true;
-      return;
-    }
+    if (!$teamSetupStore) { return; }
 
     isLoading = true;
 
-    let team = fantasyTeam;
+    let team = $teamSetupStore;
     if (team?.captainId === 0 || !team?.playerIds.includes(team?.captainId)) {
       team!.captainId = getHighestValuedPlayerId(team!, $playerStore);
     }
@@ -157,18 +143,13 @@
     isLoading = false;
   }
 
-  function closeUsernameModal() {
-    showUsernameModal = false;
-  }
-
   function handleResetTeam() {
-    if (!fantasyTeam || !startingFantasyTeam) return;
+    if (!$teamSetupStore || !startingFantasyTeam) return;
     
-    fantasyTeam = {
+    $teamSetupStore = {
       ...startingFantasyTeam,
       playerIds: Uint16Array.from(startingFantasyTeam.playerIds)
     };
-    teamValue = updateTeamValue(fantasyTeam);
     
     toasts.addToast({
       message: "Team reset successfully",
@@ -189,7 +170,6 @@
       {availableFormations}  
       {transferWindowPlayed} 
       {isSaveButtonActive} 
-      {fantasyTeam}
       startingFantasyTeam={startingFantasyTeam!}
       {showPitchView}
       {showListView}
@@ -207,7 +187,6 @@
       {availableFormations}  
       {transferWindowPlayed} 
       {isSaveButtonActive} 
-      {fantasyTeam}
       startingFantasyTeam={startingFantasyTeam!}
       {showPitchView}
       {showListView}

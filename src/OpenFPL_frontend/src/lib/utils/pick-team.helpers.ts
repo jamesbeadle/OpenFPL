@@ -8,7 +8,6 @@ import type {
   TeamSetup,
   LeagueStatus,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import { playerStore } from "$lib/stores/player-store";
 import {
   calculateAgeFromNanoseconds,
   convertPositionToIndex,
@@ -742,20 +741,6 @@ export function bonusPlayedThisWeek(
     fantasyTeam.oneNationGameweek == activeGameweek ||
     fantasyTeam.hatTrickHeroGameweek == activeGameweek;
   return bonusPlayed;
-}
-
-export function updateTeamValue(fantasyTeam: TeamSetup): number {
-  if (!fantasyTeam) return 0;
-
-  let playerStoreValue: Player[] = [];
-  playerStore.subscribe((value) => (playerStoreValue = value))();
-
-  const totalValue = Array.from(fantasyTeam.playerIds).reduce((sum, id) => {
-    const player = playerStoreValue.find((p) => p.id === id);
-    return sum + (player?.valueQuarterMillions || 0);
-  }, 0);
-
-  return totalValue / 4;
 }
 
 export function autofillTeam(

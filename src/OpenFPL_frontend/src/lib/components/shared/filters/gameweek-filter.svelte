@@ -16,7 +16,7 @@
 
     onMount(async () => {
       try{
-        gameweeks = getGameweeks($leagueStore!.activeGameweek == 0 ? $leagueStore!.unplayedGameweek : $leagueStore!.activeGameweek ?? 1);
+        gameweeks = getGameweeks($leagueStore?.totalGameweeks ?? 0);
         lastGameweek = $leagueStore?.totalGameweeks ?? 0;
       } catch {
 
@@ -44,7 +44,7 @@
       class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[125px]"
       value={selectedGameweek}
     >
-      {#each gameweeks.filter(gw => gw <= lastGameweek) as gameweek}
+      {#each gameweeks as gameweek}
         <option value={gameweek}>Gameweek {gameweek}</option>
       {/each}
     </select>

@@ -13,6 +13,7 @@
     import LandingPage from '$lib/components/landing/landing-page.svelte';
     import FullScreenSpinner from '../shared/global/full-screen-spinner.svelte';
     import Sidebar from '$lib/shared/sidebar.svelte';
+    import { teamSetupStore } from '$lib/stores/team-setup-store';
     
     interface Props {
         children: Snippet;

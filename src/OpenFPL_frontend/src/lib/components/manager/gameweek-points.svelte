@@ -77,6 +77,10 @@
     selectedOpponentTeam = $clubStore.find((x) => x.id === opponentId)!;
     showModal = true;
   }
+
+  function closeFantasyPlayerDetailModal(){
+    showModal = false;
+  }
 </script>
 
 {#if isLoading}
@@ -85,8 +89,8 @@
 {:else}
   {#if showModal}
     <FantasyPlayerDetailModal
-      visible={showModal}
       gameweekData={selectedGameweekData!}
+      onClose={closeFantasyPlayerDetailModal}
     />
   {/if}
   <div class="flex flex-col">

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { Player } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { SnapshotPlayer } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { storeManager } from "$lib/managers/store-manager";
   import { leagueStore } from "$lib/stores/league-store";
   import { playerStore } from "$lib/stores/player-store";
@@ -11,7 +11,7 @@
   let isLoading = $state(true);
   let selectedSeasonId = $state(0);
   let selectedGameweek = $state(0);
-  let gameweekPlayers: Player[] = $state([]);
+  let gameweekPlayers: SnapshotPlayer[] = $state([]);
 
   onMount(async () => {
     try{
@@ -56,7 +56,8 @@
 <GameweekFilter {selectedGameweek} />
 
 <div class="flex w-full flex-col">
-  {#each gameweekPlayers as player}
+  {#each gameweekPlayers as snapshotPlayer}
+    {@const player = $playerStore.find(x => x.id == snapshotPlayer.id)!}
     <p>{player.firstName} {player.lastName}</p>
   {/each}
 </div>

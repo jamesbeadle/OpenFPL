@@ -1,5 +1,6 @@
 <script lang="ts">
     import { leagueStore } from "$lib/stores/league-store";
+    import { teamSetupStore } from "$lib/stores/team-setup-store";
     import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     interface Props {
@@ -8,7 +9,6 @@
       availableFormations: string[];
       transferWindowPlayed: boolean;
       isSaveButtonActive: boolean;
-      fantasyTeam: TeamSetup | undefined;
       showPitchView : () => void;
       showListView : () => void;
       playTransferWindow : () => void;
@@ -17,15 +17,15 @@
       handleResetTeam: () => void;
       startingFantasyTeam: TeamSetup;
     }
-    let { pitchViewActive, selectedFormation, availableFormations, transferWindowPlayed, isSaveButtonActive, fantasyTeam, showPitchView, showListView, playTransferWindow, autoFillFantasyTeam, saveFantasyTeam, handleResetTeam, startingFantasyTeam }: Props = $props();
+    let { pitchViewActive, selectedFormation, availableFormations, transferWindowPlayed, isSaveButtonActive, showPitchView, showListView, playTransferWindow, autoFillFantasyTeam, saveFantasyTeam, handleResetTeam, startingFantasyTeam }: Props = $props();
     
     let showResetButton: boolean | undefined = $state(false);
 
     $effect(() => {
-      showResetButton = fantasyTeam?.playerIds && startingFantasyTeam?.playerIds && (
+      showResetButton = $teamSetupStore?.playerIds && startingFantasyTeam?.playerIds && (
         (startingFantasyTeam.playerIds.filter(id => id > 0).length === 11 && 
-        fantasyTeam.playerIds.filter(id => id > 0).length < startingFantasyTeam.playerIds.filter(id => id > 0).length) ||
-        !fantasyTeam.playerIds.every((id, index) => id === startingFantasyTeam.playerIds[index])
+        $teamSetupStore.playerIds.filter(id => id > 0).length < startingFantasyTeam.playerIds.filter(id => id > 0).length) ||
+        !$teamSetupStore.playerIds.every((id, index) => id === startingFantasyTeam.playerIds[index])
       );
     });
 </script>
@@ -65,14 +65,14 @@
         </button>
       {/if}
       <button
-        disabled={fantasyTeam?.playerIds
-          ? fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
+        disabled={$teamSetupStore?.playerIds
+          ? $teamSetupStore?.playerIds.filter((x) => x === 0).length === 0
           : true}
         onclick={autoFillFantasyTeam}
         class={`btn w-full md:w-auto px-4 py-2 rounded  
           ${
-            fantasyTeam?.playerIds &&
-            fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
+            $teamSetupStore ?.playerIds &&
+            $teamSetupStore?.playerIds.filter((x) => x === 0).length > 0
               ? "bg-BrandPurple hover:bg-BrandPurple/90"
               : "bg-gray-500"
           } text-white min-w-[125px]`}

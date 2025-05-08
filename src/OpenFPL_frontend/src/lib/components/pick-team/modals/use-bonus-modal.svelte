@@ -13,16 +13,16 @@
   import { authStore } from "$lib/stores/auth-store";
   import Modal from "$lib/components/shared/global/modal.svelte";
   import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
+    import { teamSetupStore } from "$lib/stores/team-setup-store";
 
   interface Props {
-    fantasyTeam: TeamSetup | undefined;
     bonusUsedInSession: boolean;
     closeBonusModal: () => void;
     bonus: Bonus;
     updateBonuses: () => void;
     bonuses: Bonus[];
   }
-  let { fantasyTeam, bonusUsedInSession, closeBonusModal, bonus, updateBonuses, bonuses }: Props = $props();
+  let { bonusUsedInSession, closeBonusModal, bonus, updateBonuses, bonuses }: Props = $props();
 
   let countries: { id: number; name: string }[] = $state([]);
   let playerOptions: { id: number; name: string }[] = $state([]);
@@ -56,11 +56,11 @@
 
   const getUniqueCountries = () => {
 
-    if (!$countryStore || !fantasyTeam || !fantasyTeam.playerIds) {
+    if (!$countryStore || !$teamSetupStore || !$teamSetupStore.playerIds) {
       return [];
     }
 
-    const fantasyTeamPlayerIds = new Set(fantasyTeam.playerIds);
+    const fantasyTeamPlayerIds = new Set($teamSetupStore.playerIds);
     const countriesOfFantasyTeamPlayers = $countryStore
       .filter((country) =>
         $playerStore.some(
@@ -81,9 +81,9 @@
   };
 
   const isPlayerInFantasyTeam = (playerId: number): boolean => {
-    return !fantasyTeam
+    return !$teamSetupStore
       ? false
-      : fantasyTeam.playerIds && fantasyTeam.playerIds.includes(playerId);
+      : $teamSetupStore.playerIds && $teamSetupStore.playerIds.includes(playerId);
   };
 
   const getRelatedTeamNames = () => {
@@ -98,9 +98,9 @@
   };
 
   const getGoalkeeperId = () => {
-    if (!fantasyTeam || !fantasyTeam.playerIds) return 0;
+    if (!$teamSetupStore || !$teamSetupStore.playerIds) return 0;
 
-    for (const playerId of fantasyTeam.playerIds) {
+    for (const playerId of $teamSetupStore.playerIds) {
       const player = $playerStore.find((p) => p.id === playerId);
       if (player && convertPositionToIndex(player.position) === 0) {
         return player.id;
@@ -111,87 +111,87 @@
   };
 
   async function handleUseBonus() {
-    if (!fantasyTeam) return;
+    if (!$teamSetupStore) return;
     let activeGameweek = $leagueStore!.unplayedGameweek;
-    const originalTeam = { ...fantasyTeam };
+    const originalTeam = { ...$teamSetupStore };
 
     bonuses[bonus.id - 1].usedGameweek = activeGameweek
     switch (bonus.id) {
       case 1:
-        fantasyTeam = {
-            ...fantasyTeam,
+      $teamSetupStore = {
+            ...$teamSetupStore,
             goalGetterPlayerId: selectedPlayerId,
             goalGetterGameweek: activeGameweek,
-            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
+            playerIds: $teamSetupStore.playerIds || new Uint16Array(11),
           }
         break;
       case 2:
-        fantasyTeam = {
-          ...fantasyTeam,
+      $teamSetupStore = {
+          ...$teamSetupStore,
             passMasterPlayerId: selectedPlayerId,
             passMasterGameweek: activeGameweek,
-            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
+            playerIds: $teamSetupStore.playerIds || new Uint16Array(11),
           };
         break;
       case 3:
-        fantasyTeam = {
-          ...fantasyTeam,
+      $teamSetupStore = {
+          ...$teamSetupStore,
             noEntryPlayerId: selectedPlayerId,
             noEntryGameweek: activeGameweek,
-            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
+            playerIds: $teamSetupStore.playerIds || new Uint16Array(11),
           };
         break;
       case 4:
-        fantasyTeam = {
-          ...fantasyTeam,
+      $teamSetupStore = {
+          ...$teamSetupStore,
             teamBoostClubId: selectedTeamId,
             teamBoostGameweek: activeGameweek,
-            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
+            playerIds: $teamSetupStore.playerIds || new Uint16Array(11),
           };
         break;
       case 5:
-        fantasyTeam = {
-          ...fantasyTeam,
+      $teamSetupStore = {
+          ...$teamSetupStore,
             safeHandsGameweek: activeGameweek,
             safeHandsPlayerId: getGoalkeeperId(),
-            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
+            playerIds: $teamSetupStore.playerIds || new Uint16Array(11),
           };
         break;
       case 6:
-        fantasyTeam = {
-          ...fantasyTeam,
-            captainFantasticPlayerId: fantasyTeam?.captainId ?? 0,
+      $teamSetupStore = {
+          ...$teamSetupStore,
+            captainFantasticPlayerId: $teamSetupStore?.captainId ?? 0,
             captainFantasticGameweek: activeGameweek,
-            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
+            playerIds: $teamSetupStore.playerIds || new Uint16Array(11),
           };
         break;
       case 7:
-        fantasyTeam = {
-          ...fantasyTeam,
+      $teamSetupStore = {
+          ...$teamSetupStore,
             prospectsGameweek: activeGameweek,
-            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
+            playerIds: $teamSetupStore.playerIds || new Uint16Array(11),
           };
         break;
       case 8:
-        fantasyTeam = {
-          ...fantasyTeam,
+      $teamSetupStore = {
+          ...$teamSetupStore,
             oneNationCountryId: selectedCountryId,
             oneNationGameweek: activeGameweek,
-            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
+            playerIds: $teamSetupStore.playerIds || new Uint16Array(11),
           };
         break;
       case 9:
-        fantasyTeam = {
-          ...fantasyTeam,
+      $teamSetupStore = {
+          ...$teamSetupStore,
             braceBonusGameweek: activeGameweek,
-            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
+            playerIds: $teamSetupStore.playerIds || new Uint16Array(11),
           };
         break;
       case 10:
-        fantasyTeam = {
-          ...fantasyTeam,
+      $teamSetupStore = {
+          ...$teamSetupStore,
             hatTrickHeroGameweek: activeGameweek,
-            playerIds: fantasyTeam.playerIds || new Uint16Array(11),
+            playerIds: $teamSetupStore.playerIds || new Uint16Array(11),
           };
         break;
     }
@@ -200,10 +200,10 @@
       isSubmitting = true;
 
       const principalId = $authStore.identity?.getPrincipal().toString() ?? "Not available";
-      const bonusPlayed = getBonusPlayed(fantasyTeam, activeGameweek);
-      const bonusPlayerId = getBonusPlayerId(fantasyTeam, activeGameweek);
-      const bonusTeamId = getBonusTeamId(fantasyTeam, activeGameweek);
-      const bonusCountryId = getBonusCountryId(fantasyTeam, activeGameweek);
+      const bonusPlayed = getBonusPlayed($teamSetupStore, activeGameweek);
+      const bonusPlayerId = getBonusPlayerId($teamSetupStore, activeGameweek);
+      const bonusTeamId = getBonusTeamId($teamSetupStore, activeGameweek);
+      const bonusCountryId = getBonusCountryId($teamSetupStore, activeGameweek);
 
       const isSaved = await managerStore.saveBonus(principalId, bonusPlayed, bonusPlayerId, bonusTeamId, bonusCountryId);
 
@@ -211,11 +211,11 @@
         updateBonuses();
         bonusUsedInSession = true;
       } else {
-        fantasyTeam = originalTeam;
+        $teamSetupStore = originalTeam;
         bonuses[bonus.id - 1].usedGameweek = 0;
       }
     } catch (error) {
-      fantasyTeam = originalTeam;
+      $teamSetupStore = originalTeam;
       bonuses[bonus.id - 1].usedGameweek = 0;
       console.error("Error saving bonus:", error);
     } finally {

@@ -27,11 +27,10 @@
 </script>
 
 <div class="bg-panel">
-  <div>
-    <div class="flex items-center justify-between py-2 bg-light-gray">
-      <h1 class="m-2 mx-4 side-panel-header">Fixtures</h1>
+  <div class="flex flex-col">
+    <div class="flex flex-col gap-4 sm:flex-row sm:gap-8 p-4">
+      <GameweekFilter {selectedGameweek} />
     </div>
-    <GameweekFilter {selectedGameweek} />
     <div>
       {#each Object.entries(groupedFixtures) as [date, fixtures]}
         <div class="flex items-center justify-between py-2 border-b border-gray-700 bg-light-gray">

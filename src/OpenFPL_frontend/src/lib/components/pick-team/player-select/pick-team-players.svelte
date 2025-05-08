@@ -3,6 +3,7 @@
 
   import { leagueStore } from "$lib/stores/league-store";
   import { playerStore } from "$lib/stores/player-store";
+  import { teamSetupStore } from "$lib/stores/team-setup-store";
   import { canAddPlayerToCurrentFormation, findValidFormationWithPlayer, getAvailablePositionIndex, getHighestValuedPlayerId, getTeamFormation, repositionPlayersForNewFormation } from "$lib/utils/pick-team.helpers";
   
   import ConfirmCaptainChange from "../modals/confirm-captain-change-modal.svelte";
@@ -11,15 +12,14 @@
   import SelectedPlayersList from "./selected-players-list.svelte";
   import { convertPositionToIndex } from "$lib/utils/Helpers";
   import LocalSpinner from "../../shared/global/local-spinner.svelte";
-  import type { TeamSetup, Player } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Player } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
   interface Props {
-    fantasyTeam: TeamSetup | undefined;
     pitchView: boolean;
     selectedFormation: string;
     sessionAddedPlayers: number[];
   }
-  let { fantasyTeam, pitchView, selectedFormation, sessionAddedPlayers }: Props = $props();
+  let { pitchView, selectedFormation, sessionAddedPlayers }: Props = $props();
 
   let isLoading = $state(true);
   let showAddPlayerModal = $state(false);
@@ -34,65 +34,30 @@
   onMount(async () => {
       await loadData();
       console.log("loading complete")
-      if (fantasyTeam) {
+      if ($teamSetupStore) {
         console.log("setting player ids")
-        startingTeamPlayerIds = Array.from(fantasyTeam.playerIds);
+        startingTeamPlayerIds = Array.from($teamSetupStore.playerIds);
       }
       isLoading = false;
   });
 
-  /*
-
-  Better to set as i go i think
-
-  $effect(() => {
-    if (fantasyTeam) {
-      setTeamValue();
-      setTeamFormation();
-    }
-  });
-
-  */
-
   async function loadData() {
-    if (!fantasyTeam) {
+    if (!$teamSetupStore) {
       return;
     }
 
-    canSellPlayer = fantasyTeam.firstGameweek || fantasyTeam.transferWindowGameweek != $leagueStore!.unplayedGameweek || fantasyTeam.transfersAvailable > 0;
-    if (fantasyTeam && (!fantasyTeam.playerIds || fantasyTeam.playerIds.length !== 11)) {
+    canSellPlayer = $teamSetupStore.firstGameweek || $teamSetupStore.transferWindowGameweek != $leagueStore!.unplayedGameweek || $teamSetupStore.transfersAvailable > 0;
+    if ($teamSetupStore && (!$teamSetupStore.playerIds || $teamSetupStore.playerIds.length !== 11)) {
       console.log("setting fantasy team")
-      fantasyTeam = {
-        ...fantasyTeam,
+      $teamSetupStore = {
+        ...$teamSetupStore,
         playerIds: new Uint16Array(11).fill(0),
       };
     }
-
-    setTeamValue();
-    setTeamFormation();
-  }
-
-  function setTeamValue() {
-    let totalValue = 0;
-    fantasyTeam!.playerIds.forEach((id) => {
-      const player = $playerStore.find((p) => p.id === id);
-      if (player) {
-        totalValue += player.valueQuarterMillions;
-      }
-    });
-    
-    let updatedFantasyTeam = {
-      ...fantasyTeam!,
-      teamValue: totalValue / 4,
-    };
-    fantasyTeam = updatedFantasyTeam;
   }
 
   function setTeamFormation(){
-    if (fantasyTeam!.playerIds.filter((x) => x > 0).length == 11) {
-      const newFormation = getTeamFormation(fantasyTeam!, $playerStore);
-      selectedFormation = newFormation;
-    }
+   
   }
 
   function loadAddPlayer(row: number) {
@@ -109,104 +74,102 @@
       return;
     }
 
-    newCaptainId = getHighestValuedPlayerId(fantasyTeam!, $playerStore);
+    newCaptainId = getHighestValuedPlayerId($teamSetupStore!, $playerStore);
     let player = $playerStore.find((x) => x.id === newCaptainId);    
     newCaptain = `${player?.firstName} ${player?.lastName}`;
     showCaptainModal = true;
   }
 
   function removePlayer(playerId: number) {
+    console.log(playerId)
       selectedPosition = -1;
-      if(!fantasyTeam){ return };
-      const playerIndex = fantasyTeam!.playerIds.indexOf(playerId);
+      if(!$teamSetupStore){ return };
+      const playerIndex = $teamSetupStore!.playerIds.indexOf(playerId);
       if (playerIndex === -1) {
         console.error("Player not found in the team.");
         return;
       }
 
-      const newPlayerIds = Uint16Array.from(fantasyTeam!.playerIds);
+      const newPlayerIds = Uint16Array.from($teamSetupStore!.playerIds);
       newPlayerIds[playerIndex] = 0;
 
-      let transfersAvailable = fantasyTeam!.transfersAvailable;
+      let transfersAvailable = $teamSetupStore!.transfersAvailable;
       
       if (sessionAddedPlayers.includes(playerId)) {
-        if (!fantasyTeam!.firstGameweek && fantasyTeam!.transferWindowGameweek !== $leagueStore!.unplayedGameweek) {
+        if (!$teamSetupStore!.firstGameweek && $teamSetupStore!.transferWindowGameweek !== $leagueStore!.unplayedGameweek) {
           transfersAvailable += 1;
         }
         sessionAddedPlayers = sessionAddedPlayers.filter((id) => id !== playerId);
         positionsChanged.delete(playerIndex); 
       }
       
-      let bankQuarterMillions = fantasyTeam.bankQuarterMillions + $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions;
+      let bankQuarterMillions = $teamSetupStore.bankQuarterMillions + $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions;
 
-      let updatedFantasyTeam = { ...fantasyTeam!, playerIds: newPlayerIds, bankQuarterMillions, transfersAvailable };
-      fantasyTeam = updatedFantasyTeam;
-
-      setTeamValue();
+      let updatedFantasyTeam = { ...$teamSetupStore!, playerIds: newPlayerIds, bankQuarterMillions, transfersAvailable };
+      $teamSetupStore = updatedFantasyTeam;
   }
 
   function changeCaptain() {
     selectedPosition = -1;
-    fantasyTeam = { ...fantasyTeam!, captainId: newCaptainId };
+    $teamSetupStore = { ...$teamSetupStore!, captainId: newCaptainId };
     showCaptainModal = false;
   }
 
   function handlePlayerSelection(player: Player) {
-    if (canAddPlayerToCurrentFormation($playerStore, player, fantasyTeam!, selectedFormation)) 
+    if (canAddPlayerToCurrentFormation($playerStore, player, $teamSetupStore!, selectedFormation)) 
     {
       addPlayerToTeam(player, selectedFormation);
     } else {
-      const newFormation = findValidFormationWithPlayer($playerStore, fantasyTeam!, player, selectedFormation);
+      const newFormation = findValidFormationWithPlayer($playerStore, $teamSetupStore!, player, selectedFormation);
       let updatedFantasyTeam = {
-        ...fantasyTeam!,
-        playerIds: repositionPlayersForNewFormation($playerStore, fantasyTeam!, newFormation),
-        bankQuarterMillions: fantasyTeam!.bankQuarterMillions - player.valueQuarterMillions
+        ...$teamSetupStore!,
+        playerIds: repositionPlayersForNewFormation($playerStore, $teamSetupStore!, newFormation),
+        bankQuarterMillions: $teamSetupStore!.bankQuarterMillions - player.valueQuarterMillions
       };
-      fantasyTeam = updatedFantasyTeam;
+      $teamSetupStore = updatedFantasyTeam;
       selectedFormation = newFormation;
       addPlayerToTeam(player, newFormation);
     }
     if (!sessionAddedPlayers.includes(player.id)) {
       sessionAddedPlayers.push(player.id);
     }
-    setTeamValue();
     setTeamFormation();
   }
 
   function addPlayerToTeam(player: Player, formation: string) {
-    const indexToAdd = getAvailablePositionIndex(convertPositionToIndex(player.position), fantasyTeam!, formation);
+    const indexToAdd = getAvailablePositionIndex(convertPositionToIndex(player.position), $teamSetupStore!, formation);
     if (indexToAdd === -1) {
       console.error("No available position to add the player.");
       return;
     }
 
-    const newPlayerIds = Uint16Array.from(fantasyTeam!.playerIds);
+    const newPlayerIds = Uint16Array.from($teamSetupStore!.playerIds);
     if (indexToAdd < newPlayerIds.length) {
       newPlayerIds[indexToAdd] = player.id;
 
-      let transfersAvailable = fantasyTeam!.transfersAvailable;
+      let transfersAvailable = $teamSetupStore!.transfersAvailable;
       if (!positionsChanged.has(indexToAdd) && 
-          !fantasyTeam!.firstGameweek && 
-          fantasyTeam!.transferWindowGameweek !== $leagueStore!.unplayedGameweek &&
+          !$teamSetupStore!.firstGameweek && 
+          $teamSetupStore!.transferWindowGameweek !== $leagueStore!.unplayedGameweek &&
           !startingTeamPlayerIds.includes(player.id)) {
         transfersAvailable -= 1;
         positionsChanged.add(indexToAdd);
       }
 
-      let bankQuarterMillions = fantasyTeam!.bankQuarterMillions - player.valueQuarterMillions;
+      let bankQuarterMillions = $teamSetupStore!.bankQuarterMillions - player.valueQuarterMillions;
     
-      let updatedFantasyTeam = { ...fantasyTeam!, playerIds: newPlayerIds, bankQuarterMillions, transfersAvailable };
-      fantasyTeam = updatedFantasyTeam;
+      let updatedFantasyTeam = { ...$teamSetupStore!, playerIds: newPlayerIds, bankQuarterMillions, transfersAvailable };
+      $teamSetupStore = updatedFantasyTeam;
     } else {
       console.error(
         "Index out of bounds when attempting to add player to team."
       );
-      return fantasyTeam;
+      return $teamSetupStore;
     }
 
-    if (fantasyTeam!.captainId > 0 && fantasyTeam!.playerIds.filter((x) => x == fantasyTeam!.captainId).length == 0) 
+    if ($teamSetupStore!.captainId > 0 && $teamSetupStore!.playerIds.filter((x) => x == $teamSetupStore!.captainId).length == 0) 
     {
-      newCaptainId = getHighestValuedPlayerId(fantasyTeam!, $playerStore);
+      newCaptainId = getHighestValuedPlayerId($teamSetupStore!, $playerStore);
       changeCaptain();
     }
   }
@@ -233,7 +196,6 @@
   <AddPlayerModal
     {handlePlayerSelection}
     filterPosition={selectedPosition}
-    {fantasyTeam}
     onClose={closeAddPlayerModal}
   />
 {/if}
@@ -242,9 +204,9 @@
   <LocalSpinner />
 {:else}
   {#if pitchView}
-    <SelectedPlayersPitch {selectedFormation} {fantasyTeam} {canSellPlayer} {sessionAddedPlayers} {loadAddPlayer} {removePlayer} {setCaptain} />
+    <SelectedPlayersPitch {selectedFormation} {canSellPlayer} {sessionAddedPlayers} {loadAddPlayer} {removePlayer} {setCaptain} />
   {:else}
-    <SelectedPlayersList {selectedFormation} {fantasyTeam} {canSellPlayer} {sessionAddedPlayers} {loadAddPlayer} {removePlayer} {setCaptain} />
+    <SelectedPlayersList {selectedFormation} {canSellPlayer} {sessionAddedPlayers} {loadAddPlayer} {removePlayer} {setCaptain} />
   {/if}
 {/if}
 

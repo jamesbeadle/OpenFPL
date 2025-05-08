@@ -9,17 +9,17 @@
     import { playerStore } from "$lib/stores/player-store";
     import { clubStore } from "$lib/stores/club-store";
     import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { teamSetupStore } from "$lib/stores/team-setup-store";
     
     interface Props {
       selectedFormation: string;
-      fantasyTeam: TeamSetup | undefined;
       loadAddPlayer: (row: number, col: number) => void;
       removePlayer: (playerId: number) => void;
       setCaptain: (playerId: number) => void;
       canSellPlayer: boolean;
       sessionAddedPlayers: number[];
     }
-    let { selectedFormation, fantasyTeam, loadAddPlayer, removePlayer, setCaptain, canSellPlayer, sessionAddedPlayers }: Props = $props();
+    let { selectedFormation, loadAddPlayer, removePlayer, setCaptain, canSellPlayer, sessionAddedPlayers }: Props = $props();
     let gridSetup: number[][] = $state([]);
     $effect(() => {
       gridSetup = getGridSetup(selectedFormation);
@@ -43,7 +43,7 @@
       </div>
       {#each row as _, colIndex (colIndex)}
         {@const actualIndex = getActualIndex(rowIndex, colIndex, gridSetup)}
-        {@const playerIds = fantasyTeam?.playerIds ?? []}
+        {@const playerIds = $teamSetupStore?.playerIds ?? []}
         {@const playerId = playerIds[actualIndex]}
         {@const player = $playerStore.find((p) => p.id === playerId)}
         {@const team = $clubStore.find((x) => x.id === player?.clubId)}
@@ -55,7 +55,7 @@
               {player.lastName}
             </div>
             <div class="w-1/6 flex items-center">
-              {#if fantasyTeam?.captainId === playerId}
+              {#if $teamSetupStore?.captainId === playerId}
                 <span>
                   <ActiveCaptainIcon className="w-6 h-6" />
                 </span>

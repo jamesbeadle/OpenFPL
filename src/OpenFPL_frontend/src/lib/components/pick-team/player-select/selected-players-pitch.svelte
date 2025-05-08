@@ -11,17 +11,17 @@
   import PitchPlayer from "./pitch-player.svelte";
   import LocalSpinner from "../../shared/global/local-spinner.svelte";
   import type { TeamSetup } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { teamSetupStore } from "$lib/stores/team-setup-store";
 
   interface Props {
     selectedFormation: string;
-    fantasyTeam: TeamSetup | undefined;
     loadAddPlayer: (row: number, col: number) => void;
     canSellPlayer: boolean;
     sessionAddedPlayers: number[];
     removePlayer: (playerId: number) => void;
     setCaptain: (playerId: number) => void;
   }
-  let { selectedFormation, fantasyTeam, loadAddPlayer, canSellPlayer, sessionAddedPlayers, removePlayer, setCaptain }: Props = $props();
+  let { selectedFormation, loadAddPlayer, canSellPlayer, sessionAddedPlayers, removePlayer, setCaptain }: Props = $props();
   
   
   let pitchHeight = $state(0);
@@ -77,7 +77,7 @@
         >
           {#each row as _, colIndex (colIndex)}
             {@const actualIndex = getActualIndex(rowIndex, colIndex, gridSetup)}
-            {@const playerIds = fantasyTeam?.playerIds ?? []}
+            {@const playerIds = $teamSetupStore!.playerIds ?? []}
             {@const playerId = playerIds[actualIndex]}
             {@const player = $playerStore.find((p) => p.id === playerId)}
 
@@ -85,7 +85,6 @@
               {#if playerId > 0 && player}
                 {@const team = $clubStore.find((x) => x.id === player.clubId)}
                 <PitchPlayer
-                  {fantasyTeam}
                   {player}
                   club={team!}
                   {canSellPlayer}

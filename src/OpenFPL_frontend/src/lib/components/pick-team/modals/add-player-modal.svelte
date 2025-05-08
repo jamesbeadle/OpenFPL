@@ -11,15 +11,15 @@
   import AddPlayerTableRow from "./add-player-table-row.svelte";
   import AddPlayerModalFilters from "./add-player-modal-filters.svelte";
   import LocalSpinner from "$lib/components/shared/global/local-spinner.svelte";
+    import { teamSetupStore } from "$lib/stores/team-setup-store";
 
   interface Props {
     handlePlayerSelection: (player: Player) => void;
-    fantasyTeam: TeamSetup | undefined;
     filterPosition: number;
     onClose: () => void;
   }
   
-  let { handlePlayerSelection, fantasyTeam, filterPosition, onClose }: Props = $props();
+  let { handlePlayerSelection, filterPosition, onClose }: Props = $props();
 
   const pageSize = 10;
   
@@ -32,8 +32,8 @@
   let currentPage = $state(1);
 
   onMount(async () => {
-    teamPlayerCounts = countPlayersByTeam($playerStore, fantasyTeam!.playerIds ?? []);
-    disableReasons = filteredPlayers.map((player) => reasonToDisablePlayer(fantasyTeam!, $playerStore, player, teamPlayerCounts));
+    teamPlayerCounts = countPlayersByTeam($playerStore, $teamSetupStore!.playerIds ?? []);
+    disableReasons = filteredPlayers.map((player) => reasonToDisablePlayer($teamSetupStore!, $playerStore, player, teamPlayerCounts));
     filteredPlayers = $playerStore;
     changePage(1);
     isLoading = false;
