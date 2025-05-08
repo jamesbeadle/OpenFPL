@@ -895,9 +895,13 @@ actor Self {
   system func postupgrade() {
     setManagerStableVariables();
     ignore Timer.setTimer<system>(#nanoseconds(Int.abs(1)), postUpgradeCallback);
-  };
+    };
 
   private func postUpgradeCallback() : async () {
+    
+    await userManager.resetWeeklyTransfers();
+    await userManager.resetBonuses();
+    
     seasonManager.setStableAppStatus({
       onHold = false;
       version = "V.1.0.0";
