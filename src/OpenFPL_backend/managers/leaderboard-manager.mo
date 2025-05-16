@@ -1,7 +1,6 @@
 import Result "mo:base/Result";
 import TrieMap "mo:base/TrieMap";
 import Principal "mo:base/Principal";
-import Base "mo:waterway-mops/base/types";
 import Ids "mo:waterway-mops/base/ids";
 import Enums "mo:waterway-mops/base/enums";
 import Management "mo:waterway-mops/base/def/management";
@@ -10,16 +9,15 @@ import CanisterIds "mo:waterway-mops/product/wwl/canister-ids";
 import FootballIds "mo:waterway-mops/domain/football/ids";
 import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
 import BaseDefinitions "mo:waterway-mops/base/definitions";
-import LogsManager "mo:waterway-mops/product/wwl/log-management/manager";
+import LogManager "mo:waterway-mops/product/wwl/log-management/manager";
+import ComparisonUtilities "mo:waterway-mops/base/utilities/comparison-utilities";
 import Cycles "mo:base/ExperimentalCycles";
 import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
 import Array "mo:base/Array";
-import Time "mo:base/Time";
 import Nat "mo:base/Nat";
 import Text "mo:base/Text";
 import Nat64 "mo:base/Nat64";
-import Int "mo:base/Int";
 import RewardManager "reward-manager";
 import AppTypes "../types/app_types";
 import LeaderboardQueries "../queries/leaderboard_queries";
@@ -29,7 +27,7 @@ import { message } "mo:base/Error";
 module {
 
   public class LeaderboardManager() {
-    private let logsManager = LogsManager.LogsManager();
+    private let logsManager = LogManager.LogManager();
 
     private var uniqueLeaderboardCanisterIds : [Ids.CanisterId] = [];
     private var weeklyLeaderboardCanisters : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, Ids.CanisterId)])] = [];
@@ -96,12 +94,12 @@ module {
       } catch (err) {
         let _ = await logsManager.addApplicationLog({
           app = #OpenFPL;
-          error = ?#FailedInterCanisterCall;
+          error = ?#CallFailed;
           detail = message(err);
           title = "Failed to get weekly leaderboard";
           logType = #Error;
         });
-        return #err(#FailedInterCanisterCall);
+        return #err(#CallFailed);
       };
     };
 
@@ -143,7 +141,7 @@ module {
       } catch (err) {
         let _ = await logsManager.addApplicationLog({
           app = #OpenFPL;
-          error = ?#FailedInterCanisterCall;
+          error = ?#CallFailed;
           detail = message(err);
           title = "Failed to get weekly leaderboard entry";
           logType = #Error;
@@ -196,7 +194,7 @@ module {
       } catch (err) {
         let _ = await logsManager.addApplicationLog({
           app = #OpenFPL;
-          error = ?#FailedInterCanisterCall;
+          error = ?#CallFailed;
           detail = message(err);
           title = "Failed to get monthly leaderboard entry";
           logType = #Error;
@@ -237,7 +235,7 @@ module {
       } catch (err) {
         let _ = await logsManager.addApplicationLog({
           app = #OpenFPL;
-          error = ?#FailedInterCanisterCall;
+          error = ?#CallFailed;
           detail = message(err);
           title = "Failed to get season leaderboard entry";
           logType = #Error;
@@ -342,7 +340,7 @@ module {
       } catch (err) {
         let _ = await logsManager.addApplicationLog({
           app = #OpenFPL;
-          error = ?#FailedInterCanisterCall;
+          error = ?#CallFailed;
           detail = message(err);
           title = "Failed to calculate leaderboards";
           logType = #Error;
@@ -399,7 +397,7 @@ module {
     };
 
     private func groupByTeam(snapshots : [AppTypes.FantasyTeamSnapshot]) : TrieMap.TrieMap<FootballIds.ClubId, [AppTypes.FantasyTeamSnapshot]> {
-      let groupedTeams : TrieMap.TrieMap<FootballIds.ClubId, [AppTypes.FantasyTeamSnapshot]> = TrieMap.TrieMap<FootballIds.ClubId, [AppTypes.FantasyTeamSnapshot]>(BaseUtilities.eqNat16, BaseUtilities.hashNat16);
+      let groupedTeams : TrieMap.TrieMap<FootballIds.ClubId, [AppTypes.FantasyTeamSnapshot]> = TrieMap.TrieMap<FootballIds.ClubId, [AppTypes.FantasyTeamSnapshot]>(ComparisonUtilities.eqNat16, ComparisonUtilities.hashNat16);
 
       for (fantasyTeam in Iter.fromArray(snapshots)) {
         switch (fantasyTeam.favouriteClubId) {

@@ -3,7 +3,8 @@
 import BaseTypes "mo:waterway-mops/base/types";
 import Ids "mo:waterway-mops/base/ids";
 import Enums "mo:waterway-mops/base/enums";
-import ICFCEnums "mo:waterway-mops/product/icfc/enums";
+import AppEnums "mo:waterway-mops/product/wwl/enums";
+import ICFCQueries "mo:waterway-mops/product/icfc/queries";
 import CanisterIds "mo:waterway-mops/product/wwl/canister-ids";
 import Management "mo:waterway-mops/base/def/management";
 import FootballIds "mo:waterway-mops/domain/football/ids";
@@ -110,7 +111,7 @@ actor Self {
   private stable var stable_league_month_statuses : [AppTypes.LeagueMonthStatus] = [];
   private stable var stable_league_season_statuses : [AppTypes.LeagueSeasonStatus] = [];
 
-  private stable var stable_data_hashes : [Base.DataHash] = [];
+  private stable var stable_data_hashes : [BaseTypes.DataHash] = [];
 
   private stable var stable_player_snapshots : [(FootballIds.SeasonId, [(FootballDefinitions.GameweekNumber, [AppTypes.SnapshotPlayer])])] = [];
 
@@ -121,7 +122,7 @@ actor Self {
   private stable var stable_unique_manager_canister_ids : [Ids.CanisterId] = [];
   private stable var stable_total_managers : Nat = 0;
   private stable var stable_active_manager_canister_id : Ids.CanisterId = "";
-  private stable var topups : [Base.CanisterTopup] = [];
+  private stable var topups : [BaseTypes.CanisterTopup] = [];
   private stable var stable_user_icfc_links : [(Ids.PrincipalId, AppTypes.ICFCLink)] = [];
 
   private stable var stable_unique_weekly_leaderboard_canister_ids : [Ids.CanisterId] = [];
@@ -191,7 +192,7 @@ actor Self {
     return await userManager.getCombinedProfile(dto);
   };
 
-  public shared ({ caller }) func getICFCLinkStatus() : async Result.Result<ICFCEnums.ICFCLinkStatus, Enums.Error> {
+  public shared ({ caller }) func getICFCLinkStatus() : async Result.Result<AppEnums.LinkStatus, Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     return await userManager.getUserICFCLinkStatus(principalId);
@@ -576,7 +577,7 @@ actor Self {
     let _ = leaderboardManager.calculateLeaderboards(dto.seasonId, dto.gameweek, 0, managerCanisterIds);
 
     let icfc_backend_canister = actor (CanisterIds.ICFC_BACKEND_CANISTER_ID) : actor {
-      requestLeaderboardPayout : (dto : LeaderboardPayoutCommands.LeaderboardPayoutRequest) -> async Result.Result<(), Enums.Error>;
+      requestLeaderboardPayout : (dto : InterAppCallCommands.LeaderboardPayoutRequest) -> async Result.Result<(), Enums.Error>;
     };
 
     let weeklyLeaderboardResult = await leaderboardManager.getWeeklyLeaderboard({
@@ -588,27 +589,23 @@ actor Self {
 
     switch (weeklyLeaderboardResult) {
       case (#ok(foundLeaderboard)) {
-        var leaderboard : [LeaderboardPayoutCommands.LeaderboardEntry] = [];
+        var leaderboard : [InterAppCallCommands.LeaderboardEntry] = [];
 
         for (entry in Iter.fromArray(foundLeaderboard.entries)) {
-          let leaderboardEntry : LeaderboardPayoutCommands.LeaderboardEntry = {
+          let leaderboardEntry : InterAppCallCommands.LeaderboardEntry = {
             appPrincipalId = entry.principalId;
             rewardAmount = entry.rewardAmount;
             payoutStatus = #Pending;
             payoutDate = null;
           };
-          leaderboard := Array.append<LeaderboardPayoutCommands.LeaderboardEntry>(leaderboard, [leaderboardEntry]);
-        };
-        let ?appText = BaseUtilities.appToText(#OpenFPL) else {
-          return #err(#NotFound);
+          leaderboard := Array.append<InterAppCallCommands.LeaderboardEntry>(leaderboard, [leaderboardEntry]);
         };
 
-        let payoutRequest : LeaderboardPayoutCommands.LeaderboardPayoutRequest = {
-          app = appText;
+        let payoutRequest : InterAppCallCommands.LeaderboardPayoutRequest = {
+          app = #OpenFPL;
           leaderboard = leaderboard;
           gameweek = dto.gameweek;
           seasonId = dto.seasonId;
-          token = BaseUtilities.tokenToText(#ICFC);
         };
 
         let sendReq = await icfc_backend_canister.requestLeaderboardPayout(payoutRequest);
@@ -639,7 +636,7 @@ actor Self {
   };
 
   /* ----- ICFC Callback for paid LeaderBoard ----- */
-  public shared ({ caller }) func leaderboardPaid(dto : LeaderboardPayoutCommands.CompleteLeaderboardPayout) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func leaderboardPaid(dto : InterAppCallCommands.CompleteLeaderboardPayout) : async Result.Result<(), Enums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_BACKEND_CANISTER_ID;
 
     let foundPayoutRequest = Array.find<AppTypes.LeaderboardPayout>(
@@ -663,9 +660,9 @@ actor Self {
                 leaderboard = dto.leaderboard;
                 totalEntries = Array.size(dto.leaderboard);
                 totalEntriesPaid = Array.size(
-                  Array.filter<LeaderboardPayoutCommands.LeaderboardEntry>(
+                  Array.filter<InterAppCallCommands.LeaderboardEntry>(
                     dto.leaderboard,
-                    func(entry : LeaderboardPayoutCommands.LeaderboardEntry) : Bool {
+                    func(entry : InterAppCallCommands.LeaderboardEntry) : Bool {
                       return entry.payoutStatus == #Paid;
                     },
                   )

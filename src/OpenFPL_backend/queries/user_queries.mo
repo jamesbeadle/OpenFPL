@@ -3,6 +3,7 @@ import FootballIds "mo:waterway-mops/domain/football/ids";
 import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
 import BaseDefinitions "mo:waterway-mops/base/definitions";
 import ICFCEnums "mo:waterway-mops/product/icfc/enums";
+import AppEnums "mo:waterway-mops/product/wwl/enums";
 
 module UserQueries = {
 
@@ -66,7 +67,7 @@ module UserQueries = {
     public type ICFCLink = {
         membershipType : ICFCEnums.MembershipType;
         principalId : Ids.PrincipalId;
-        linkStatus : ICFCEnums.ICFCLinkStatus;
+        linkStatus : AppEnums.LinkStatus;
         dataHash : Text;
     };
 

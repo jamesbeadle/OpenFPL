@@ -8,12 +8,14 @@ import Buffer "mo:base/Buffer";
 import Ids "mo:waterway-mops/base/ids";
 import Enums "mo:waterway-mops/base/enums";
 import IcfcEnums "mo:waterway-mops/product/icfc/enums";
+import ICFCQueries "mo:waterway-mops/product/icfc/queries";
 import Management "mo:waterway-mops/base/def/management";
 import CanisterUtilities "mo:waterway-mops/product/wwl/canister-management/utilities";
 import CanisterIds "mo:waterway-mops/product/wwl/canister-ids";
+import AppEnums "mo:waterway-mops/product/wwl/enums";
 import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
 import FootballIds "mo:waterway-mops/domain/football/ids";
-import BaseDefinitions "mo:waterway-mops/domain/football/definitions";
+import BaseDefinitions "mo:waterway-mops/base/definitions";
 import Cycles "mo:base/ExperimentalCycles";
 import Time "mo:base/Time";
 import Nat64 "mo:base/Nat64";
@@ -31,9 +33,9 @@ import ManagerCanister "../canister_definitions/manager-canister";
 import SHA224 "mo:waterway-mops/base/def/sha224";
 import ClubQueries "mo:waterway-mops/product/icfc/data-canister-queries/club-queries";
 import PlayerQueries "mo:waterway-mops/product/icfc/data-canister-queries/player-queries";
+import ConversionUtilities "mo:waterway-mops/base/utilities/conversion-utilities";
 import ICFCCommands "../commands/icfc_commands";
 import Environment "../Environment";
-import ICFCQueries "../queries/icfc_queries";
 
 module {
 
@@ -196,7 +198,7 @@ module {
 
     };
 
-    public func getUserICFCLinkStatus(managerPrincipalId : Ids.PrincipalId) : async Result.Result<IcfcEnums.ICFCLinkStatus, Enums.Error> {
+    public func getUserICFCLinkStatus(managerPrincipalId : Ids.PrincipalId) : async Result.Result<AppEnums.LinkStatus, Enums.Error> {
       let icfcLink : ?UserQueries.ICFCLink = userICFCLinks.get(managerPrincipalId);
 
       switch (icfcLink) {
@@ -558,8 +560,8 @@ module {
     public func isUsernameTaken(username : Text, principalId : Text) : Bool {
       for (managerUsername in usernames.entries()) {
 
-        let lowerCaseUsername = Helpers.toLowercase(username);
-        let existingUsername = Helpers.toLowercase(managerUsername.1);
+        let lowerCaseUsername = ConversionUtilities.toLowercase(username);
+        let existingUsername = ConversionUtilities.toLowercase(managerUsername.1);
 
         if (lowerCaseUsername == existingUsername and managerUsername.0 != principalId) {
           return true;
@@ -919,7 +921,7 @@ module {
     private func useBonus(managerCanisterId : Ids.CanisterId, dto : UserCommands.PlayBonus, gameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
       let manager_canister = actor (managerCanisterId) : actor {
         getManager : Ids.PrincipalId -> async ?AppTypes.Manager;
-        useBonus : (dto : UserCommands.PlayBonus, monthlyBonuses : Nat8, gameweek : IcfcTypes.GameweekNumber) -> async Result.Result<(), Enums.Error>;
+        useBonus : (dto : UserCommands.PlayBonus, monthlyBonuses : Nat8, gameweek : FootballDefinitions.GameweekNumber) -> async Result.Result<(), Enums.Error>;
       };
 
       let manager = await manager_canister.getManager(dto.principalId);

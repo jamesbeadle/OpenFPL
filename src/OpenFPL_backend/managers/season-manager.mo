@@ -9,6 +9,7 @@ import Enums "mo:waterway-mops/base/enums";
 import FootballIds "mo:waterway-mops/domain/football/ids";
 import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
 import BaseQueries "mo:waterway-mops/base/queries";
+import BaseTypes "mo:waterway-mops/base/types";
 import PlayerQueries "mo:waterway-mops/product/icfc/data-canister-queries/player-queries";
 import AppCommands "../../OpenFPL_backend/commands/app_commands";
 import AppTypes "../types/app_types";

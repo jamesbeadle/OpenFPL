@@ -7,19 +7,16 @@ import List "mo:base/List";
 import Nat64 "mo:base/Nat64";
 import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
-import Result "mo:base/Result";
-
-import Enums "mo:waterway-mops/base/enums";
 import FootballIds "mo:waterway-mops/domain/football/ids";
-import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
 import AppTypes "../types/app_types";
 import LeaderboardQueries "../queries/leaderboard_queries";
-import RewardPercentages "../utilities/RewardPercentages";
+import Constants "mo:waterway-mops/product/wwl/constants";
+import ComparisonUtilities "mo:waterway-mops/base/utilities/comparison-utilities";
 
 module {
 
   public class RewardManager() {
-
+    private let rewardPercentages = Constants.DEFAULT_REWARD_PERCENTRAGES;
     private var historicRewardRates : [AppTypes.RewardRates] = [];
     private var activeRewardRates : AppTypes.RewardRates = {
       allTimeMonthlyHighScoreRewardRate = 0;
@@ -33,7 +30,7 @@ module {
       startDate = 0;
       weeklyLeaderboardRewardRate = 0;
     };
-    private var teamValueLeaderboards : TrieMap.TrieMap<FootballIds.SeasonId, AppTypes.TeamValueLeaderboard> = TrieMap.TrieMap<FootballIds.SeasonId, AppTypes.TeamValueLeaderboard>(BaseUtilities.eqNat16, BaseUtilities.hashNat16);
+    private var teamValueLeaderboards : TrieMap.TrieMap<FootballIds.SeasonId, AppTypes.TeamValueLeaderboard> = TrieMap.TrieMap<FootballIds.SeasonId, AppTypes.TeamValueLeaderboard>(ComparisonUtilities.eqNat16, ComparisonUtilities.hashNat16);
 
     private var seasonRewards : List.List<AppTypes.SeasonRewards> = List.nil();
     private var monthlyRewards : List.List<AppTypes.MonthlyRewards> = List.nil();
@@ -62,9 +59,9 @@ module {
       let weeklyRewardAmount = activeRewardRates.weeklyLeaderboardRewardRate;
       let topEntries = filterTop100IncludingTies(dto.entries);
 
-      var scaledPercentages : [Float] = RewardPercentages.percentages;
+      var scaledPercentages : [Float] = rewardPercentages;
       if (Array.size(topEntries) < 100) {
-        scaledPercentages := scalePercentages(RewardPercentages.percentages, Array.size(topEntries));
+        scaledPercentages := scalePercentages(rewardPercentages, Array.size(topEntries));
       };
 
       let payoutPercentages = spreadPercentagesOverEntries(topEntries, scaledPercentages);
@@ -234,8 +231,8 @@ module {
     public func setStableTeamValueLeaderboards(stable_team_value_leaderboards : [(FootballIds.SeasonId, AppTypes.TeamValueLeaderboard)]) {
       teamValueLeaderboards := TrieMap.fromEntries<FootballIds.SeasonId, AppTypes.TeamValueLeaderboard>(
         Iter.fromArray(stable_team_value_leaderboards),
-        BaseUtilities.eqNat16,
-        BaseUtilities.hashNat16,
+        ComparisonUtilities.eqNat16,
+        ComparisonUtilities.hashNat16,
       );
     };
 

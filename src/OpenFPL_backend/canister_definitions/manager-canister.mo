@@ -7,7 +7,8 @@ import FootballIds "mo:waterway-mops/domain/football/ids";
 import Ids "mo:waterway-mops/base/ids";
 
 import PlayerQueries "mo:waterway-mops/product/icfc/data-canister-queries/player-queries";
-import LogsManager "mo:waterway-mops/product/wwl/log-management/manager";
+import LogManager "mo:waterway-mops/product/wwl/log-management/manager";
+import ComparisonUtilities "mo:waterway-mops/base/utilities/comparison-utilities";
 
 import { message } "mo:base/Error";
 
@@ -72,9 +73,9 @@ actor class _ManagerCanister() {
 
   private var managerGroupIndexes : TrieMap.TrieMap<Ids.PrincipalId, Nat8> = TrieMap.TrieMap<Ids.PrincipalId, Nat8>(Text.equal, Text.hash);
 
-  private let logsManager = LogsManager.LogsManager();
+  private let logsManager = LogManager.LogManager();
 
-  public shared ({ caller }) func updateTeamSelection(dto : UserCommands.SaveFantasyTeam, transfersAvailable : Nat8, newBankBalance : Nat16, currentGameweek : IcfcTypes.GameweekNumber) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func updateTeamSelection(dto : UserCommands.SaveFantasyTeam, transfersAvailable : Nat8, newBankBalance : Nat16, currentGameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == Environment.BACKEND_CANISTER_ID;
@@ -213,7 +214,7 @@ actor class _ManagerCanister() {
 
   };
 
-  private func mergeTeamSelection(dto : UserCommands.SaveFantasyTeam, manager : AppTypes.Manager, transfersAvailable : Nat8, newBankBalance : Nat16, currentGameweek : IcfcTypes.GameweekNumber) : AppTypes.Manager {
+  private func mergeTeamSelection(dto : UserCommands.SaveFantasyTeam, manager : AppTypes.Manager, transfersAvailable : Nat8, newBankBalance : Nat16, currentGameweek : FootballDefinitions.GameweekNumber) : AppTypes.Manager {
 
     var transferWindowGameweek = manager.transferWindowGameweek;
     if (transferWindowGameweek == 0 and dto.playTransferWindowBonus) {
@@ -256,7 +257,7 @@ actor class _ManagerCanister() {
     };
   };
 
-  public shared ({ caller }) func useBonus(dto : UserCommands.PlayBonus, monthlyBonuses : Nat8, gameweek : IcfcTypes.GameweekNumber) : async Result.Result<(), Enums.Error> {
+  public shared ({ caller }) func useBonus(dto : UserCommands.PlayBonus, monthlyBonuses : Nat8, gameweek : FootballDefinitions.GameweekNumber) : async Result.Result<(), Enums.Error> {
     assert not Principal.isAnonymous(caller);
     let backendPrincipalId = Principal.toText(caller);
     assert backendPrincipalId == Environment.BACKEND_CANISTER_ID;
@@ -1926,7 +1927,7 @@ actor class _ManagerCanister() {
         };
       };
 
-      let playerIdTrie : TrieMap.TrieMap<FootballIds.PlayerId, PlayerQueries.PlayerScore> = TrieMap.TrieMap<FootballIds.PlayerId, PlayerQueries.PlayerScore>(BaseUtilities.eqNat16, BaseUtilities.hashNat16);
+      let playerIdTrie : TrieMap.TrieMap<FootballIds.PlayerId, PlayerQueries.PlayerScore> = TrieMap.TrieMap<FootballIds.PlayerId, PlayerQueries.PlayerScore>(ComparisonUtilities.eqNat16, ComparisonUtilities.hashNat16);
 
       switch (allPlayersListResult) {
         case (#ok allPlayersList) {
