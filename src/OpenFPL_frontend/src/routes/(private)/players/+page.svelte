@@ -7,6 +7,7 @@
   import {toastsStore } from "$lib/stores/toasts-store";
   import SeasonFilter from "$lib/components/shared/filters/season-filter.svelte";
   import GameweekFilter from "$lib/components/shared/filters/gameweek-filter.svelte";
+  import PlayerDetailRow from "$lib/components/player/player-detail-row.svelte";
   
   let isLoading = $state(true);
   let selectedSeasonId = $state(0);
@@ -57,7 +58,7 @@
 
 <div class="flex w-full flex-col">
   {#each gameweekPlayers as snapshotPlayer}
-    {@const player = $playerStore.find(x => x.id == snapshotPlayer.id)!}
-    <p>{player.firstName} {player.lastName}</p>
+  {@const player = $playerStore.find(x => x.id == snapshotPlayer.id)!}
+    <PlayerDetailRow {player} />
   {/each}
 </div>

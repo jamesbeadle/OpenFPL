@@ -1,4 +1,5 @@
-import IcfcEnums "mo:waterway-mops/ICFCEnums";
+import IcfcEnums "mo:waterway-mops/product/icfc/enums";
+
 module MemberbershipTypes = {
   
   public type MembershipClaim = {

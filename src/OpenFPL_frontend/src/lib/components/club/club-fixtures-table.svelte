@@ -2,12 +2,12 @@
     import type { FixtureWithClubs } from "$lib/types/fixture-with-clubs";
 
     import {
-    convertFixtureStatus,
-    formatUnixDateToReadable,
-    formatUnixDateToSmallReadable,
-    formatUnixTimeToTime
-  } from "$lib/utils/Helpers";
-  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+      convertFixtureStatus,
+      formatUnixDateToReadable,
+      formatUnixDateToSmallReadable,
+      formatUnixTimeToTime
+    } from "$lib/utils/Helpers";
+    import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
     interface Props {
         filteredFixtures: FixtureWithClubs[];

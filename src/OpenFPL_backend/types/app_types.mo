@@ -1,13 +1,12 @@
 import List "mo:base/List";
-import Ids "mo:waterway-mops/Ids";
-import BaseTypes "mo:waterway-mops/BaseTypes";
-import ICFCEnums "mo:waterway-mops/ICFCEnums";
-import FootballIds "mo:waterway-mops/football/FootballIds";
-import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
-import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
-import Enums "mo:waterway-mops/Enums";
-import IcfcEnums "mo:waterway-mops/ICFCEnums";
-import FootballEnums "mo:waterway-mops/football/FootballEnums";
+import Ids "mo:waterway-mops/base/ids";
+import BaseTypes "mo:waterway-mops/base/types";
+import ICFCEnums "mo:waterway-mops/product/icfc/enums";
+import FootballIds "mo:waterway-mops/domain/football/ids";
+import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
+import BaseDefinitions "mo:waterway-mops/base/definitions";
+import Enums "mo:waterway-mops/base/enums";
+import FootballEnums "mo:waterway-mops/domain/football/enums";
 import AppEnums "../enums/app_enums";
 
 module AppTypes {
@@ -208,13 +207,13 @@ module AppTypes {
   };
 
   public type MembershipClaim = {
-    membershipType : IcfcEnums.MembershipType;
+    membershipType : ICFCEnums.MembershipType;
     purchasedOn : Int;
     expiresOn : ?Int;
   };
 
   public type ICFCLink = {
-    membershipType : IcfcEnums.MembershipType;
+    membershipType : ICFCEnums.MembershipType;
     principalId : Ids.PrincipalId;
     linkStatus : ICFCEnums.ICFCLinkStatus;
     dataHash : Text;

@@ -5,9 +5,9 @@
     <div class="flex items-center justify-between w-full p-4">
         <div class="flex items-center space-x-2">
             <a
-            href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai"
-            target="_blank"
-            rel="noopener noreferrer"
+                href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai"
+                target="_blank"
+                rel="noopener noreferrer"
             >
             <img
                 src="/openchat.png"
@@ -16,9 +16,9 @@
             />
             </a>
             <a
-            href="https://x.com/OpenFPL_DAO"
-            target="_blank"
-            rel="noopener noreferrer"
+                href="https://x.com/OpenFPL_DAO"
+                target="_blank"
+                rel="noopener noreferrer"
             >
             <img src="/twitter.png" class="w-auto h-4 mb-2 mr-2" alt="X" />
             </a>
@@ -38,7 +38,7 @@
             <a
                 href="https://waterwaylabs.xyz"
                 target="_blank"
-                class="flex items-center hover:text-gray-300"
+                class="flex items-center hover:text-BrandDarkGray"
             >
             Waterway Labs
         </a>

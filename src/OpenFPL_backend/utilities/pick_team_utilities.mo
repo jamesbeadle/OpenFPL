@@ -1,9 +1,9 @@
 import Array "mo:base/Array";
-import Enums "mo:waterway-mops/Enums";
-import Ids "mo:waterway-mops/Ids";
-import FootballIds "mo:waterway-mops/football/FootballIds";
-import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
-import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
+import Enums "mo:waterway-mops/base/enums";
+import Ids "mo:waterway-mops/base/ids";
+import FootballIds "mo:waterway-mops/domain/football/ids";
+import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
+import PlayerQueries "mo:waterway-mops/product/icfc/data-canister-queries/player-queries";
 import Int "mo:base/Int";
 import Int64 "mo:base/Int64";
 import Iter "mo:base/Iter";

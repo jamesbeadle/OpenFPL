@@ -41,16 +41,16 @@
   }
 </script>
 
-  {#if isLoading && selectedPlayer && playerClub}
-    <LocalSpinner />
-  {:else}
-    <PlayerHeader player={selectedPlayer!} club={playerClub!} gameweek={selectedGameweek} />
+{#if isLoading && selectedPlayer && playerClub}
+  <LocalSpinner />
+{:else}
+  <PlayerHeader player={selectedPlayer!} club={playerClub!} gameweek={selectedGameweek} />
+  
+  <div class="bg-panel">
+    <TabContainer {tabs} {activeTab} {setActiveTab}  />
     
-    <div class="bg-panel">
-      <TabContainer {tabs} {activeTab} {setActiveTab}  />
-     
-      {#if activeTab === "history"}
-        <PlayerGameweekHistory />
-      {/if}
-    </div>
-  {/if}
+    {#if activeTab === "history"}
+      <PlayerGameweekHistory />
+    {/if}
+  </div>
+{/if}

@@ -1,5 +1,9 @@
 <script lang="ts">
   
+  import PageHeader from "$lib/components/shared/panels/page-header.svelte";
+  import ContentPanel from "$lib/components/shared/panels/content-panel.svelte";
+  import HomepageGameweekPanel from "$lib/components/home/header/homepage-gameweek-panel.svelte";
+  import HomepageNextGamePanel from "$lib/components/home/header/homepage-next-game-panel.svelte";
   import TabContainer from "$lib/components/shared/global/tab-container.svelte";
   import PointsComponent from "$lib/components/home/points.svelte";
   import LeaderboardsComponent from "$lib/components/home/leaderboards.svelte";
@@ -7,11 +11,7 @@
   import MvpsComponent from "$lib/components/home/mvps.svelte";
   import LeagueTableComponent from "$lib/components/home/league-table.svelte";
   import TrophyRoomComponent from "$lib/components/home/trophy-room.svelte";
-    import PageHeader from "$lib/components/shared/panels/page-header.svelte";
-    import ContentPanel from "$lib/components/shared/panels/content-panel.svelte";
-    import HomepageGameweekPanel from "$lib/components/home/header/homepage-gameweek-panel.svelte";
-    import HomepageNextGamePanel from "$lib/components/home/header/homepage-next-game-panel.svelte";
-
+  
   let activeTab: string = "points";
 
   const tabs = [
@@ -46,7 +46,7 @@
   {:else if activeTab === "leaderboards"}
     <LeaderboardsComponent />
   {:else if activeTab === "fixtures"}
-  <FixturesComponent />
+    <FixturesComponent />
   {:else if activeTab === "mvps"}
     <MvpsComponent />
   {:else if activeTab === "league-table"}

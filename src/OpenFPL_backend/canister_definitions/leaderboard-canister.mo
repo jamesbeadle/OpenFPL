@@ -1,21 +1,22 @@
+import Array "mo:base/Array";
+import Buffer "mo:base/Buffer";
+import Int "mo:base/Int";
+import Iter "mo:base/Iter";
 import List "mo:base/List";
+import Nat "mo:base/Nat";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
-import Array "mo:base/Array";
-import Order "mo:base/Order";
-import Iter "mo:base/Iter";
-import Buffer "mo:base/Buffer";
 import Timer "mo:base/Timer";
-import Int "mo:base/Int";
-import Nat "mo:base/Nat";
 import TrieMap "mo:base/TrieMap";
+import Order "mo:base/Order";
 
-import CanisterIds "mo:waterway-mops/CanisterIds";
-import FootballIds "mo:waterway-mops/football/FootballIds";
 import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
+import CanisterIds "mo:waterway-mops/CanisterIds";
 import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
+import FootballIds "mo:waterway-mops/football/FootballIds";
 import LeaderboardQueries "../../OpenFPL_backend/queries/leaderboard_queries";
 import LeaderboardUtilities "../utilities/leaderboard_utilities";
+
 import AppTypes "../types/app_types";
 
 actor class _LeaderboardCanister() {
