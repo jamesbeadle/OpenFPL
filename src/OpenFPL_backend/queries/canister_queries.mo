@@ -1,5 +1,5 @@
-import Enums "mo:waterway-mops/Enums";
-import Ids "mo:waterway-mops/Ids";
+import Enums "mo:waterway-mops/base/enums";
+import Ids "mo:waterway-mops/base/ids";
 
 module CanisterQueries {
 

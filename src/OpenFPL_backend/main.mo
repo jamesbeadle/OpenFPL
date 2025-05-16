@@ -1,23 +1,21 @@
 //TODO - Remove and import correct mops package
 
-import Base "mo:waterway-mops/BaseTypes";
-import Ids "mo:waterway-mops/Ids";
-import BaseTypes "mo:waterway-mops/BaseTypes";
-import Enums "mo:waterway-mops/Enums";
-import ICFCEnums "mo:waterway-mops/ICFCEnums";
-import CanisterIds "mo:waterway-mops/CanisterIds";
-import Management "mo:waterway-mops/Management";
-import FootballIds "mo:waterway-mops/football/FootballIds";
-import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
-import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
-import BaseQueries "mo:waterway-mops/queries/BaseQueries";
-import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
+import BaseTypes "mo:waterway-mops/base/types";
+import Ids "mo:waterway-mops/base/ids";
+import Enums "mo:waterway-mops/base/enums";
+import ICFCEnums "mo:waterway-mops/product/icfc/enums";
+import CanisterIds "mo:waterway-mops/product/wwl/canister-ids";
+import Management "mo:waterway-mops/base/def/management";
+import FootballIds "mo:waterway-mops/domain/football/ids";
+import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
+import BaseDefinitions "mo:waterway-mops/base/definitions";
+import BaseQueries "mo:waterway-mops/base/queries";
+import PlayerQueries "mo:waterway-mops/product/icfc/data-canister-queries/player-queries";
 import Environment "Environment";
-import LeagueNotificationCommands "mo:waterway-mops/football/LeagueNotificationCommands";
-import PlayerNotificationCommands "mo:waterway-mops/football/PlayerNotificationCommands";
-import BaseUtilities "mo:waterway-mops/BaseUtilities";
-import DateTimeUtilities "mo:waterway-mops/DateTimeUtilities";
-import LeaderboardPayoutCommands "mo:waterway-mops/football/LeaderboardPayoutCommands";
+import LeagueNotificationCommands "mo:waterway-mops/product/icfc/data-canister-notification-commands/league-notification-commands";
+import PlayerNotificationCommands "mo:waterway-mops/product/icfc/data-canister-notification-commands/player-notification-commands";
+import DateTimeUtilities "mo:waterway-mops/base/utilities/date-time-utilities";
+import InterAppCallCommands "mo:waterway-mops/product/icfc/inter-app-call-commands";
 
 /* ----- Mops Packages ----- */
 
@@ -33,7 +31,7 @@ import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Timer "mo:base/Timer";
 import Order "mo:base/Order";
-import Countries "mo:waterway-mops/def/Countries";
+import Countries "mo:waterway-mops/base/countries";
 
 /* ----- Canister Definition Files ----- */
 
@@ -60,13 +58,13 @@ import DataManager "./managers/data-manager";
 import AppTypes "types/app_types";
 
 /* ----- WWL Canister Management ----- */
-import CanisterCommands "mo:waterway-mops/canister-management/CanisterCommands";
-import CanisterQueries "mo:waterway-mops/canister-management/CanisterQueries";
-import CanisterManager "mo:waterway-mops/canister-management/CanisterManager";
-import FixtureQueries "mo:waterway-mops/queries/football-queries/FixtureQueries";
-import LeagueQueries "mo:waterway-mops/queries/football-queries/LeagueQueries";
-import SeasonQueries "mo:waterway-mops/queries/football-queries/SeasonQueries";
-import ClubQueries "mo:waterway-mops/queries/football-queries/ClubQueries";
+import CanisterCommands "mo:waterway-mops/product/wwl/canister-management/commands";
+import CanisterQueries "mo:waterway-mops/product/wwl/canister-management/queries";
+import CanisterManager "mo:waterway-mops/product/wwl/canister-management/manager";
+import FixtureQueries "mo:waterway-mops/product/icfc/data-canister-queries/fixture-queries";
+import LeagueQueries "mo:waterway-mops/product/icfc/data-canister-queries/league-queries";
+import SeasonQueries "mo:waterway-mops/product/icfc/data-canister-queries/season-queries";
+import ClubQueries "mo:waterway-mops/product/icfc/data-canister-queries/club-queries";
 import MvpQueries "queries/mvp_queries";
 
 /* ----- Only Stable Variables Should Use Types ----- */

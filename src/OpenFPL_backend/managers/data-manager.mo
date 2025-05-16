@@ -1,19 +1,20 @@
 import Result "mo:base/Result";
-import CanisterIds "mo:waterway-mops/CanisterIds";
-import Enums "mo:waterway-mops/Enums";
-import LeagueQueries "mo:waterway-mops/queries/football-queries/LeagueQueries";
-import SeasonQueries "mo:waterway-mops/queries/football-queries/SeasonQueries";
-import ClubQueries "mo:waterway-mops/queries/football-queries/ClubQueries";
-import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
-import FixtureQueries "mo:waterway-mops/queries/football-queries/FixtureQueries";
-import LogsManager "mo:waterway-mops/logs-management/LogsManager";
 import { message } "mo:base/Error";
+
+import CanisterIds "mo:waterway-mops/product/wwl/canister-ids";
+import ClubQueries "mo:waterway-mops/product/icfc/data-canister-queries/club-queries";
+import Enums "mo:waterway-mops/base/enums";
+import LeagueQueries "mo:waterway-mops/product/icfc/data-canister-queries/league-queries";
+import LogManager "mo:waterway-mops/product/wwl/log-management/manager";
+import FixtureQueries "mo:waterway-mops/product/icfc/data-canister-queries/fixture-queries";
+import SeasonQueries "mo:waterway-mops/product/icfc/data-canister-queries/season-queries";
+import PlayerQueries "mo:waterway-mops/product/icfc/data-canister-queries/player-queries";
 
 module {
 
   public class DataManager() {
 
-    private let logsManager = LogsManager.LogsManager();
+    private let logsManager = LogManager.LogManager();
 
     public func getLeagueStatus(dto : LeagueQueries.GetLeagueStatus) : async Result.Result<LeagueQueries.LeagueStatus, Enums.Error> {
       try {
@@ -24,12 +25,12 @@ module {
       } catch (err) {
         let _ = await logsManager.addApplicationLog({
           app = #OpenFPL;
-          error = ?#FailedInterCanisterCall;
+          error = ?#CallFailed;
           detail = message(err);
           title = "Failed to get league status";
           logType = #Error;
         });
-        return #err(#FailedInterCanisterCall);
+        return #err(#CallFailed);
       };
     };
 
@@ -42,12 +43,12 @@ module {
       } catch (err) {
         let _ = await logsManager.addApplicationLog({
           app = #OpenFPL;
-          error = ?#FailedInterCanisterCall;
+          error = ?#CallFailed;
           detail = message(err);
           title = "Failed to get seasons";
           logType = #Error;
         });
-        return #err(#FailedInterCanisterCall);
+        return #err(#CallFailed);
       };
     };
 
@@ -60,12 +61,12 @@ module {
       } catch (err) {
         let _ = await logsManager.addApplicationLog({
           app = #OpenFPL;
-          error = ?#FailedInterCanisterCall;
+          error = ?#CallFailed;
           detail = message(err);
           title = "Failed to get clubs";
           logType = #Error;
         });
-        return #err(#FailedInterCanisterCall);
+        return #err(#CallFailed);
       };
     };
 
@@ -78,12 +79,12 @@ module {
       } catch (err) {
         let _ = await logsManager.addApplicationLog({
           app = #OpenFPL;
-          error = ?#FailedInterCanisterCall;
+          error = ?#CallFailed;
           detail = message(err);
           title = "Failed to get players";
           logType = #Error;
         });
-        return #err(#FailedInterCanisterCall);
+        return #err(#CallFailed);
       };
     };
 
@@ -96,12 +97,12 @@ module {
       } catch (err) {
         let _ = await logsManager.addApplicationLog({
           app = #OpenFPL;
-          error = ?#FailedInterCanisterCall;
+          error = ?#CallFailed;
           detail = message(err);
           title = "Failed to get player details for gameweek";
           logType = #Error;
         });
-        return #err(#FailedInterCanisterCall);
+        return #err(#CallFailed);
       };
     };
 
@@ -114,12 +115,12 @@ module {
       } catch (err) {
         let _ = await logsManager.addApplicationLog({
           app = #OpenFPL;
-          error = ?#FailedInterCanisterCall;
+          error = ?#CallFailed;
           detail = message(err);
           title = "Failed to get fixtures";
           logType = #Error;
         });
-        return #err(#FailedInterCanisterCall);
+        return #err(#CallFailed);
       };
     };
 
@@ -132,12 +133,12 @@ module {
       } catch (err) {
         let _ = await logsManager.addApplicationLog({
           app = #OpenFPL;
-          error = ?#FailedInterCanisterCall;
+          error = ?#CallFailed;
           detail = message(err);
           title = "Failed to get players map";
           logType = #Error;
         });
-        return #err(#FailedInterCanisterCall);
+        return #err(#CallFailed);
       };
     };
 
@@ -150,12 +151,12 @@ module {
       } catch (err) {
         let _ = await logsManager.addApplicationLog({
           app = #OpenFPL;
-          error = ?#FailedInterCanisterCall;
+          error = ?#CallFailed;
           detail = message(err);
           title = "Failed to get player details";
           logType = #Error;
         });
-        return #err(#FailedInterCanisterCall);
+        return #err(#CallFailed);
       };
     };
 

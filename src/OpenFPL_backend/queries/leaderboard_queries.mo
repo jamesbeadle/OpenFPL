@@ -1,7 +1,7 @@
-import FootballIds "mo:waterway-mops/football/FootballIds";
-import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
-import Ids "mo:waterway-mops/Ids";
-import IcfcEnums "mo:waterway-mops/ICFCEnums";
+import FootballIds "mo:waterway-mops/domain/football/ids";
+import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
+import Ids "mo:waterway-mops/base/ids";
+import IcfcEnums "mo:waterway-mops/product/icfc/enums";
 import AppEnums "../enums/app_enums";
 
 module LeaderboardQueries = {

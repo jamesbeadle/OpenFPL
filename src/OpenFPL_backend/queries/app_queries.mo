@@ -1,8 +1,7 @@
-import FootballIds "mo:waterway-mops/football/FootballIds";
-import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
-import Ids "mo:waterway-mops/Ids";
-import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
-import FootballEnums "mo:waterway-mops/football/FootballEnums";
+import FootballIds "mo:waterway-mops/domain/football/ids";
+import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
+import Ids "mo:waterway-mops/base/ids";
+import FootballEnums "mo:waterway-mops/domain/football/enums";
 
 module AppQueries {
 

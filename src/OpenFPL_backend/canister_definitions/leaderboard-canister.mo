@@ -10,10 +10,10 @@ import Timer "mo:base/Timer";
 import TrieMap "mo:base/TrieMap";
 import Order "mo:base/Order";
 
-import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
-import CanisterIds "mo:waterway-mops/CanisterIds";
-import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
-import FootballIds "mo:waterway-mops/football/FootballIds";
+import BaseDefinitions "mo:waterway-mops/base/definitions";
+import CanisterIds "mo:waterway-mops/product/wwl/canister-ids";
+import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
+import FootballIds "mo:waterway-mops/domain/football/ids";
 import LeaderboardQueries "../../OpenFPL_backend/queries/leaderboard_queries";
 import LeaderboardUtilities "../utilities/leaderboard_utilities";
 

@@ -1,6 +1,6 @@
-import Ids "mo:waterway-mops/Ids";
-import FootballIds "mo:waterway-mops/football/FootballIds";
-import IcfcEnums "mo:waterway-mops/ICFCEnums";
+import Ids "mo:waterway-mops/base/ids";
+import FootballIds "mo:waterway-mops/domain/football/ids";
+import IcfcEnums "mo:waterway-mops/product/icfc/enums";
 import AppEnums "../enums/app_enums";
 
 module UserCommands = {

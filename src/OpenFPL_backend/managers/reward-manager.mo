@@ -9,10 +9,9 @@ import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
 import Result "mo:base/Result";
 
-import Enums "mo:waterway-mops/Enums";
-import BaseUtilities "mo:waterway-mops/BaseUtilities";
-import FootballIds "mo:waterway-mops/football/FootballIds";
-import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
+import Enums "mo:waterway-mops/base/enums";
+import FootballIds "mo:waterway-mops/domain/football/ids";
+import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
 import AppTypes "../types/app_types";
 import LeaderboardQueries "../queries/leaderboard_queries";
 import RewardPercentages "../utilities/RewardPercentages";

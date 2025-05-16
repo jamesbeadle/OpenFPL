@@ -1,15 +1,14 @@
-import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
-import BaseUtilities "mo:waterway-mops/BaseUtilities";
-import DateTimeUtilities "mo:waterway-mops/DateTimeUtilities";
-import Enums "mo:waterway-mops/Enums";
-import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
-import FootballEnums "mo:waterway-mops/football/FootballEnums";
-import FootballIds "mo:waterway-mops/football/FootballIds";
-import Ids "mo:waterway-mops/Ids";
+import BaseDefinitions "mo:waterway-mops/base/definitions";
+import DateTimeUtilities "mo:waterway-mops/base/utilities/date-time-utilities";
+import Enums "mo:waterway-mops/base/enums";
+import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
+import FootballEnums "mo:waterway-mops/domain/football/enums";
+import FootballIds "mo:waterway-mops/domain/football/ids";
+import Ids "mo:waterway-mops/base/ids";
 
-import IcfcTypes "mo:waterway-mops/ICFCTypes"; // TODO - I think gameweek number should be in football definitions
-import PlayerQueries "mo:waterway-mops/queries/football-queries/PlayerQueries";
-import LogsManager "mo:waterway-mops/logs-management/LogsManager";
+import PlayerQueries "mo:waterway-mops/product/icfc/data-canister-queries/player-queries";
+import LogsManager "mo:waterway-mops/product/wwl/log-management/manager";
+
 import { message } "mo:base/Error";
 
 /* ----- Mops Packages ----- */

@@ -1,8 +1,8 @@
-import Ids "mo:waterway-mops/Ids";
-import FootballIds "mo:waterway-mops/football/FootballIds";
-import FootballDefinitions "mo:waterway-mops/football/FootballDefinitions";
-import BaseDefinitions "mo:waterway-mops/BaseDefinitions";
-import ICFCEnums "mo:waterway-mops/ICFCEnums";
+import Ids "mo:waterway-mops/base/ids";
+import FootballIds "mo:waterway-mops/domain/football/ids";
+import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
+import BaseDefinitions "mo:waterway-mops/base/definitions";
+import ICFCEnums "mo:waterway-mops/product/icfc/enums";
 
 module UserQueries = {
 

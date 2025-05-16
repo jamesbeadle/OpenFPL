@@ -1,4 +1,4 @@
-import FootballIds "mo:waterway-mops/football/FootballIds";
+import FootballIds "mo:waterway-mops/domain/football/ids";
 
 module Environment {
 
