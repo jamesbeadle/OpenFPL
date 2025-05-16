@@ -1,13 +1,14 @@
 import List "mo:base/List";
 import Ids "mo:waterway-mops/base/ids";
 import BaseTypes "mo:waterway-mops/base/types";
+import AppEnums "mo:waterway-mops/product/wwl/enums";
 import ICFCEnums "mo:waterway-mops/product/icfc/enums";
 import FootballIds "mo:waterway-mops/domain/football/ids";
 import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
 import BaseDefinitions "mo:waterway-mops/base/definitions";
-import Enums "mo:waterway-mops/base/enums";
+import BaseEnums "mo:waterway-mops/base/enums";
 import FootballEnums "mo:waterway-mops/domain/football/enums";
-import AppEnums "../enums/app_enums";
+import Enums "../enums/app_enums";
 
 module AppTypes {
 
@@ -118,13 +119,13 @@ module AppTypes {
 
   public type RewardEntry = {
     principalId : Text;
-    rewardType : AppEnums.RewardType;
+    rewardType : Enums.RewardType;
     position : Nat;
     amount : Nat64;
   };
 
   public type HighScoreRecord = {
-    recordType : AppEnums.RecordType;
+    recordType : Enums.RecordType;
     points : Int16;
     createDate : Int;
   };
@@ -172,20 +173,20 @@ module AppTypes {
     leagueId : FootballIds.LeagueId;
     seasonId : FootballIds.SeasonId;
     gameweek : FootballDefinitions.GameweekNumber;
-    status : AppEnums.LeaderboardStatus;
+    status : Enums.LeaderboardStatus;
   };
 
   public type LeagueMonthStatus = {
     leagueId : FootballIds.LeagueId;
     seasonId : FootballIds.SeasonId;
     month : BaseDefinitions.CalendarMonth;
-    status : AppEnums.LeaderboardStatus;
+    status : Enums.LeaderboardStatus;
   };
 
   public type LeagueSeasonStatus = {
     leagueId : FootballIds.LeagueId;
     seasonId : FootballIds.SeasonId;
-    status : AppEnums.LeaderboardStatus;
+    status : Enums.LeaderboardStatus;
   };
 
   public type AppStatus = {
@@ -215,7 +216,7 @@ module AppTypes {
   public type ICFCLink = {
     membershipType : ICFCEnums.MembershipType;
     principalId : Ids.PrincipalId;
-    linkStatus : ICFCEnums.ICFCLinkStatus;
+    linkStatus : AppEnums.LinkStatus;
     dataHash : Text;
   };
 
@@ -230,7 +231,7 @@ module AppTypes {
   public type LeaderboardPayoutEntry = {
     appPrincipalId : Ids.PrincipalId;
     rewardAmount : ?Nat64;
-    payoutStatus : Enums.PayoutStatus;
+    payoutStatus : BaseEnums.PayoutStatus;
     payoutDate : ?Int;
   };
 

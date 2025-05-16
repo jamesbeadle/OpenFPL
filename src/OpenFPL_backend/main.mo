@@ -43,7 +43,6 @@ import LeaderboardCanister "./canister_definitions/leaderboard-canister";
 import AppQueries "./queries/app_queries";
 import LeaderboardQueries "./queries/leaderboard_queries";
 import UserQueries "./queries/user_queries";
-import ICFCQueries "./queries/icfc_queries";
 
 /* ----- Commands ----- */
 import UserCommands "./commands/user_commands";

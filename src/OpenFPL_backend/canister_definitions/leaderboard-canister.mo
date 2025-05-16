@@ -4,11 +4,11 @@ import Int "mo:base/Int";
 import Iter "mo:base/Iter";
 import List "mo:base/List";
 import Nat "mo:base/Nat";
+import Order "mo:base/Order";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
 import Timer "mo:base/Timer";
 import TrieMap "mo:base/TrieMap";
-import Order "mo:base/Order";
 
 import BaseDefinitions "mo:waterway-mops/base/definitions";
 import CanisterIds "mo:waterway-mops/product/wwl/canister-ids";
