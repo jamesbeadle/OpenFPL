@@ -209,13 +209,13 @@ module AppTypes {
   };
 
   public type MembershipClaim = {
-    membershipType : ICFCEnums.SubscriptionType;
+    subscriptionType : ICFCEnums.SubscriptionType;
     purchasedOn : Int;
     expiresOn : ?Int;
   };
 
   public type ICFCLink = {
-    membershipType : ICFCEnums.SubscriptionType;
+    subscriptionType : ICFCEnums.SubscriptionType;
     principalId : Ids.PrincipalId;
     linkStatus : AppEnums.LinkStatus;
     dataHash : Text;

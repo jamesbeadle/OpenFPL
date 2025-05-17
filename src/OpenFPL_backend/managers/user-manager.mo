@@ -134,7 +134,7 @@ module {
                         favouriteLeagueId = icfcProfile.favouriteLeagueId;
                         membershipClaims = icfcProfile.membershipClaims;
                         membershipExpiryTime = icfcProfile.membershipExpiryTime;
-                        membershipType = icfcProfile.membershipType;
+                        subscriptionType = icfcProfile.subscriptionType;
                         nationalityId = icfcProfile.nationalityId;
                         termsAgreed = icfcProfile.termsAgreed;
                         displayName = icfcProfile.displayName;
@@ -174,7 +174,7 @@ module {
                         favouriteLeagueId = icfcProfile.favouriteLeagueId;
                         membershipClaims = icfcProfile.membershipClaims;
                         membershipExpiryTime = icfcProfile.membershipExpiryTime;
-                        membershipType = icfcProfile.membershipType;
+                        subscriptionType = icfcProfile.subscriptionType;
                         nationalityId = icfcProfile.nationalityId;
                         termsAgreed = icfcProfile.termsAgreed;
                         displayName = icfcProfile.displayName;
@@ -233,14 +233,14 @@ module {
       };
     };
 
-    public func getUserICFCMembership(dto : UserQueries.GetICFCMembership) : async Result.Result<IcfcEnums.MembershipType, Enums.Error> {
+    public func getUserICFCMembership(dto : UserQueries.GetICFCMembership) : async Result.Result<IcfcEnums.SubscriptionType, Enums.Error> {
       let icfcLink : ?UserQueries.ICFCLink = userICFCLinks.get(dto.principalId);
       switch (icfcLink) {
         case (null) {
           return #err(#NotFound);
         };
         case (?foundICFCLink) {
-          return #ok(foundICFCLink.membershipType);
+          return #ok(foundICFCLink.subscriptionType);
         };
       };
     };
@@ -576,7 +576,7 @@ module {
         principalId = dto.icfcPrincipalId;
         linkStatus = #PendingVerification;
         dataHash = await SHA224.getRandomHash();
-        membershipType = dto.membershipType;
+        subscriptionType = dto.subscriptionType;
       };
       userICFCLinks.put(dto.subAppUserPrincipalId, icfcLink);
       return #ok();
@@ -621,7 +621,7 @@ module {
                   principalId = foundICFCLink.principalId;
                   linkStatus = #Verified;
                   dataHash = await SHA224.getRandomHash();
-                  membershipType = foundICFCLink.membershipType;
+                  subscriptionType = foundICFCLink.subscriptionType;
                 },
               );
 
@@ -706,7 +706,7 @@ module {
               principalId = foundICFCLink.principalId;
               linkStatus = foundICFCLink.linkStatus;
               dataHash = newHash;
-              membershipType = dto.membershipType;
+              subscriptionType = dto.subscriptionType;
             },
           );
           return #ok();
@@ -721,7 +721,7 @@ module {
         let link : ICFCQueries.ICFCLinks = {
           icfcPrincipalId = icfcLink.1.principalId;
           subAppUserPrincipalId = icfcLink.0;
-          membershipType = icfcLink.1.membershipType;
+          subscriptionType = icfcLink.1.subscriptionType;
           subApp = #OpenFPL;
         };
         result := Array.append(result, [link]);

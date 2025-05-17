@@ -14,6 +14,7 @@ module UserQueries = {
     public type GetICFCLinkStatus = {
         principalId : Ids.PrincipalId;
     };
+
     public type CombinedProfile = {
         principalId : Ids.PrincipalId;
         username : Text;
@@ -23,7 +24,7 @@ module UserQueries = {
         favouriteClubId : ?FootballIds.ClubId;
         createDate : Int;
         displayName : Text;
-        membershipType : ICFCEnums.MembershipType;
+        subscriptionType : ICFCEnums.SubscriptionType;
         membershipClaims : [MembershipClaim];
         createdOn : Int;
         termsAgreed : Bool;
@@ -53,7 +54,7 @@ module UserQueries = {
         principalId : Ids.PrincipalId;
         username : Text;
         displayName : Text;
-        membershipType : ICFCEnums.MembershipType;
+        subscriptionType : ICFCEnums.SubscriptionType;
         membershipClaims : [MembershipClaim];
         createdOn : Int;
         profilePicture : ?Blob;
@@ -65,14 +66,14 @@ module UserQueries = {
     };
 
     public type ICFCLink = {
-        membershipType : ICFCEnums.MembershipType;
+        subscriptionType : ICFCEnums.SubscriptionType;
         principalId : Ids.PrincipalId;
         linkStatus : AppEnums.LinkStatus;
         dataHash : Text;
     };
 
     public type MembershipClaim = {
-        membershipType : ICFCEnums.MembershipType;
+        subscriptionType : ICFCEnums.SubscriptionType;
         purchasedOn : Int;
         expiresOn : ?Int;
     };

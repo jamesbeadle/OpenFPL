@@ -9,7 +9,7 @@ module UserCommands = {
         principalId : Ids.PrincipalId;
         icfcPrincipalId : Ids.PrincipalId;
         favouriteClubId : FootballIds.ClubId;
-        icfcMembershipType : IcfcEnums.MembershipType;
+        icfcSubscriptionType : IcfcEnums.SubscriptionType;
     };
 
     public type SetFavouriteClub = {

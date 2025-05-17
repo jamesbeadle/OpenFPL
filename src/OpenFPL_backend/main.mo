@@ -25,7 +25,7 @@ import Environment "Environment";
 import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
 import FootballIds "mo:waterway-mops/domain/football/ids";
 import Ids "mo:waterway-mops/base/ids";
-import InterAppCallCommands "mo:waterway-mops/product/icfc/inter-app-call-commands";
+import RewardPayoutCommands "mo:waterway-mops/product/openfpl/reward-payout-commands";
 import Management "mo:waterway-mops/base/def/management";
 
 import ICFCQueries "mo:waterway-mops/product/icfc/queries";
@@ -579,7 +579,7 @@ actor Self {
     let _ = leaderboardManager.calculateLeaderboards(dto.seasonId, dto.gameweek, 0, managerCanisterIds);
 
     let icfc_backend_canister = actor (CanisterIds.ICFC_BACKEND_CANISTER_ID) : actor {
-      requestLeaderboardPayout : (dto : InterAppCallCommands.LeaderboardPayoutRequest) -> async Result.Result<(), BaseEnums.Error>;
+      requestLeaderboardPayout : (dto : RewardPayoutCommands.PayoutRequest) -> async Result.Result<(), BaseEnums.Error>;
     };
 
     let weeklyLeaderboardResult = await leaderboardManager.getWeeklyLeaderboard({
@@ -591,24 +591,27 @@ actor Self {
 
     switch (weeklyLeaderboardResult) {
       case (#ok(foundLeaderboard)) {
-        var leaderboard : [InterAppCallCommands.LeaderboardEntry] = [];
+        var leaderboard : [RewardPayoutCommands.LeaderboardEntry] = [];
 
         for (entry in Iter.fromArray(foundLeaderboard.entries)) {
-          let leaderboardEntry : InterAppCallCommands.LeaderboardEntry = {
+          let leaderboardEntry : RewardPayoutCommands.LeaderboardEntry = {
             appPrincipalId = entry.principalId;
-            rewardAmount = entry.rewardAmount;
-            payoutStatus = #Pending;
-            payoutDate = null;
+            position = 0; // TODO
           };
-          leaderboard := Array.append<InterAppCallCommands.LeaderboardEntry>(leaderboard, [leaderboardEntry]);
+          leaderboard := Array.append<RewardPayoutCommands.LeaderboardEntry>(leaderboard, [leaderboardEntry]);
         };
 
-        let payoutRequest : InterAppCallCommands.LeaderboardPayoutRequest = {
-          app = #OpenFPL;
+        let weeklyLeaderboardRequestDetail : RewardPayoutCommands.WeeklyLeaderboard = {
           leaderboard = leaderboard;
           gameweek = dto.gameweek;
           seasonId = dto.seasonId;
+        };
+
+        let payoutRequest: RewardPayoutCommands.PayoutRequest = {
+          app = #OpenFPL;
           currency = #CKBTC;
+          detail = #WeeklyLeaderboard weeklyLeaderboardRequestDetail;
+          rewardType = #WeeklyLeaderboard;
         };
 
         let sendReq = await icfc_backend_canister.requestLeaderboardPayout(payoutRequest);
@@ -624,7 +627,7 @@ actor Self {
           [{
             seasonId = dto.seasonId;
             gameweek = dto.gameweek;
-            leaderboard = leaderboard;
+            leaderboard = leaderboard; // TODO MAP TO ABOVE?
             totalEntries = Array.size(leaderboard);
             totalEntriesPaid = 0;
           }],
@@ -639,9 +642,13 @@ actor Self {
   };
 
   /* ----- ICFC Callback for paid LeaderBoard ----- */
-  public shared ({ caller }) func leaderboardPaid(dto : InterAppCallCommands.LeaderboardPayoutResponse) : async Result.Result<(), BaseEnums.Error> {
+
+  public shared ({ caller }) func leaderboardPaid(dto : RewardPayoutCommands.LeaderboardPayoutResponse) : async Result.Result<(), BaseEnums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_BACKEND_CANISTER_ID;
 
+    // TODO
+    //When paid update the leaderboard values with the payment information
+    
     let foundPayoutRequest = Array.find<AppTypes.LeaderboardPayout>(
       stable_leaderboard_payouts,
       func(entry : AppTypes.LeaderboardPayout) : Bool {
@@ -663,9 +670,9 @@ actor Self {
                 leaderboard = dto.leaderboard;
                 totalEntries = Array.size(dto.leaderboard);
                 totalEntriesPaid = Array.size(
-                  Array.filter<InterAppCallCommands.LeaderboardEntry>(
+                  Array.filter<RewardPayoutCommands.LeaderboardEntry>(
                     dto.leaderboard,
-                    func(entry : InterAppCallCommands.LeaderboardEntry) : Bool {
+                    func(entry : RewardPayoutCommands.LeaderboardEntry) : Bool {
                       return entry.payoutStatus == #Paid;
                     },
                   )

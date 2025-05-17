@@ -3,7 +3,7 @@ import Ids "mo:waterway-mops/base/ids";
 
 module {
     public type NotifyAppofLink = {
-        membershipType : ICFCEnums.MembershipType;
+        subscriptionType : ICFCEnums.SubscriptionType;
         subAppUserPrincipalId : Ids.PrincipalId;
         subApp : ICFCEnums.SubApp;
         icfcPrincipalId : Ids.PrincipalId;
@@ -12,7 +12,7 @@ module {
     public type UpdateICFCProfile = {
         subAppUserPrincipalId : Ids.PrincipalId;
         subApp : ICFCEnums.SubApp;
-        membershipType : ICFCEnums.MembershipType;
+        subscriptionType : ICFCEnums.SubscriptionType;
     };
 
     public type VerifyICFCProfile = {
