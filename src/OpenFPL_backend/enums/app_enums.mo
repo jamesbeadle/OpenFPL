@@ -13,17 +13,6 @@ module Enums {
     #HatTrickHero;
   };
 
-  public type RewardType = {
-    #SeasonLeaderboard;
-    #MonthlyLeaderboard;
-    #WeeklyLeaderboard;
-    #MostValuableTeam;
-    #HighestScoringPlayer;
-    #WeeklyATHScore;
-    #MonthlyATHScore;
-    #SeasonATHScore;
-  };
-
   public type RecordType = {
     #WeeklyHighScore;
     #MonthlyHighScore;

@@ -28,7 +28,7 @@ module LeaderboardQueries = {
         principalId : Ids.PrincipalId;
         points : Int16;
         nationalityId : ?Ids.CountryId;
-        membershipLevel : IcfcEnums.MembershipType;
+        membershipLevel : IcfcEnums.SubscriptionType;
         bonusPlayed : ?AppEnums.BonusType;
         profilePicture : ?Blob;
         rewardAmount : ?Nat64;
@@ -78,7 +78,7 @@ module LeaderboardQueries = {
         principalId : Ids.PrincipalId;
         teamValue : Nat16;
         nationalityId : ?Ids.CountryId;
-        membershipLevel : IcfcEnums.MembershipType;
+        membershipLevel : IcfcEnums.SubscriptionType;
         bonusPlayed : ?AppEnums.BonusType;
         profilePicture : ?Blob;
         rewardAmount : ?Nat64;

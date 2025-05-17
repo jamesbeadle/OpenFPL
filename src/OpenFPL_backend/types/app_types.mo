@@ -8,6 +8,7 @@ import FootballDefinitions "mo:waterway-mops/domain/football/definitions";
 import BaseDefinitions "mo:waterway-mops/base/definitions";
 import BaseEnums "mo:waterway-mops/base/enums";
 import FootballEnums "mo:waterway-mops/domain/football/enums";
+import OpenFPLEnums "mo:waterway-mops/product/openfpl/enums";
 import Enums "../enums/app_enums";
 
 module AppTypes {
@@ -119,7 +120,7 @@ module AppTypes {
 
   public type RewardEntry = {
     principalId : Text;
-    rewardType : Enums.RewardType;
+    rewardType : OpenFPLEnums.RewardType;
     position : Nat;
     amount : Nat64;
   };
@@ -208,13 +209,13 @@ module AppTypes {
   };
 
   public type MembershipClaim = {
-    membershipType : ICFCEnums.MembershipType;
+    membershipType : ICFCEnums.SubscriptionType;
     purchasedOn : Int;
     expiresOn : ?Int;
   };
 
   public type ICFCLink = {
-    membershipType : ICFCEnums.MembershipType;
+    membershipType : ICFCEnums.SubscriptionType;
     principalId : Ids.PrincipalId;
     linkStatus : AppEnums.LinkStatus;
     dataHash : Text;
