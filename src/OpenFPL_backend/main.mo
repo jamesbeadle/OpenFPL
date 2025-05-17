@@ -608,6 +608,7 @@ actor Self {
           leaderboard = leaderboard;
           gameweek = dto.gameweek;
           seasonId = dto.seasonId;
+          currency = #BTC;
         };
 
         let sendReq = await icfc_backend_canister.requestLeaderboardPayout(payoutRequest);
@@ -638,7 +639,7 @@ actor Self {
   };
 
   /* ----- ICFC Callback for paid LeaderBoard ----- */
-  public shared ({ caller }) func leaderboardPaid(dto : InterAppCallCommands.CompleteLeaderboardPayout) : async Result.Result<(), BaseEnums.Error> {
+  public shared ({ caller }) func leaderboardPaid(dto : InterAppCallCommands.LeaderboardPayoutResponse) : async Result.Result<(), BaseEnums.Error> {
     assert Principal.toText(caller) == CanisterIds.ICFC_BACKEND_CANISTER_ID;
 
     let foundPayoutRequest = Array.find<AppTypes.LeaderboardPayout>(
