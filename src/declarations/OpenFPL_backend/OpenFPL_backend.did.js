@@ -25,26 +25,29 @@ export const idlFactory = ({ IDL }) => {
     canisterId: CanisterId,
   });
   const Error = IDL.Variant({
-    InvalidProfilePicture: IDL.Null,
+    CallFailed: IDL.Null,
+    DeleteFailed: IDL.Null,
     DecodeError: IDL.Null,
     TooLong: IDL.Null,
     NotAllowed: IDL.Null,
     DuplicateData: IDL.Null,
+    TooShort: IDL.Null,
     InvalidProperty: IDL.Null,
+    NoneRemaining: IDL.Null,
     NotFound: IDL.Null,
     IncorrectSetup: IDL.Null,
     AlreadyClaimed: IDL.Null,
     NotAuthorized: IDL.Null,
     MaxDataExceeded: IDL.Null,
+    InvalidCall: IDL.Null,
     InvalidData: IDL.Null,
     SystemOnHold: IDL.Null,
     AlreadyExists: IDL.Null,
-    NoPacketsRemaining: IDL.Null,
     UpdateFailed: IDL.Null,
-    CanisterCreateError: IDL.Null,
-    NeuronAlreadyUsed: IDL.Null,
-    FailedInterCanisterCall: IDL.Null,
-    InsufficientPacketsRemaining: IDL.Null,
+    InsufficientAmount: IDL.Null,
+    CreateFailed: IDL.Null,
+    ReadFailed: IDL.Null,
+    AlreadyUsed: IDL.Null,
     InsufficientFunds: IDL.Null,
     InEligible: IDL.Null,
   });
@@ -113,14 +116,14 @@ export const idlFactory = ({ IDL }) => {
     NotEligible: IDL.Null,
     Expired: IDL.Null,
   });
-  const ICFCLinkStatus = IDL.Variant({
+  const LinkStatus = IDL.Variant({
     PendingVerification: IDL.Null,
     Verified: IDL.Null,
   });
   const ICFCLink = IDL.Record({
     dataHash: IDL.Text,
     membershipType: MembershipType,
-    linkStatus: ICFCLinkStatus,
+    linkStatus: LinkStatus,
     principalId: PrincipalId,
   });
   const AppStatus = IDL.Record({ version: IDL.Text, onHold: IDL.Bool });
@@ -220,7 +223,7 @@ export const idlFactory = ({ IDL }) => {
     leagueId: LeagueId,
   });
   const Result_22 = IDL.Variant({ ok: Fixtures, err: Error });
-  const Result_20 = IDL.Variant({ ok: ICFCLinkStatus, err: Error });
+  const Result_20 = IDL.Variant({ ok: LinkStatus, err: Error });
   const GetICFCLinks = IDL.Record({});
   const SubApp = IDL.Variant({
     OpenFPL: IDL.Null,
@@ -609,7 +612,11 @@ export const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber,
   });
   const Result_1 = IDL.Variant({ ok: WeeklyLeaderboard, err: Error });
-  const PayoutStatus = IDL.Variant({ Paid: IDL.Null, Pending: IDL.Null });
+  const PayoutStatus = IDL.Variant({
+    Failed: IDL.Null,
+    Paid: IDL.Null,
+    Pending: IDL.Null,
+  });
   const LeaderboardEntry = IDL.Record({
     payoutStatus: PayoutStatus,
     rewardAmount: IDL.Opt(IDL.Nat64),

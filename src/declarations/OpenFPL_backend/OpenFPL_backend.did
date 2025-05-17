@@ -222,7 +222,7 @@ type Result_21 =
 type Result_20 = 
  variant {
    err: Error;
-   ok: ICFCLinkStatus;
+   ok: LinkStatus;
  };
 type Result_2 = 
  variant {
@@ -406,6 +406,7 @@ type PlayBonus =
  };
 type PayoutStatus = 
  variant {
+   Failed;
    Paid;
    Pending;
  };
@@ -486,6 +487,11 @@ type Manager =
    weeklyPosition: int;
    weeklyPositionText: text;
  };
+type LinkStatus = 
+ variant {
+   PendingVerification;
+   Verified;
+ };
 type LeagueStatus = 
  record {
    activeGameweek: GameweekNumber;
@@ -536,15 +542,10 @@ type ICFCLinks =
    subApp: SubApp;
    subAppUserPrincipalId: PrincipalId;
  };
-type ICFCLinkStatus = 
- variant {
-   PendingVerification;
-   Verified;
- };
 type ICFCLink = 
  record {
    dataHash: text;
-   linkStatus: ICFCLinkStatus;
+   linkStatus: LinkStatus;
    membershipType: MembershipType;
    principalId: PrincipalId;
  };
@@ -694,25 +695,28 @@ type Error =
  variant {
    AlreadyClaimed;
    AlreadyExists;
-   CanisterCreateError;
+   AlreadyUsed;
+   CallFailed;
+   CreateFailed;
    DecodeError;
+   DeleteFailed;
    DuplicateData;
-   FailedInterCanisterCall;
    InEligible;
    IncorrectSetup;
+   InsufficientAmount;
    InsufficientFunds;
-   InsufficientPacketsRemaining;
+   InvalidCall;
    InvalidData;
-   InvalidProfilePicture;
    InvalidProperty;
    MaxDataExceeded;
-   NeuronAlreadyUsed;
-   NoPacketsRemaining;
+   NoneRemaining;
    NotAllowed;
    NotAuthorized;
    NotFound;
+   ReadFailed;
    SystemOnHold;
    TooLong;
+   TooShort;
    UpdateFailed;
  };
 type DetailedPlayer = 

@@ -128,26 +128,29 @@ export interface DetailedPlayer {
   firstName: string;
 }
 export type Error =
-  | { InvalidProfilePicture: null }
+  | { CallFailed: null }
+  | { DeleteFailed: null }
   | { DecodeError: null }
   | { TooLong: null }
   | { NotAllowed: null }
   | { DuplicateData: null }
+  | { TooShort: null }
   | { InvalidProperty: null }
+  | { NoneRemaining: null }
   | { NotFound: null }
   | { IncorrectSetup: null }
   | { AlreadyClaimed: null }
   | { NotAuthorized: null }
   | { MaxDataExceeded: null }
+  | { InvalidCall: null }
   | { InvalidData: null }
   | { SystemOnHold: null }
   | { AlreadyExists: null }
-  | { NoPacketsRemaining: null }
   | { UpdateFailed: null }
-  | { CanisterCreateError: null }
-  | { NeuronAlreadyUsed: null }
-  | { FailedInterCanisterCall: null }
-  | { InsufficientPacketsRemaining: null }
+  | { InsufficientAmount: null }
+  | { CreateFailed: null }
+  | { ReadFailed: null }
+  | { AlreadyUsed: null }
   | { InsufficientFunds: null }
   | { InEligible: null };
 export interface FantasyTeamSnapshot {
@@ -288,10 +291,9 @@ export interface HighScoreRecord {
 export interface ICFCLink {
   dataHash: string;
   membershipType: MembershipType;
-  linkStatus: ICFCLinkStatus;
+  linkStatus: LinkStatus;
   principalId: PrincipalId;
 }
-export type ICFCLinkStatus = { PendingVerification: null } | { Verified: null };
 export interface ICFCLinks {
   icfcPrincipalId: PrincipalId;
   subApp: SubApp;
@@ -337,6 +339,7 @@ export interface LeagueStatus {
   leagueId: LeagueId;
   seasonActive: boolean;
 }
+export type LinkStatus = { PendingVerification: null } | { Verified: null };
 export interface Manager {
   username: string;
   weeklyPosition: bigint;
@@ -404,7 +407,10 @@ export interface NotifyAppofRemoveLink {
   icfcPrincipalId: PrincipalId;
   subApp: SubApp;
 }
-export type PayoutStatus = { Paid: null } | { Pending: null };
+export type PayoutStatus =
+  | { Failed: null }
+  | { Paid: null }
+  | { Pending: null };
 export interface PlayBonus {
   clubId: ClubId;
   playerId: PlayerId;
@@ -528,7 +534,7 @@ export type Result_17 = { ok: Manager } | { err: Error };
 export type Result_18 = { ok: LeagueStatus } | { err: Error };
 export type Result_19 = { ok: Array<ICFCLinks> } | { err: Error };
 export type Result_2 = { ok: bigint } | { err: Error };
-export type Result_20 = { ok: ICFCLinkStatus } | { err: Error };
+export type Result_20 = { ok: LinkStatus } | { err: Error };
 export type Result_21 = { ok: string } | { err: Error };
 export type Result_22 = { ok: Fixtures } | { err: Error };
 export type Result_23 = { ok: FantasyTeamSnapshot } | { err: Error };
