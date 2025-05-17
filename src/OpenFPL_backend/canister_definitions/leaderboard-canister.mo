@@ -446,7 +446,7 @@ actor class _LeaderboardCanister() {
             func(entry : AppTypes.LeaderboardEntry) {
               return {
                 bonusPlayed = null; // TODO
-                membershipLevel = #Founding; // TODO
+                subscriptionType = #Paid; // TODO
                 nationalityId = null; // TODO
                 points = entry.points;
                 position = entry.position;

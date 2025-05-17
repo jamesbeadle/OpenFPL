@@ -108,7 +108,7 @@ module {
           principalId = entry.principalId;
           username = entry.username;
           bonusPlayed = entry.bonusPlayed;
-          membershipLevel = entry.membershipLevel;
+          subscriptionType = entry.subscriptionType;
           nationalityId = entry.nationalityId;
           profilePicture = entry.profilePicture;
           rewardAmount = entry.rewardAmount;
