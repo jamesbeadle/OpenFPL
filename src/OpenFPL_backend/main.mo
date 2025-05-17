@@ -608,7 +608,7 @@ actor Self {
           leaderboard = leaderboard;
           gameweek = dto.gameweek;
           seasonId = dto.seasonId;
-          currency = #BTC;
+          currency = #CKBTC;
         };
 
         let sendReq = await icfc_backend_canister.requestLeaderboardPayout(payoutRequest);
