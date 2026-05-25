@@ -233,8 +233,7 @@ create table bonus_plays (
 	constraint bonus_plays_unique_per_season unique (manager_id, season_id, bonus)
 );
 
-create index bonus_plays_manager_idx on bonus_plays (manager_id);
-create index bonus_plays_month_idx on bonus_plays (manager_id, date_trunc('month', played_at));
+create index bonus_plays_manager_played_idx on bonus_plays (manager_id, played_at);
 
 create table gameweek_scores (
 	id uuid primary key default gen_random_uuid(),
