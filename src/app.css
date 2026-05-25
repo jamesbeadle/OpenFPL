@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+
+/* OpenFPL design tokens. Add custom theme variables here as the design system grows. */
+@theme {
+	--font-sans:
+		'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
